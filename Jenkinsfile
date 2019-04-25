@@ -1,0 +1,79 @@
+pipeline {
+    libraries { lib 'SharedLibrary' }
+
+    environment {
+        http_proxy='http://inetgw.aa.com:9093'
+        https_proxy='http://inetgw.aa.com:9093'
+
+        pcfAppName='receipts-ms'
+        PCF_ID = credentials('PCF_DEVTEST_KEY')
+        PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
+
+        PCF_URL='api.system.depaas.qcorpaa.aa.com'
+        PCF_TEST_DOMAIN='apps.depaas.qcorpaa.aa.com'
+        PCF_STAGE_URL='api.system.sepaas.aa.com'
+        PCF_STAGE_DOMAIN='apps.sepaas.aa.com'
+        NOTIFYUSERS="DL_KeyStar_Prod_Support@aa.com"
+        PCF_PROD_URL='api.system.ppepaas.aa.com'
+        PCF_PROD_DOMAIN='apps.ppepaas.aa.com'
+        PCF_SPACE='Test'
+        PCF_STAGE_SPACE='Stage'
+        PCF_PROD_SPACE='Prod'
+        PCF_ORG ='Keystar'
+        CF_HOME="${WORKSPACE}"
+        DEPLOY_DETAILS = "<BR>DEPLOY DETAILS: "
+        PCF_BLUE= "Temp-FVT-API"
+        PCF_GREEN= "FVT-API"
+        SLACK_TOKEN = credentials('SlackToken')
+        SLACK_CHANNEL = 'keystar-hanger'
+        BUILD_DETAILS = "BUILD DETAILS: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${BUILD_URL} "
+        JOB_CAUSES = edtUtil.getCauses()
+
+        slackChannel='receipts-msg'
+        cfKeepRollback=0
+        nexusCredentials=credentials('Nexus3upload')
+        jarPath='./target/${pcfAppName}-*.jar'
+    }
+
+    agent {
+        label 'Builder'
+    }
+
+    stages {
+        stage('loadXml') {
+            steps {
+                // Credential has to exist in Jenkins already.  The function will replace the user and password in the settings.xml template and create the .settings.xml locally for use
+                script {
+                    loadSettingsXml("$nexusCredentials_USR","$nexusCredentials_PSW")
+                }
+
+            }
+
+        }
+
+        stage('build') {
+            steps {
+                sh "mvn -s .settings.xml clean install"
+
+            }
+
+        }
+
+        stage('sonar scan: code analysis') {
+            steps {
+                sh "mvn -s .settings.xml package sonar:sonar -Pcoverage"
+                publishHTML (target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'target/jacoco',
+                    reportFiles: 'index.html',
+                    reportName: "Code Coverage Report"
+                ])
+            }
+
+        }
+
+
+    }
+}
