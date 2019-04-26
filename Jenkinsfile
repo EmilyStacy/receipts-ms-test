@@ -6,7 +6,7 @@ pipeline {
         https_proxy='http://inetgw.aa.com:9093'
 
         pcfAppName='receipts-ms'
-        //PCF_ID = credentials('PCF_DEVTEST_KEY')
+        PCF_ID = credentials('PCF_DEVTEST_KEY')
         //PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
 
         PCF_URL='api.system.depaas.qcorpaa.aa.com'
@@ -77,10 +77,8 @@ pipeline {
 
         stage('dev') {
             steps {
-                sh """
-                    chmod u+x ./devops/bluemix/deploy.sh
-                    ./devops/bluemix/deploy.sh ${bmxApiUrl} ${CF_API_KEY} ${bmxOrg} ${bmxDevSpace} ${bmxDomain} ${bmxAppName}-${BRANCH_NAME.replaceAll("_","-")}-dev ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
-                  """
+                sh "cf login -a $PCF_URL -u $PCF_ID_USR -p $PCF_ID_PSW -o $PCF_ORG -s $PCF_SPACE"
+                sh "cf push $CF_TEST_MANIFEST_BLUE --no-start"
             }
 
         }
