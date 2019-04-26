@@ -75,5 +75,21 @@ pipeline {
         }*/
 
 
+        stage('dev') {
+            steps {
+                sh """
+                    chmod u+x ./devops/bluemix/deploy.sh
+                    ./devops/bluemix/deploy.sh ${bmxApiUrl} ${CF_API_KEY} ${bmxOrg} ${bmxDevSpace} ${bmxDomain} ${bmxAppName}-${BRANCH_NAME.replaceAll("_","-")}-dev ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
+                  """
+            }
+
+        }
+
+        stage('Upload Artifacts') {
+            steps {
+                echo "*****Nexus Upload*****"
+                sh "mvn --settings .settings.xml deploy -DskipTests=true"
+            }
+        }
     }
 }
