@@ -1,5 +1,5 @@
 defaults: &defaults
-  path: ../receipts-onboard-purchases-ms-0.0.1-SNAPSHOT.jar
+  path: ../receipts-ms-0.0.1-SNAPSHOT.jar
   health-check-type: port
   maximum_health_check_timeout: 180
   timeout: 180
@@ -30,7 +30,7 @@ applications:
 #
 # DEV
 #
-- name: receipts-onboard-purchases-ms-dev
+- name: receipts-ms-dev
   <<: *defaults
   env:
     SPRING_PROFILES_ACTIVE: dev
@@ -42,7 +42,7 @@ applications:
 #
 # QA
 #
-- name: receipts-onboard-purchases-ms-qa
+- name: receipts-ms-qa
   <<: *defaults
   env:
     SPRING_PROFILES_ACTIVE: qa
@@ -53,7 +53,7 @@ applications:
 #
 # STAGE cdc application
 #
-- name: receipts-onboard-purchases-ms-stagec-green
+- name: receipts-ms-stagec-green
   <<: *defaults
   env:
     SPRING_PROFILES_ACTIVE: stagec
@@ -63,7 +63,7 @@ applications:
 #
 # STAGE pdc application
 #
-- name: receipts-onboard-purchases-ms-stagep-green
+- name: receipts-ms-stagep-green
   <<: *defaults
   env:
     SPRING_PROFILES_ACTIVE: stagep
@@ -74,7 +74,7 @@ applications:
 #
 # PROD cdc application
 #
-- name: receipts-onboard-purchases-ms-prodc-green
+- name: receipts-ms-prodc-green
   <<: *defaults
   env:
     SPRING_PROFILES_ACTIVE: prodc
@@ -84,7 +84,7 @@ applications:
 #
 # PROD pdc application
 #
-- name: receipts-onboard-purchases-ms-prodp-green
+- name: receipts-ms-prodp-green
   <<: *defaults
   env:
     SPRING_PROFILES_ACTIVE: prodp
@@ -94,7 +94,7 @@ applications:
 #
 # VIRT
 #
-- name: receipts-onboard-purchases-ms-virt
+- name: receipts-ms-virt
   <<: *defaults
   env:
     SPRING_PROFILES_ACTIVE: virt
@@ -104,7 +104,7 @@ applications:
 #
 # LOAD
 #
-- name: receipts-onboard-purchases-ms-load
+- name: receipts-ms-load
   <<: *defaults
   env:
     SPRING_PROFILES_ACTIVE: load
