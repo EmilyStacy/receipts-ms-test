@@ -78,7 +78,7 @@ pipeline {
         stage('dev') {
             steps {
                 sh "cf login -a $PCF_URL -u $PCF_ID_USR -p $PCF_ID_PSW -o $PCF_ORG -s $PCF_SPACE"
-                sh "cf push receipts-onboard-purchases-ms-dev -f manifest.yml"
+                sh "cf push receipts-ms-dev -f manifest.yml"
             }
 
         }
