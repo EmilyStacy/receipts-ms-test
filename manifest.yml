@@ -1,5 +1,5 @@
 defaults: &defaults
-  path: ../../target/receipts-ms-0.0.1-SNAPSHOT.jar
+  path: target/receipts-ms-0.0.1-SNAPSHOT.jar
   health-check-type: port
   maximum_health_check_timeout: 180
   timeout: 180
