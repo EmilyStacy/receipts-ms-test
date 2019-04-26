@@ -6,8 +6,8 @@ pipeline {
         https_proxy='http://inetgw.aa.com:9093'
 
         pcfAppName='receipts-ms'
-        PCF_ID = credentials('PCF_DEVTEST_KEY')
-        PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
+        //PCF_ID = credentials('PCF_DEVTEST_KEY')
+        //PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
 
         PCF_URL='api.system.depaas.qcorpaa.aa.com'
         PCF_TEST_DOMAIN='apps.depaas.qcorpaa.aa.com'
@@ -24,8 +24,8 @@ pipeline {
         DEPLOY_DETAILS = "<BR>DEPLOY DETAILS: "
         PCF_BLUE= "Temp-FVT-API"
         PCF_GREEN= "FVT-API"
-        SLACK_TOKEN = credentials('SlackToken')
-        SLACK_CHANNEL = 'keystar-hanger'
+        //SLACK_TOKEN = credentials('SlackToken')
+        SLACK_CHANNEL = 'receipts-msg'
         BUILD_DETAILS = "BUILD DETAILS: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${BUILD_URL} "
         JOB_CAUSES = edtUtil.getCauses()
 
@@ -59,7 +59,7 @@ pipeline {
 
         }
 
-        stage('sonar scan: code analysis') {
+        /*stage('sonar scan: code analysis') {
             steps {
                 sh "mvn -s .settings.xml package sonar:sonar -Pcoverage"
                 publishHTML (target: [
@@ -72,7 +72,7 @@ pipeline {
                 ])
             }
 
-        }
+        }*/
 
 
     }
