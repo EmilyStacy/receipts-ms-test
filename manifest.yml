@@ -1,0 +1,113 @@
+defaults: &defaults
+  path: ../receipts-onboard-purchases-ms-0.0.1-SNAPSHOT.jar
+  health-check-type: port
+  maximum_health_check_timeout: 180
+  timeout: 180
+  buildpacks: 
+  - java_buildpack_offline-4_14
+  memory: 1G
+  instances: 1
+
+enviro: &environments
+  TZ: America/Chicago
+  JAVA_OPTS: >
+    -XX:MaxGCPauseMillis=200
+    -XX:MaxMetaspaceSize=256M
+    -Xms1024m
+    -Xmx1024m
+    -XX:NewSize=512m
+    -XX:MaxNewSize=512m
+    -Djava.security.egd=file:///dev/urandom
+    -Dhttp.proxyHost=inetgw.aa.com
+    -Dhttp.proxyPort=9093
+    -Dhttps.proxyHost=inetgw.aa.com
+    -Dhttps.proxyPort=9093
+    -Dhttp.nonProxyHosts="*.aa.com"
+
+
+applications:
+
+#
+# DEV
+#
+- name: receipts-onboard-purchases-ms-dev
+  <<: *defaults
+  env:
+    SPRING_PROFILES_ACTIVE: dev
+    <<: *environments
+  services:
+  - logstash-dev-drain
+
+
+#
+# QA
+#
+- name: receipts-onboard-purchases-ms-qa
+  <<: *defaults
+  env:
+    SPRING_PROFILES_ACTIVE: qa
+    <<: *environments
+  services:
+  - logstash-qa-drain
+
+#
+# STAGE cdc application
+#
+- name: receipts-onboard-purchases-ms-stagec-green
+  <<: *defaults
+  env:
+    SPRING_PROFILES_ACTIVE: stagec
+    <<: *environments
+  services:
+  - logstash-stage-drain
+#
+# STAGE pdc application
+#
+- name: receipts-onboard-purchases-ms-stagep-green
+  <<: *defaults
+  env:
+    SPRING_PROFILES_ACTIVE: stagep
+    <<: *environments
+  services:
+  - logstash-stage-drain
+
+#
+# PROD cdc application
+#
+- name: receipts-onboard-purchases-ms-prodc-green
+  <<: *defaults
+  env:
+    SPRING_PROFILES_ACTIVE: prodc
+    <<: *environments
+  services:
+  - logstash-prod-drain
+#
+# PROD pdc application
+#
+- name: receipts-onboard-purchases-ms-prodp-green
+  <<: *defaults
+  env:
+    SPRING_PROFILES_ACTIVE: prodp
+  services:
+  - logstash-prod-drain 
+
+#
+# VIRT
+#
+- name: receipts-onboard-purchases-ms-virt
+  <<: *defaults
+  env:
+    SPRING_PROFILES_ACTIVE: virt
+    <<: *environments
+  services:
+  - logstash-qa-drain
+#
+# LOAD
+#
+- name: receipts-onboard-purchases-ms-load
+  <<: *defaults
+  env:
+    SPRING_PROFILES_ACTIVE: load
+    <<: *environments
+  services:
+  - logstash-load-drain

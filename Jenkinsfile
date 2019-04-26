@@ -16,10 +16,10 @@ pipeline {
         NOTIFYUSERS="DL_KeyStar_Prod_Support@aa.com"
         PCF_PROD_URL='api.system.ppepaas.aa.com'
         PCF_PROD_DOMAIN='apps.ppepaas.aa.com'
-        PCF_SPACE='Test'
+        PCF_SPACE='Dev'
         PCF_STAGE_SPACE='Stage'
         PCF_PROD_SPACE='Prod'
-        PCF_ORG ='Keystar'
+        PCF_ORG ='eTDS'
         CF_HOME="${WORKSPACE}"
         DEPLOY_DETAILS = "<BR>DEPLOY DETAILS: "
         PCF_BLUE= "Temp-FVT-API"
