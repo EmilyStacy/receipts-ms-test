@@ -17,7 +17,7 @@ pipeline {
         PCF_PROD_URL='api.system.ppepaas.aa.com'
         PCF_PROD_DOMAIN='apps.ppepaas.aa.com'
         PCF_SPACE='Dev'
-        PCF_STAGE_SPACE='stage'
+        PCF_STAGE_SPACE='Stage'
         PCF_PROD_SPACE='Production'
         PCF_ORG ='eTDS'
         CF_HOME="${WORKSPACE}"
