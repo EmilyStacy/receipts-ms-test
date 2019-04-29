@@ -7,7 +7,7 @@ pipeline {
 
         pcfAppName='receipts-ms'
         PCF_ID = credentials('PCF_DEVTEST_KEY')
-        //PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
+        PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
 
         PCF_URL='api.system.depaas.qcorpaa.aa.com'
         PCF_TEST_DOMAIN='apps.depaas.qcorpaa.aa.com'
@@ -83,11 +83,13 @@ pipeline {
 
         }
 
-        stage('Upload Artifacts') {
+        stage('stage') {
             steps {
-                echo "*****Nexus Upload*****"
-                sh "mvn --settings .settings.xml deploy -DskipTests=true"
+                sh "cf login -a $PCF_PROD_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_STAGE_SPACE"
+                sh "cf push receipts-ms-stage -f manifest.yml"
             }
+
         }
+
     }
 }
