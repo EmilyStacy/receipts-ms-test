@@ -85,7 +85,7 @@ pipeline {
 
         stage('stage') {
             steps {
-                sh "cf login -a $PCF_STAGE_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_STAGE_SPACE"
+                sh "cf login -a '$PCF_STAGE_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
                 sh "cf push receipts-ms-stagec-green -f manifest.yml"
                 //sh "cf push receipts-ms-stagep-green -f manifest.yml"
             }
