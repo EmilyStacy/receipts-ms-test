@@ -92,5 +92,13 @@ pipeline {
 
         }
 
+        stage('prod') {
+            steps {
+                sh "cf login -a $PCF_PROD_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
+                sh "cf push receipts-ms-prodc-green -f manifest.yml"
+            }
+
+        }
+
     }
 }
