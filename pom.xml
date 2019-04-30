@@ -102,6 +102,12 @@
         </repository>
     </distributionManagement>
 
+	<repositories>
+		<repository>
+			<id>aa-releases</id>
+			<url>https://artifacts.aa.com/artifactory/releases</url>
+		</repository>
+	</repositories>
 
     <build>
         <plugins>
