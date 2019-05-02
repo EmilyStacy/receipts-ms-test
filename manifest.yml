@@ -7,6 +7,9 @@ defaults: &defaults
   - java_buildpack_offline-4_14
   memory: 1G
   instances: 1
+  services:
+  - mosaic-receipts
+  
 
 enviro: &environments
   TZ: America/Chicago
