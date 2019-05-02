@@ -13,12 +13,12 @@ pipeline {
         PCF_TEST_DOMAIN='apps.depaas.qcorpaa.aa.com'
         PCF_STAGE_URL='api.system.sepaas.aa.com'
         PCF_STAGE_DOMAIN='apps.sepaas.aa.com'
-        NOTIFYUSERS="DL_KeyStar_Prod_Support@aa.com"
+        NOTIFYUSERS="DL_eTDS_TeamReceipts@aa.com@aa.com"
         PCF_PROD_URL='api.system.ppepaas.aa.com'
         PCF_PROD_DOMAIN='apps.ppepaas.aa.com'
         PCF_SPACE='Dev'
         PCF_STAGE_SPACE='Stage'
-        PCF_PROD_SPACE='Prod'
+        PCF_PROD_SPACE='Production'
         PCF_ORG ='eTDS'
         CF_HOME="${WORKSPACE}"
         DEPLOY_DETAILS = "<BR>DEPLOY DETAILS: "
@@ -88,8 +88,20 @@ pipeline {
         		branch 'master'
         	}
             steps {
-                sh "cf login -a $PCF_PROD_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_STAGE_SPACE"
-                sh "cf push receipts-ms-stage -f manifest.yml"
+                sh "cf login -a '$PCF_PROD_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
+                sh "cf push receipts-ms-stagep-green -f manifest.yml"
+                //sh "cf push receipts-ms-stagep-green -f manifest.yml"
+            }
+
+        }
+
+        stage('prod') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh "cf login -a $PCF_PROD_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
+                sh "cf push receipts-ms-prodp-green -f manifest.yml"
             }
 
         }

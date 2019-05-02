@@ -40,6 +40,7 @@ applications:
     <<: *environments
   services:
   - logstash-dev-drain
+  - mosaic-receipts
 
 
 #
@@ -52,6 +53,7 @@ applications:
     <<: *environments
   services:
   - logstash-qa-drain
+  - mosaic-receipts
 
 #
 # STAGE cdc application
@@ -63,6 +65,7 @@ applications:
     <<: *environments
   services:
   - logstash-stage-drain
+  - mosaic-receipts
 #
 # STAGE pdc application
 #
@@ -73,6 +76,7 @@ applications:
     <<: *environments
   services:
   - logstash-stage-drain
+  - mosaic-receipts
 
 #
 # PROD cdc application
@@ -84,6 +88,7 @@ applications:
     <<: *environments
   services:
   - logstash-prod-drain
+  - mosaic-receipts
 #
 # PROD pdc application
 #
@@ -92,7 +97,8 @@ applications:
   env:
     SPRING_PROFILES_ACTIVE: prodp
   services:
-  - logstash-prod-drain 
+  - logstash-prod-drain
+  - mosaic-receipts
 
 #
 # VIRT
@@ -104,6 +110,7 @@ applications:
     <<: *environments
   services:
   - logstash-qa-drain
+  - mosaic-receipts
 #
 # LOAD
 #
@@ -114,3 +121,4 @@ applications:
     <<: *environments
   services:
   - logstash-load-drain
+  - mosaic-receipts
