@@ -6,6 +6,10 @@ package com.aa.fly.receipts.controller;
 import java.lang.invoke.MethodHandles;
 import java.util.UUID;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import com.aa.fly.receipts.domain.ReceiptResponse;
+import com.aa.fly.receipts.domain.SearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +31,9 @@ public class ReceiptsController
    private static final Logger logger = LoggerFactory.getLogger( MethodHandles.lookup()
                                                                               .lookupClass() );
 
-   @RequestMapping( value = "/receipt", method = RequestMethod.GET )
-   public String getReceipts()
+   //@RequestMapping( value = "/receipt", method = RequestMethod.POST )
+   @PostMapping("/receipt")
+   public ReceiptResponse getReceipts(@RequestBody SearchCriteria searchCriteria)
 
    {
 
@@ -41,8 +46,13 @@ public class ReceiptsController
       logger.info( "*************************** Transaction Id ************************* {}",
                    trasactionId );
 
-      return( trasactionId );
+      ReceiptResponse response = new ReceiptResponse();
+      response.setFirstName(searchCriteria.getFirstName());
+      response.setLastName(searchCriteria.getLastName());
+      response.setReceiptTotal("$239.00");
+      return response;
 
    }
+
 
 }
