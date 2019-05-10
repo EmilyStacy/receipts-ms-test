@@ -7,14 +7,16 @@ package com.aa.fly.receipts.domain;
  * @author Shiva.Narendrula
  *
  */
-public class ReceiptResponse {
-
+public class Receipt
+{
    private String firstName;
    private String lastName;
    private String receiptTotal;
+
    public String getFirstName() {
       return firstName;
    }
+
    public void setFirstName(String firstName) {
       this.firstName = firstName;
    }

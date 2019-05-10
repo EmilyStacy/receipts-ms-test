@@ -18,6 +18,7 @@ public class SearchCriteria {
    private String firstName;
    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
    private Date departureDate;
+
    public String getTicketNumber() {
       return ticketNumber;
    }
@@ -43,4 +44,10 @@ public class SearchCriteria {
       this.departureDate = departureDate;
    }
 
+   @Override
+   public String toString()
+   {
+      return "SearchCriteria{" + "ticketNumber='" + ticketNumber + '\'' + ", lastName='" + lastName
+            + '\'' + ", firstName='" + firstName + '\'' + ", departureDate=" + departureDate + '}';
+   }
 }

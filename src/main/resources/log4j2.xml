@@ -37,6 +37,8 @@
     <!-- Jackson Logging -->
     <Logger name="com.fasterxml.jackson" level="warn" />
     <Logger name="org.codehaus.jackson" level="warn" />
+    <Logger name="org.springframework.jdbc" level="TRACE"/>
+
 
     <Root level="trace">
       <AppenderRef ref="LOG4J2_APPENDER" />
