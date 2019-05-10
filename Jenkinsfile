@@ -59,7 +59,7 @@ pipeline {
 
         }
 
-        /*stage('sonar scan: code analysis') {
+        stage('sonar scan: code analysis') {
             steps {
                 sh "mvn -s .settings.xml package sonar:sonar -Pcoverage"
                 publishHTML (target: [
@@ -72,7 +72,7 @@ pipeline {
                 ])
             }
 
-        }*/
+        }
 
 
         stage('dev') {
