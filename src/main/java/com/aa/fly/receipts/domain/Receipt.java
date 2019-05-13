@@ -33,4 +33,10 @@ public class Receipt
       this.receiptTotal = receiptTotal;
    }
 
+   @Override
+   public String toString()
+   {
+      return "Receipt{" + "firstName='" + firstName + '\'' + ", lastName='" + lastName + '\''
+            + ", receiptTotal='" + receiptTotal + '\'' + '}';
+   }
 }

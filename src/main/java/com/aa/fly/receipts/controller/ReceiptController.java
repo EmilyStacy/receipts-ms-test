@@ -6,6 +6,9 @@ package com.aa.fly.receipts.controller;
 import java.util.UUID;
 
 import com.aa.fly.receipts.service.ReceiptService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +36,12 @@ public class ReceiptController
    @Autowired
    private ReceiptService receiptService;
 
+
+   @ApiOperation( value = "Find receipt by ticketNumber, firstName, lastName, departureDate" )
+   @ApiResponses( {
+         @ApiResponse( code = 500, // HttpStatus.INTERNAL_SERVER_ERROR
+               message = "Unexpected Error",
+               response = Receipt.class ) } )
    @PostMapping("/receipt")
    public Receipt getReceipts(@RequestBody SearchCriteria searchCriteria)
 

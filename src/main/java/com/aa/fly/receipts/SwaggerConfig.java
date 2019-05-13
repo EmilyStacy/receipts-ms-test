@@ -46,19 +46,4 @@ public class SwaggerConfig {
    }
 
 
-  /* private ApiInfo apiInfo()
-   {
-
-      return new ApiInfo( "Credit Card Authorization Service",
-            "Get a credit card authoization using Sabre Web Services",
-            "1.0.0",
-            "http://wiki.etds.aa.com/jamwiki/en/StartingPoints",
-            new Contact( "eTDS IT Support",
-                  "http://wiki.etds.aa.com/jamwiki/en/eTDS_Support_Information",
-                  "etdsitsupport@aa.com" ),
-            "License of API",
-            "http://wiki.etds.aa.com ",
-            new ArrayList< VendorExtension >() );
-
-   }*/
 }
