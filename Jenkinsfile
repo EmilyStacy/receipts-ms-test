@@ -74,6 +74,12 @@ pipeline {
 
         }
 
+        stage('coverage') {
+            steps {
+                sh "mvn -s .settings.xml jacoco:check"
+            }
+        }
+
 
         stage('dev') {
             steps {
