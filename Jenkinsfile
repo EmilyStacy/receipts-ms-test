@@ -78,7 +78,7 @@ pipeline {
                 sh "mvn -s .settings.xml jacoco:check"
             }
         }
-        
+
         stage('dev') {
             steps {
                 sh "cf login -a $PCF_URL -u $PCF_ID_USR -p $PCF_ID_PSW -o $PCF_ORG -s $PCF_SPACE"

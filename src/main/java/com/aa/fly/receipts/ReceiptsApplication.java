@@ -13,36 +13,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
-public class ReceiptsApplication implements CommandLineRunner
-
+public class ReceiptsApplication
 {
-
-
-
-   @Autowired
-   JdbcTemplate jdbcTemplate;
-
    private static Logger logger = LoggerFactory.getLogger( ReceiptsApplication.class );
 
    public static void main( String[] args )
    {
-
-      SpringApplication.run( ReceiptsApplication.class,
-            args );
+      SpringApplication.run( ReceiptsApplication.class,  args );
    }
-
-   /* (non-Javadoc)
-    * @see org.springframework.boot.CommandLineRunner#run(java.lang.String[])
-    */
-   @Override
-   public void run( String... args )
-         throws Exception
-   {
-      logger.info( "$$$$$$$$$$$$$$$$$$$$$$ select 1 $$$$$$$$$$$$$$$$:  {} ",
-            jdbcTemplate.queryForObject( "select 1",
-                  String.class ) );
-
-   }
-
 
 }
