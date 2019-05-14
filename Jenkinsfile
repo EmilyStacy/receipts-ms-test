@@ -71,7 +71,6 @@ pipeline {
                     reportName: "Code Coverage Report"
                 ])
             }
-
         }
 
         stage('coverage') {
@@ -79,7 +78,6 @@ pipeline {
                 sh "mvn -s .settings.xml jacoco:check"
             }
         }
-
 
         stage('dev') {
             steps {
