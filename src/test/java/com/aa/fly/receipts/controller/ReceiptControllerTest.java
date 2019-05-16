@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 
 import com.aa.fly.receipts.domain.SearchCriteria;
@@ -29,8 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 
-@WebMvcTest(ReceiptController.class)
+@WebMvcTest(value = ReceiptController.class, excludeFilters = {@ComponentScan.Filter(
+      type = FilterType.REGEX, pattern = "com.aa.fly.receipts.config.*")} )
 @RunWith(SpringRunner.class)
+
 public class ReceiptControllerTest
 {
 
@@ -39,6 +43,7 @@ public class ReceiptControllerTest
 
    @MockBean
    private ReceiptService receiptService;
+
 
    @Test
    public void findReceipt_byTicketNumber() throws Exception
