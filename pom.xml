@@ -18,7 +18,7 @@
     <properties>
         <java.version>1.8</java.version>
         <log4j2ext.version>1.2.1</log4j2ext.version>
-        <coverage>0.67</coverage>
+        <coverage>0.85</coverage>
     </properties>
 
     <dependencies>
