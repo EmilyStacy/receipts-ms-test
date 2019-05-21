@@ -61,21 +61,14 @@ pipeline {
 
         stage('sonar scan: code analysis') {
             steps {
-                sh "mvn -s .settings.xml package sonar:sonar -Pcoverage"
-                publishHTML (target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: 'target/jacoco',
-                    reportFiles: 'index.html',
-                    reportName: "Code Coverage Report"
-                ])
+                sh "mvn -s .settings.xml package sonar:sonar"
             }
         }
 
         stage('coverage') {
             steps {
                 sh "mvn -s .settings.xml jacoco:check"
+                jacoco()
             }
         }
 
