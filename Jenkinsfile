@@ -77,7 +77,22 @@ pipeline {
                 sh "cf login -a $PCF_URL -u $PCF_ID_USR -p $PCF_ID_PSW -o $PCF_ORG -s $PCF_SPACE"
                 sh "cf push receipts-ms-dev -f manifest.yml"
             }
-
+            post {
+                success {
+                    script {
+                        createChangeRequest(
+                            appName: "Receipts",      	        //Application name based on what is shown in Archer
+                            appVersion: "1.0.0",			    //Version number of the Application deployed to Production
+                            team: "Receipts",             	    //Cherwell Team Name
+                            location: "DFW",                    //Location of the Datacenter where the Production Application resides
+                            requestingEmployeeId: "00854495",   //Default Requestor and Owner of the Change Ticket
+                            finalDisposition: "Successful",     //Set to Successful if Production succeeded, or Failed if attempt failed 
+                            description: "Receipts MS", 
+                            cherwellInstance: "stage" 
+                        )
+                    }
+                }
+            }
         }
 
         stage('stage') {
@@ -100,8 +115,21 @@ pipeline {
                 sh "cf login -a $PCF_PROD_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
                 sh "cf push receipts-ms-prodp-green -f manifest.yml"
             }
-
+            post {
+                success {
+                    script {
+                        createChangeRequest(
+                            appName: "Receipts",      	        //Application name based on what is shown in Archer
+                            appVersion: "1.0.0",			    //Version number of the Application deployed to Production
+                            team: "Receipts",             	    //Cherwell Team Name
+                            location: "DFW",                    //Location of the Datacenter where the Production Application resides
+                            requestingEmployeeId: "00854495",   //Default Requestor and Owner of the Change Ticket
+                            finalDisposition: "Successful",     //Set to Successful if Production succeeded, or Failed if attempt failed 
+                            description: "Receipts MS", 
+                        )
+                    }
+                }
+            }
         }
-
     }
 }
