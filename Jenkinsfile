@@ -63,6 +63,11 @@ pipeline {
             steps {
                 sh "mvn -s .settings.xml package sonar:sonar"
             }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
         }
 
         stage('coverage') {
