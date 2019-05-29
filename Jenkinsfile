@@ -33,6 +33,9 @@ pipeline {
         cfKeepRollback=0
         nexusCredentials=credentials('Nexus3upload')
         jarPath='./target/${pcfAppName}-*.jar'
+        GIT_REPO = "AA-CustTech-Fly/receipts-ms"
+        GITHUB = credentials('Jing-GHE-Receipts')
+        SONAR_API_KEY = credentials('SONAR_API_KEY')
     }
 
     agent {
@@ -53,20 +56,49 @@ pipeline {
 
         stage('build') {
             steps {
-                sh "mvn -s .settings.xml clean install"
+                sh "mvn -s .settings.xml clean install -DskipTests=false"
 
             }
 
         }
 
-        stage('sonar scan: code analysis') {
+        stage('Unit Tests') {
             steps {
-                sh "mvn -s .settings.xml package sonar:sonar"
+                sh "mvn -s .settings.xml test"
             }
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
                 }
+            }
+        }
+        
+        stage ('sonar code scan') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh """ mvn -s .settings.xml sonar:sonar"""
+            }
+        }
+
+        stage ('sonar code review') {
+            when {
+                changeRequest()
+            }
+            steps {
+                sh """
+                    mvn --settings .settings.xml \
+                    sonar:sonar \
+                    -Dsonar.login=$SONAR_API_KEY \
+                    -Dsonar.password="" \
+                    -Dsonar.analysis.mode=preview \
+                    -Dsonar.github.pullRequest=${env.CHANGE_ID} \
+                    -Dsonar.github.repository=$GIT_REPO \
+                    -Dsonar.github.login=$GITHUB_USR \
+                    -Dsonar.github.oauth=$GITHUB_PSW \
+                    -Dsonar.github.endpoint=https://ghe.aa.com/api/v3/ \
+                """
             }
         }
 

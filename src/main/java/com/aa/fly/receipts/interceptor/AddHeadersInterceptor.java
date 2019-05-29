@@ -22,5 +22,4 @@ public class AddHeadersInterceptor extends HandlerInterceptorAdapter
       response.addHeader("X-Transaction-ID", request.getHeader("X-Transaction-ID"));
       return true;
    }
-
 }
