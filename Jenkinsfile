@@ -73,7 +73,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage ('sonar code scan') {
             when {
                 branch 'master'
@@ -119,14 +119,14 @@ pipeline {
                 success {
                     script {
                         createChangeRequest(
-                            appName: "Receipts",      	        //Application name based on what is shown in Archer
-                            appVersion: "1.0.0",			    //Version number of the Application deployed to Production
-                            team: "Receipts",             	    //Cherwell Team Name
-                            location: "DFW",                    //Location of the Datacenter where the Production Application resides
-                            requestingEmployeeId: "00854495",   //Default Requestor and Owner of the Change Ticket
-                            finalDisposition: "Successful",     //Set to Successful if Production succeeded, or Failed if attempt failed 
-                            description: "Receipts MS", 
-                            cherwellInstance: "stage" 
+                                appName: "Receipts",      	        //Application name based on what is shown in Archer
+                                appVersion: "1.0.0",			    //Version number of the Application deployed to Production
+                                team: "Receipts",             	    //Cherwell Team Name
+                                location: "DFW",                    //Location of the Datacenter where the Production Application resides
+                                requestingEmployeeId: "00854495",   //Default Requestor and Owner of the Change Ticket
+                                finalDisposition: "Successful",     //Set to Successful if Production succeeded, or Failed if attempt failed
+                                description: "Receipts MS",
+                                cherwellInstance: "stage"
                         )
                     }
                 }
@@ -134,13 +134,13 @@ pipeline {
         }
 
         stage('stage') {
-        	when {
-        		branch 'master'
-        	}
+            when {
+                branch 'master'
+            }
             parallel {
                 stage('cdc') {
                     steps {
-                        sh "cf login -a '$PCF_PRODPC_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
+                        sh "cf login -a '$PCF_PRODC_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
                         sh "cf push receipts-ms-stagec-green -f manifest.yml"
                     }
                 }
@@ -158,22 +158,32 @@ pipeline {
                 branch 'master'
             }
 
-
-            steps {
-                sh "cf login -a $PCF_PRODP_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
-                sh "cf push receipts-ms-prodp-green -f manifest.yml"
+            parallel {
+                stage('cdc') {
+                    steps {
+                        sh "cf login -a $PCF_PRODC_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
+                        sh "cf push receipts-ms-prodc-green -f manifest.yml"
+                    }
+                }
+                stage('pdc') {
+                    steps {
+                        sh "cf login -a $PCF_PRODP_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
+                        sh "cf push receipts-ms-prodp-green -f manifest.yml"
+                    }
+                }
             }
+
             post {
                 success {
                     script {
                         createChangeRequest(
-                            appName: "Receipts",      	        //Application name based on what is shown in Archer
-                            appVersion: "1.0.0",			    //Version number of the Application deployed to Production
-                            team: "Receipts",             	    //Cherwell Team Name
-                            location: "DFW",                    //Location of the Datacenter where the Production Application resides
-                            requestingEmployeeId: "00854495",   //Default Requestor and Owner of the Change Ticket
-                            finalDisposition: "Successful",     //Set to Successful if Production succeeded, or Failed if attempt failed 
-                            description: "Receipts MS", 
+                                appName: "Receipts",      	        //Application name based on what is shown in Archer
+                                appVersion: "1.0.0",			    //Version number of the Application deployed to Production
+                                team: "Receipts",             	    //Cherwell Team Name
+                                location: "DFW",                    //Location of the Datacenter where the Production Application resides
+                                requestingEmployeeId: "00854495",   //Default Requestor and Owner of the Change Ticket
+                                finalDisposition: "Successful",     //Set to Successful if Production succeeded, or Failed if attempt failed
+                                description: "Receipts MS",
                         )
                     }
                 }
