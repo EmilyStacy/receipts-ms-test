@@ -14,7 +14,8 @@ pipeline {
         PCF_STAGE_URL='api.system.sepaas.aa.com'
         PCF_STAGE_DOMAIN='apps.sepaas.aa.com'
         NOTIFYUSERS="DL_eTDS_TeamReceipts@aa.com@aa.com"
-        PCF_PROD_URL='api.system.ppepaas.aa.com'
+        PCF_PRODP_URL='api.system.ppepaas.aa.com'
+        PCF_PRODC_URL='api.system.cpepaas.aa.com'
         PCF_PROD_DOMAIN='apps.ppepaas.aa.com'
         PCF_SPACE='Dev'
         PCF_STAGE_SPACE='Stage'
@@ -136,20 +137,30 @@ pipeline {
         	when {
         		branch 'master'
         	}
-            steps {
-                sh "cf login -a '$PCF_PROD_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
-                sh "cf push receipts-ms-stagep-green -f manifest.yml"
-                //sh "cf push receipts-ms-stagep-green -f manifest.yml"
+            parallel {
+                stage('cdc') {
+                    steps {
+                        sh "cf login -a '$PCF_PRODPC_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
+                        sh "cf push receipts-ms-stagec-green -f manifest.yml"
+                    }
+                }
+                stage('pdc') {
+                    steps {
+                        sh "cf login -a '$PCF_PRODP_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
+                        sh "cf push receipts-ms-stagep-green -f manifest.yml"
+                    }
+                }
             }
-
         }
 
         stage('prod') {
             when {
                 branch 'master'
             }
+
+
             steps {
-                sh "cf login -a $PCF_PROD_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
+                sh "cf login -a $PCF_PRODP_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
                 sh "cf push receipts-ms-prodp-green -f manifest.yml"
             }
             post {
