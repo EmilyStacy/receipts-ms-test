@@ -63,7 +63,7 @@ pipeline {
 
         }
 
-        stage('Unit Tests') {
+        stage('unit tests') {
             steps {
                 sh "mvn -s .settings.xml test"
             }
@@ -110,7 +110,7 @@ pipeline {
             }
         }
 
-        stage('dev') {
+        stage('deploy dev') {
             steps {
                 sh "cf login -a $PCF_URL -u $PCF_ID_USR -p $PCF_ID_PSW -o $PCF_ORG -s $PCF_SPACE"
                 sh "cf push receipts-ms-dev -f manifest.yml"
@@ -133,7 +133,7 @@ pipeline {
             }
         }
 
-        stage('stage') {
+        stage('deploy stage') {
             when {
                 branch 'master'
             }
@@ -153,7 +153,7 @@ pipeline {
             }
         }
 
-        stage('prod') {
+        stage('deploy prod') {
             when {
                 branch 'master'
             }
