@@ -57,7 +57,7 @@ pipeline {
 
         stage('build') {
             steps {
-                sh "mvn -s .settings.xml clean install -DskipTests=false"
+                sh "mvn -Dskip.unit.tests=true -s .settings.xml clean install"
 
             }
 
@@ -65,7 +65,7 @@ pipeline {
 
         stage('unit tests') {
             steps {
-                sh "mvn -s .settings.xml test"
+                sh "mvn -Dskip.unit.tests=false -s .settings.xml test -Punit-test"
             }
             post {
                 always {
@@ -131,6 +131,17 @@ pipeline {
                     }
                 }
             }
+        }
+
+        stage('integration tests') {
+            when{
+                branch 'master'
+            }
+            steps {
+                sh "mvn -s .settings.xml verify -Pintegration-tests"
+
+            }
+
         }
 
         stage('deploy stage') {
