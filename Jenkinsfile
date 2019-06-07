@@ -152,26 +152,18 @@ pipeline {
             when {
                 branch 'master'
             }
-            parallel {
-                stage('cdc') {
-                    steps {
-                        sh "cf login -a '$PCF_PRODC_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
 
-                        sh """
-                            chmod u+x ./devops/epaas/deploy.sh
-                            ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-stagec ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml
-                        """
-                    }
-                }
-                stage('pdc') {
-                    steps {
-                        sh "cf login -a '$PCF_PRODP_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
-                        sh """
-                            chmod u+x ./devops/epaas/deploy.sh
-                            ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-stagep ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml
-                        """
-                    }
-                }
+            steps {
+                sh "cf login -a '$PCF_PRODC_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
+                sh """
+                    chmod u+x ./devops/epaas/deploy.sh
+                    ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-stagec ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml
+                 """
+                sh "cf login -a '$PCF_PRODP_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
+                sh """
+                    chmod u+x ./devops/epaas/deploy.sh
+                    ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-stagep ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml
+                 """
             }
         }
 
@@ -180,25 +172,17 @@ pipeline {
                 branch 'master'
             }
 
-            parallel {
-                stage('cdc') {
-                    steps {
-                        sh "cf login -a $PCF_PRODC_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
-                        sh """
-                            chmod u+x ./devops/epaas/deploy.sh
-                            ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-prodc ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml
-                        """
-                    }
-                }
-                stage('pdc') {
-                    steps {
-                        sh "cf login -a $PCF_PRODP_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
-                        sh """
-                            chmod u+x ./devops/epaas/deploy.sh
-                            ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-prodp ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml
-                        """
-                    }
-                }
+            steps {
+                sh "cf login -a $PCF_PRODC_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
+                sh """
+                    chmod u+x ./devops/epaas/deploy.sh
+                    ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-prodc ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml
+                 """
+                sh "cf login -a $PCF_PRODP_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
+                sh """
+                    chmod u+x ./devops/epaas/deploy.sh
+                    ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-prodp ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml
+                 """
             }
 
             post {
