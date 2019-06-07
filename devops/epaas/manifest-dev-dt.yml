@@ -1,0 +1,26 @@
+applications:
+- buildpack: java_buildpack_offline-4_14
+  memory: 1G
+  timeout: 180
+  instances: 1
+  maximum_health_check_timeout: 300
+  env:
+    SPRING_PROFILES_ACTIVE: dev
+    TZ: America/Chicago
+    JAVA_OPTS: >
+      -XX:MaxGCPauseMillis=200
+      -XX:MaxMetaspaceSize=256M
+      -Xms1024m
+      -Xmx1024m
+      -XX:NewSize=512m
+      -XX:MaxNewSize=512m
+      -Djava.security.egd=file:///dev/urandom
+      -Dhttp.proxyHost=inetgw.aa.com
+      -Dhttp.proxyPort=9093
+      -Dhttps.proxyHost=inetgw.aa.com
+      -Dhttps.proxyPort=9093
+      -Dhttp.nonProxyHosts="*.aa.com"
+  services:
+    - logstash-dev-drain
+    - mosaic-receipts
+#    - dynatrace-service-receipts

@@ -6,18 +6,17 @@ pipeline {
         https_proxy='http://inetgw.aa.com:9093'
 
         pcfAppName='receipts-ms'
-        PCF_ID = credentials('PCF_DEVTEST_KEY')
+        PCF_DEVTEST_ID = credentials('PCF_DEVTEST_KEY')
         PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
 
-        PCF_URL='api.system.depaas.qcorpaa.aa.com'
-        PCF_TEST_DOMAIN='apps.depaas.qcorpaa.aa.com'
-        PCF_STAGE_URL='api.system.sepaas.aa.com'
-        PCF_STAGE_DOMAIN='apps.sepaas.aa.com'
+        PCF_DEV_TEST_URL='api.system.depaas.qcorpaa.aa.com'
+        PCF_DEVTEST_DOMAIN='apps.depaas.qcorpaa.aa.com'
         NOTIFYUSERS="DL_eTDS_TeamReceipts@aa.com@aa.com"
         PCF_PRODP_URL='api.system.ppepaas.aa.com'
         PCF_PRODC_URL='api.system.cpepaas.aa.com'
-        PCF_PROD_DOMAIN='apps.ppepaas.aa.com'
-        PCF_SPACE='Dev'
+        PCF_PRODP_DOMAIN='apps.ppepaas.aa.com'
+        PCF_PRODC_DOMAIN='apps.cpepaas.aa.com'
+        PCF_DEV_SPACE='Dev'
         PCF_STAGE_SPACE='Stage'
         PCF_PROD_SPACE='Production'
         PCF_ORG ='eTDS'
@@ -112,8 +111,13 @@ pipeline {
 
         stage('deploy dev') {
             steps {
-                sh "cf login -a $PCF_URL -u $PCF_ID_USR -p $PCF_ID_PSW -o $PCF_ORG -s $PCF_SPACE"
-                sh "cf push receipts-ms-dev -f manifest.yml"
+                sh "cf login -a $PCF_DEV_TEST_URL -u $PCF_DEVTEST_ID_USR -p $PCF_DEVTEST_ID_PSW -o $PCF_ORG -s $PCF_DEV_SPACE"
+
+                sh """
+                    chmod u+x ./devops/epaas/deploy.sh
+                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${pcfAppName}-dev ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
+                  """
+
             }
             post {
                 success {
@@ -152,13 +156,20 @@ pipeline {
                 stage('cdc') {
                     steps {
                         sh "cf login -a '$PCF_PRODC_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
-                        sh "cf push receipts-ms-stagec-green -f manifest.yml"
+
+                        sh """
+                            chmod u+x ./devops/epaas/deploy.sh
+                            ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-stagec ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml
+                        """
                     }
                 }
                 stage('pdc') {
                     steps {
                         sh "cf login -a '$PCF_PRODP_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
-                        sh "cf push receipts-ms-stagep-green -f manifest.yml"
+                        sh """
+                            chmod u+x ./devops/epaas/deploy.sh
+                            ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-stagep ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml
+                        """
                     }
                 }
             }
@@ -173,13 +184,19 @@ pipeline {
                 stage('cdc') {
                     steps {
                         sh "cf login -a $PCF_PRODC_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
-                        sh "cf push receipts-ms-prodc-green -f manifest.yml"
+                        sh """
+                            chmod u+x ./devops/epaas/deploy.sh
+                            ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-prodc ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml
+                        """
                     }
                 }
                 stage('pdc') {
                     steps {
                         sh "cf login -a $PCF_PRODP_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
-                        sh "cf push receipts-ms-prodp-green -f manifest.yml"
+                        sh """
+                            chmod u+x ./devops/epaas/deploy.sh
+                            ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-prodp ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml
+                        """
                     }
                 }
             }
