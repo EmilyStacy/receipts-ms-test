@@ -6,6 +6,8 @@ pipeline {
         https_proxy='http://inetgw.aa.com:9093'
 
         pcfAppName='receipts-ms'
+        deployAppName="$pcfAppName" + "-" + "${BRANCH_NAME == 'master' ? '' : BRANCH_NAME.replaceAll('_','-')}" + "-dev"
+        
         PCF_DEVTEST_ID = credentials('PCF_DEVTEST_KEY')
         PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
 
@@ -109,15 +111,39 @@ pipeline {
             }
         }
 
-        stage('deploy dev') {
+        stage('branch to dev') {
+            when {
+                // if it is a branch and not a PR
+                allOf {
+                    not {
+                        changeRequest()
+                    }
+                    not {
+                        branch 'master'
+                    }
+                }
+            }
             steps {
                 sh "cf login -a $PCF_DEV_TEST_URL -u $PCF_DEVTEST_ID_USR -p $PCF_DEVTEST_ID_PSW -o $PCF_ORG -s $PCF_DEV_SPACE"
 
                 sh """
                     chmod u+x ./devops/epaas/deploy.sh
-                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${pcfAppName}-dev ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
-                  """
+                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${deployAppName} ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
+                  """                  
+            }
+        }
 
+        stage('deploy dev') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh "cf login -a $PCF_DEV_TEST_URL -u $PCF_DEVTEST_ID_USR -p $PCF_DEVTEST_ID_PSW -o $PCF_ORG -s $PCF_DEV_SPACE"
+
+                sh """
+                    chmod u+x ./devops/epaas/deploy.sh
+                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${deployAppName} ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
+                  """
             }
             post {
                 success {
@@ -138,12 +164,18 @@ pipeline {
         }
 
         stage('integration tests') {
-            when{
-                branch 'master'
+            when {
+                // if it is a branch and not a PR
+                allOf {
+                    not {
+                        changeRequest()
+                    }
+                }
             }
             steps {
-                sh "mvn -s .settings.xml verify -Pintegration-tests"
-
+                sh """
+                    mvn -s .settings.xml verify -Pintegration-tests -Dbranch.application.url='https://'${deployAppName}.${PCF_DEVTEST_DOMAIN}
+                  """
             }
 
         }
