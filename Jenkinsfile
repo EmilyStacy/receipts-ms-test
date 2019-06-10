@@ -6,32 +6,33 @@ pipeline {
         https_proxy='http://inetgw.aa.com:9093'
 
         pcfAppName='receipts-ms'
-        deployAppName="$pcfAppName" + "-" + "${BRANCH_NAME == 'master' ? '' : BRANCH_NAME.replaceAll('_','-')}" + "-dev"
+        deployAppName="$pcfAppName" + "${BRANCH_NAME == 'master' ? '' : "-" + BRANCH_NAME.replaceAll('_','-')}" + "-dev"
         
         PCF_DEVTEST_ID = credentials('PCF_DEVTEST_KEY')
         PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
 
         PCF_DEV_TEST_URL='api.system.depaas.qcorpaa.aa.com'
         PCF_DEVTEST_DOMAIN='apps.depaas.qcorpaa.aa.com'
-        NOTIFYUSERS="DL_eTDS_TeamReceipts@aa.com@aa.com"
+        // NOTIFYUSERS="DL_eTDS_TeamReceipts@aa.com"
         PCF_PRODP_URL='api.system.ppepaas.aa.com'
         PCF_PRODC_URL='api.system.cpepaas.aa.com'
         PCF_PRODP_DOMAIN='apps.ppepaas.aa.com'
         PCF_PRODC_DOMAIN='apps.cpepaas.aa.com'
+        PCF_GTM_DOMAIN='apps.aa.com'
         PCF_DEV_SPACE='Dev'
         PCF_STAGE_SPACE='Stage'
         PCF_PROD_SPACE='Production'
         PCF_ORG ='eTDS'
         CF_HOME="${WORKSPACE}"
-        DEPLOY_DETAILS = "<BR>DEPLOY DETAILS: "
-        PCF_BLUE= "Temp-FVT-API"
-        PCF_GREEN= "FVT-API"
-        //SLACK_TOKEN = credentials('SlackToken')
-        SLACK_CHANNEL = 'receipts-msg'
-        BUILD_DETAILS = "BUILD DETAILS: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${BUILD_URL} "
-        JOB_CAUSES = edtUtil.getCauses()
+        // PCF_BLUE= "Temp-FVT-API"
+        // PCF_GREEN= "FVT-API"
+        // SLACK_TOKEN = credentials('SlackToken')
+        // SLACK_CHANNEL = 'receipts-msg'
+        // slackChannel='receipts-msg'
+        // BUILD_DETAILS = "BUILD DETAILS: ${env.JOB_NAME} #${env.BUILD_NUMBER} - ${BUILD_URL} "
+        // DEPLOY_DETAILS = "<BR>DEPLOY DETAILS: "
+        // JOB_CAUSES = edtUtil.getCauses()
 
-        slackChannel='receipts-msg'
         cfKeepRollback=0
         nexusCredentials=credentials('Nexus3upload')
         jarPath='./target/${pcfAppName}-*.jar'
@@ -189,12 +190,12 @@ pipeline {
                 sh "cf login -a '$PCF_PRODC_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
                 sh """
                     chmod u+x ./devops/epaas/deploy.sh
-                    ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-stagec ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml
+                    ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-stage ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml ${PCF_GTM_DOMAIN}
                  """
                 sh "cf login -a '$PCF_PRODP_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
                 sh """
                     chmod u+x ./devops/epaas/deploy.sh
-                    ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-stagep ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml
+                    ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-stage ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml ${PCF_GTM_DOMAIN}
                  """
             }
         }
@@ -208,12 +209,12 @@ pipeline {
                 sh "cf login -a $PCF_PRODC_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
                 sh """
                     chmod u+x ./devops/epaas/deploy.sh
-                    ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-prodc ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml
+                    ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName} ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml ${PCF_GTM_DOMAIN}
                  """
                 sh "cf login -a $PCF_PRODP_URL -u $PCF_STAGE_PROD_ID_USR -p $PCF_STAGE_PROD_ID_PSW -o $PCF_ORG -s $PCF_PROD_SPACE"
                 sh """
                     chmod u+x ./devops/epaas/deploy.sh
-                    ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-prodp ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml
+                    ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_PROD_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName} ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-prod.yml ${PCF_GTM_DOMAIN}
                  """
             }
 
