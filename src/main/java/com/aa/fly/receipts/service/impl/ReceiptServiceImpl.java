@@ -3,6 +3,8 @@ package com.aa.fly.receipts.service.impl;
 import com.aa.fly.receipts.data.ReceiptRepository;
 import com.aa.fly.receipts.domain.Receipt;
 import com.aa.fly.receipts.domain.SearchCriteria;
+import com.aa.fly.receipts.domain.WifiReceipt;
+import com.aa.fly.receipts.domain.WifiSearchCriteria;
 import com.aa.fly.receipts.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,15 +14,18 @@ import org.springframework.stereotype.Service;
  */
 @Service
 
-public class ReceiptServiceImpl implements ReceiptService
-{
+public class ReceiptServiceImpl implements ReceiptService {
 
-   @Autowired
-   private ReceiptRepository repository;
+    @Autowired
+    private ReceiptRepository repository;
 
+    @Override
+    public Receipt findReceipt(SearchCriteria criteria) {
+        return repository.findReceipt(criteria);
+    }
 
-   public Receipt findReceipt(SearchCriteria criteria)
-   {
-      return repository.findReceipt(criteria);
-   }
+    @Override
+    public WifiReceipt findWifiReceipt(WifiSearchCriteria criteria) {
+        return repository.findWifiReceipt(criteria);
+    }
 }

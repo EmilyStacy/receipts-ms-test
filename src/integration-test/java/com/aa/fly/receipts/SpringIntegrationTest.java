@@ -18,7 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.ResponseExtractor;
 
-@SpringBootTest( classes = ReceiptsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT )
+@SpringBootTest(classes = ReceiptsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-tests")
 @ContextConfiguration
 public class SpringIntegrationTest {
@@ -36,16 +36,17 @@ public class SpringIntegrationTest {
         final ResponseResultErrorHandler errorHandler = new ResponseResultErrorHandler();
 
         restTemplate.getRestTemplate().setErrorHandler(errorHandler);
-        latestResponse = restTemplate.execute(url, HttpMethod.GET, requestCallback, new ResponseExtractor<ResponseResults>() {
-            @Override
-            public ResponseResults extractData(ClientHttpResponse response) throws IOException {
-                if (errorHandler.hadError) {
-                    return (errorHandler.getResults());
-                } else {
-                    return (new ResponseResults(response));
-                }
-            }
-        });
+        latestResponse = restTemplate.execute(url, HttpMethod.GET, requestCallback,
+                new ResponseExtractor<ResponseResults>() {
+                    @Override
+                    public ResponseResults extractData(ClientHttpResponse response) throws IOException {
+                        if (errorHandler.hadError) {
+                            return (errorHandler.getResults());
+                        } else {
+                            return (new ResponseResults(response));
+                        }
+                    }
+                });
 
     }
 

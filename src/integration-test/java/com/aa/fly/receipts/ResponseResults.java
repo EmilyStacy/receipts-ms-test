@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
@@ -25,12 +24,11 @@ public class ResponseResults {
             this.body = stringWriter.toString();
         }
     }
-    
+
     protected ResponseResults(final ResponseEntity<String> response) {
         this.theResponseEntity = response;
         this.body = response.getBody();
     }
-
 
     protected ClientHttpResponse getTheResponse() {
         return theResponse;
@@ -39,8 +37,8 @@ public class ResponseResults {
     protected String getBody() {
         return body;
     }
-    
+
     protected ResponseEntity<String> getTheResponseEntity() {
-    	return theResponseEntity;
+        return theResponseEntity;
     }
 }
