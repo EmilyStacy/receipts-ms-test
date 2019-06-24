@@ -2,12 +2,13 @@ package com.aa.fly.receipts;
 
 import org.junit.Assert;
 import org.springframework.http.HttpStatus;
+
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class GetHealthStepsDefinition extends SpringIntegrationTest {
 
-    @When("^the client calls /health$")
+    @When("^the client calls /actuator/health$")
     public void the_client_issues_GET_health() throws Throwable {
         String branchApplicationUrl = System.getProperty("branch.application.url");
         System.out.println("branch.application.url used to run IT: " + branchApplicationUrl);

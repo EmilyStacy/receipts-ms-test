@@ -1,3 +1,4 @@
+@Wi-fi
 Feature: Search wifi subscriptions by CC last four, lastName
 	As a user
 	I want to search my wifi subscriptions
