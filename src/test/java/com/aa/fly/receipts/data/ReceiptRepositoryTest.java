@@ -45,7 +45,7 @@ public class ReceiptRepositoryTest {
     public void findWifiReceipt() throws ParseException {
         WifiSearchCriteria criteria = ReceiptsMSDomainTest.getWifiSearchCriteria();
         WifiReceipt receipt = ReceiptsMSDomainTest.getWifiReceipt();
-        when(jdbcTemplate.query(anyString(), any(WifiLineItemMapper.class), anyString(), anyString(), anyString()))
+        when(jdbcTemplate.query(anyString(), any(WifiLineItemMapper.class), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(receipt.getWifiLineItems());
         assertEquals("11.00", receiptRepository.findWifiReceipt(criteria).getWifiLineItems().get(0).getNetPrice());
 

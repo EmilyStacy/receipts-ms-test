@@ -44,7 +44,7 @@ public class ReceiptsMSDomainTest {
     public void testWifiSearchCriteriaToString() throws ParseException {
         WifiSearchCriteria criteria = getWifiSearchCriteria();
         Assert.assertEquals(
-                "WifiSearchCriteria{ccLastFour='null', lastName='smith', startDate='2017-01-01', endDate='2019-06-01'}",
+                "WifiSearchCriteria{ccLastFour='1234', lastName='smith', startDate='2017-01-01', endDate='2019-06-01'}",
                 criteria.toString());
     }
 
@@ -66,6 +66,7 @@ public class ReceiptsMSDomainTest {
     public static WifiSearchCriteria getWifiSearchCriteria() throws ParseException {
         WifiSearchCriteria criteria = new WifiSearchCriteria();
         criteria.setLastName("smith");
+        criteria.setCcLastFour("1234");
         criteria.setStartDate(dateFormat.parse("01/01/2017"));
         criteria.setEndDate(dateFormat.parse("06/01/2019"));
         return criteria;

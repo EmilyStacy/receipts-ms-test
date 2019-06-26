@@ -39,10 +39,14 @@ public class FindWifiReceiptsStepsDefinition extends SpringIntegrationTest {
         executePost(branchApplicationUrl + "/api/wifi-receipt", criteria);
     }
 
-    @Then("I find number of subscription records \"(.+)\"$")
-    public void the_client_receives_status_code_of(String noOfRecords) throws Throwable {
+    @Then("^I get a successful response$")
+    public void i_get_a_successful_response() throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
+    }
+
+    @Then("I find number of subscription records \"(.+)\"$")
+    public void the_client_receives_status_code_of(String noOfRecords) throws Throwable {
         Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         WifiReceipt response = g.fromJson(latestResponse.getBody(), WifiReceipt.class);
         Assert.assertTrue(response.getWifiLineItems() != null);
