@@ -44,7 +44,6 @@ public class ReceiptRepository {
 
     @Transactional(readOnly = true)
     public WifiReceipt findWifiReceipt(WifiSearchCriteria criteria) {
-        // build query params
         String lastName = criteria.getLastName().toUpperCase();
         // hard code the time part of the start date to zeroes
         String fromDate = dateFormat.format(criteria.getStartDate()) + " 00:00:00";
@@ -52,34 +51,27 @@ public class ReceiptRepository {
         String endDate = dateFormat.format(criteria.getEndDate()) + " 23:59:59";
         String ccLastFour = criteria.getCcLastFour();
 
-        // build the query for Mosaic
-        /*
-         * String sql = "SELECT  SUBSCR_ORDER_ID, CAST(PURCHS_TMS AS DATE) PURCHS_DT, PROD_NM, PROD_PRICE, \n" + "CURNCY_CD, TAX_AMT, NET_PRICE, LAST_4_DIGIT, CC_TYPE_CD, CARD_HLDR_LAST_NM FROM " +
-         * inflightSchemaName + ".WIFI_SUBSCR_PURCHS \n" + " WHERE UPPER(CARD_HLDR_LAST_NM) = ? AND INFO_SRC_TYPE_CD = 'ASP' AND PURCHS_TMS\n" +
-         * " BETWEEN To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') AND To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') ORDER BY PURCHS_DT";
-         */
-
         // New sql joins to RiM Auth to get last 4 CC
-        String sql = "SELECT "
-                + "    wifi.SUBSCR_ORDER_ID, "
-                + "    CAST(wifi.PURCHS_TMS AS DATE) PURCHS_DT, "
-                + "    wifi.PROD_NM, "
-                + "    wifi.PROD_PRICE, "
-                + "    wifi.CURNCY_CD, "
-                + "    wifi.TAX_AMT, "
-                + "    wifi.NET_PRICE, "
-                + "    rim.CREDIT_CARD_LAST_4_NBR, "
-                + "    wifi.CC_TYPE_CD, "
-                + "    wifi.CARD_HLDR_LAST_NM "
-                + "FROM " + inflightSchemaName + ".WIFI_SUBSCR_PURCHS wifi "
-                + "JOIN " + inflightSchemaName + ".RIM_AUTHRZ_EVENT rim "
-                + "ON wifi.GATE_WAY_REFRNC_ID = rim.GATE_WAY_REFRNC_ID "
-                + "WHERE "
-                + "wifi.INFO_SRC_TYPE_CD = 'ASP' "
-                + "AND UPPER(wifi.CARD_HLDR_LAST_NM) = ? "
-                + "AND wifi.PURCHS_TMS BETWEEN To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') AND To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') "
-                + "AND rim.CREDIT_CARD_LAST_4_NBR = ? "
-                + "ORDER BY PURCHS_DT";
+        String sql = new StringBuilder("SELECT ")
+                .append("    wifi.SUBSCR_ORDER_ID, ")
+                .append("    CAST(wifi.PURCHS_TMS AS DATE) PURCHS_DT, ")
+                .append("    wifi.PROD_NM, ")
+                .append("    wifi.PROD_PRICE, ")
+                .append("    wifi.CURNCY_CD, ")
+                .append("    wifi.TAX_AMT, ")
+                .append("    wifi.NET_PRICE, ")
+                .append("    rim.CREDIT_CARD_LAST_4_NBR, ")
+                .append("    wifi.CC_TYPE_CD, ")
+                .append("    wifi.CARD_HLDR_LAST_NM ")
+                .append("FROM ").append(inflightSchemaName).append(".WIFI_SUBSCR_PURCHS wifi ")
+                .append("JOIN ").append(inflightSchemaName).append(".RIM_AUTHRZ_EVENT rim ")
+                .append("ON wifi.GATE_WAY_REFRNC_ID = rim.GATE_WAY_REFRNC_ID ")
+                .append("WHERE ")
+                .append("wifi.INFO_SRC_TYPE_CD = 'ASP' ")
+                .append("AND UPPER(wifi.CARD_HLDR_LAST_NM) = ? ")
+                .append("AND wifi.PURCHS_TMS BETWEEN To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') AND To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') ")
+                .append("AND rim.CREDIT_CARD_LAST_4_NBR = ? ")
+                .append("ORDER BY PURCHS_DT").toString();
 
         List<WifiLineItem> wifiLineItems = jdbcTemplate.query(sql, new WifiLineItemMapper(), lastName, fromDate,
                 endDate, ccLastFour);
