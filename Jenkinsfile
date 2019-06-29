@@ -195,7 +195,7 @@ pipeline {
             }
             
             steps {
-                build job: 'bff-e2e'
+                build job: 'AA-DevOps/AA-CustTech-Fly/AA-CT-Fly-Receipts/CrossApps/bff-e2e'
             }
         }
 
