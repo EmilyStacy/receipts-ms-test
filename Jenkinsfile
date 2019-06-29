@@ -189,6 +189,16 @@ pipeline {
             }
         }
 
+        stage ('job:bff-e2e') {
+            when {
+                branch 'master'
+            }
+            
+            steps {
+                build job: 'bff-e2e'
+            }
+        }
+
         stage('deploy stage') {
             when {
                 branch 'master'
