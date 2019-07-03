@@ -23,6 +23,8 @@ public class WifiLineItemMapper implements RowMapper<WifiLineItem> {
         lineItem.setProductPrice(rs.getString("PROD_PRICE"));
         lineItem.setPurchaseDate(rs.getDate("PURCHS_DT"));
         lineItem.setTaxAmount(rs.getString("TAX_AMT"));
+        lineItem.setSeller("American");
+
         return lineItem;
     }
 

@@ -23,6 +23,7 @@ public class WifiLineItem {
     private String ccLastFour;
     private String ccTypeCode;
     private String lastName;
+    private String seller;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public String getOrderId() {
@@ -103,6 +104,14 @@ public class WifiLineItem {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getSeller() {
+        return seller;
+    }
+
+    public void setSeller(String seller) {
+        this.seller = seller;
     }
 
     @Override

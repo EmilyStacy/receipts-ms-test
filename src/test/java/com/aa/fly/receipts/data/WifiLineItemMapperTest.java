@@ -50,6 +50,7 @@ public class WifiLineItemMapperTest {
         assertThat(item.getProductPrice()).isEqualTo("10.00");
         assertThat(item.getPurchaseDate()).isEqualTo(dateFormat.parse("2019-01-01"));
         assertThat(item.getTaxAmount()).isEqualTo("1.00");
+        assertThat(item.getSeller()).isEqualTo("American");
     }
 
     @Test
@@ -76,6 +77,6 @@ public class WifiLineItemMapperTest {
         assertThat(item.getProductPrice()).isEqualTo("10.00");
         assertThat(item.getPurchaseDate()).isEqualTo(dateFormat.parse("2019-01-01"));
         assertThat(item.getTaxAmount()).isEqualTo("1.00");
-
+        assertThat(item.getSeller()).isEqualTo("American");
     }
 }
