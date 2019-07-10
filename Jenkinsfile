@@ -38,7 +38,12 @@ pipeline {
         jarPath='./target/${pcfAppName}-*.jar'
         GIT_REPO = "AA-CustTech-Fly/receipts-ms"
         GITHUB = credentials('Jing-GHE-Receipts')
+        GIT_URL = scm.getUserRemoteConfigs()[0].getUrl()
         SONAR_API_KEY = credentials('SONAR_API_KEY')
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
     }
 
     agent {
@@ -252,5 +257,24 @@ pipeline {
                 }
             }
         }
+        
+        stage('tag build') {
+            when{
+                branch 'master'
+            }
+            steps {
+                echo "*****Tag the Deployment*****"
+                script {
+                    SCM_URL = "$GIT_URL".trim().minus("https://")
+                    
+                    pom = readMavenPom file: 'pom.xml'
+                    APPLICATION_VERSION = pom.version.toString() + '-' + BUILD_NUMBER
+                }
+                               
+                sh "git tag ${deployAppName}-$APPLICATION_VERSION"
+                sh "git push https://$GITHUB_USR:$GITHUB_PSW@$SCM_URL $deployAppName-$APPLICATION_VERSION"
+            }
+        }
+        
     }
 }
