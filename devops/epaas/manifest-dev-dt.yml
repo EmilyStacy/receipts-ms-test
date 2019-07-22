@@ -21,6 +21,6 @@ applications:
       -Dhttps.proxyPort=9093
       -Dhttp.nonProxyHosts="*.aa.com"
   services:
-    - logstash-dev-drain
     - mosaic-receipts
+    - splunk-drains
 #    - dynatrace-service-receipts
