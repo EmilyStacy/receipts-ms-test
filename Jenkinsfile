@@ -268,7 +268,7 @@ pipeline {
                     SCM_URL = "$GIT_URL".trim().minus("https://")
                     
                     pom = readMavenPom file: 'pom.xml'
-                    APPLICATION_VERSION = pom.version.toString() + '-' + BUILD_NUMBER
+                    APPLICATION_VERSION = pom.version.replace('SNAPSHOT', BUILD_NUMBER)
                 }
                                
                 sh "git tag ${deployAppName}-$APPLICATION_VERSION"

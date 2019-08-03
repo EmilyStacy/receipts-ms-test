@@ -1,0 +1,8 @@
+mosaic:
+  inflight:
+    schema:
+      name: PROD_INFLIGHT_SRVCS_VW
+
+logging:
+  level:
+    root: INFO
