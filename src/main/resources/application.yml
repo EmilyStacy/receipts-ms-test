@@ -14,4 +14,5 @@ mosaic:
       name: CERT_INFLIGHT_SRVCS_VW
 
 loglib:
-  headersToLog: X-Client-ID,X-Transaction-ID
+  requestHeadersToLog: X-Client-ID,X-Transaction-ID
+  responseHeadersToLog: X-Client-ID,X-Transaction-ID
