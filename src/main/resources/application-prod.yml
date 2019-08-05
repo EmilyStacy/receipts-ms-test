@@ -1,7 +1,8 @@
 mosaic:
   inflight:
     schema:
-      name: PROD_INFLIGHT_SRVCS_VW
+      name: CERT_INFLIGHT_SRVCS_VW
+      #name: PROD_INFLIGHT_SRVCS_VW
 
 logging:
   level:
