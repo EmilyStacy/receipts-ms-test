@@ -13,6 +13,13 @@ mosaic:
     schema:
       name: CERT_INFLIGHT_SRVCS_VW
 
+logging:
+  level:
+    root: ERROR
+    com.aa.fly.receipts: INFO
+  pattern:
+    console: '%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger.%M - %msg%n'
+    
 loglib:
   requestHeadersToLog: X-Client-ID,X-Transaction-ID
   responseHeadersToLog: X-Client-ID,X-Transaction-ID

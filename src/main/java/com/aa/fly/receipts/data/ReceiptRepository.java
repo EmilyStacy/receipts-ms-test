@@ -3,8 +3,6 @@ package com.aa.fly.receipts.data;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +20,6 @@ import com.aa.fly.receipts.domain.WifiSearchCriteria;
  */
 @Repository
 public class ReceiptRepository {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReceiptRepository.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -75,8 +72,6 @@ public class ReceiptRepository {
                 .append("AND wifi.PURCHS_TMS BETWEEN To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') AND To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') ")
                 .append("AND rim.CREDIT_CARD_LAST_4_NBR = ? ")
                 .append("ORDER BY PURCHS_DT").toString();
-
-        LOGGER.debug("Moasic SQL: " + sql);
 
         List<WifiLineItem> wifiLineItems = jdbcTemplate.query(sql, new WifiLineItemMapper(), lastName, fromDate,
                 endDate, ccLastFour);
