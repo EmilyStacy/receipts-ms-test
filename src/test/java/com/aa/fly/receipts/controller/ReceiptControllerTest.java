@@ -17,7 +17,7 @@ import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.WifiReceipt;
 import com.aa.fly.receipts.domain.WifiSearchCriteria;
-import com.aa.fly.receipts.service.ReceiptService;
+import com.aa.fly.receipts.service.WifiReceiptService;
 
 /**
  * Created by 629874 on 5/17/2019.
@@ -27,10 +27,10 @@ import com.aa.fly.receipts.service.ReceiptService;
 
 public class ReceiptControllerTest {
     @Mock
-    private ReceiptService receiptService;
+    private WifiReceiptService receiptService;
 
     @InjectMocks
-    private ReceiptController controller;
+    private WifiReceiptController controller;
 
     @Test
     public void findReceipt_byTicketNumber() throws Exception {

@@ -8,7 +8,7 @@ import com.aa.fly.receipts.domain.WifiSearchCriteria;
 /**
  * Created by 629874 on 5/9/2019.
  */
-public interface ReceiptService {
+public interface WifiReceiptService {
     public Receipt findReceipt(SearchCriteria criteria);
 
     /**

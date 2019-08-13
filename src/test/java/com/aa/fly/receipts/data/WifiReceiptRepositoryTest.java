@@ -25,12 +25,12 @@ import com.aa.fly.receipts.domain.WifiSearchCriteria;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ReceiptRepositoryTest {
+public class WifiReceiptRepositoryTest {
     @Mock
     private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
-    private ReceiptRepository receiptRepository;
+    private WifiReceiptRepository receiptRepository;
 
     @Test
     public void findReceipt() {

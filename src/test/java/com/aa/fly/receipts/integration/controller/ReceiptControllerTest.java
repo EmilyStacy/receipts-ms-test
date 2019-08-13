@@ -22,16 +22,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.aa.fly.receipts.controller.ReceiptController;
+import com.aa.fly.receipts.controller.WifiReceiptController;
 import com.aa.fly.receipts.domain.Receipt;
 import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.service.ReceiptService;
+import com.aa.fly.receipts.service.WifiReceiptService;
 
 /**
  * Created by 629874 on 5/7/2019.
  */
 
-@WebMvcTest(value = ReceiptController.class, excludeFilters = {
+@WebMvcTest(value = WifiReceiptController.class, excludeFilters = {
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com.aa.fly.receipts.config.*")})
 @RunWith(SpringRunner.class)
 
@@ -41,7 +41,7 @@ public class ReceiptControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ReceiptService receiptService;
+    private WifiReceiptService receiptService;
 
     @Test
     public void findReceipt_byTicketNumber() throws Exception {

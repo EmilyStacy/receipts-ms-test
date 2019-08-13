@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.aa.fly.receipts.ReceiptsApplication;
-import com.aa.fly.receipts.data.ReceiptRepository;
+import com.aa.fly.receipts.data.WifiReceiptRepository;
 import com.aa.fly.receipts.domain.SearchCriteria;
 
 /**
@@ -19,9 +19,9 @@ import com.aa.fly.receipts.domain.SearchCriteria;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReceiptsApplication.class)
 
-public class ReceiptRepositoryTest {
+public class WifiReceiptRepositoryTest {
     @Autowired
-    private ReceiptRepository receiptRepository;
+    private WifiReceiptRepository receiptRepository;
 
     @Test
     public void findReceipt() {

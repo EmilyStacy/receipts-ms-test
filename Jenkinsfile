@@ -180,7 +180,7 @@ pipeline {
             }
             steps {
                 sh """
-                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags ~@TicketAndFees' -Dbranch.application.url='https://'${deployAppName}.${PCF_DEVTEST_DOMAIN}
+                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://'${deployAppName}.${PCF_DEVTEST_DOMAIN}
                   """
                   
                 publishHTML target: [

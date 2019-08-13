@@ -13,31 +13,31 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.aa.fly.receipts.data.ReceiptRepository;
+import com.aa.fly.receipts.data.WifiReceiptRepository;
 import com.aa.fly.receipts.domain.Receipt;
 import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.WifiReceipt;
 import com.aa.fly.receipts.domain.WifiSearchCriteria;
-import com.aa.fly.receipts.service.impl.ReceiptServiceImpl;
+import com.aa.fly.receipts.service.impl.WifiReceiptServiceImpl;
 
 /**
  * Created by 629874 on 5/9/2019.
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReceiptServiceTest {
+public class WifiReceiptServiceTest {
     @InjectMocks
-    private ReceiptServiceImpl receiptService;
+    private WifiReceiptServiceImpl wifiReceiptService;
 
     @Mock
-    private ReceiptRepository receiptRepository;
+    private WifiReceiptRepository wifiReceiptRepository;
 
     @Test
     public void testReceiptTotal() {
         Receipt expectedReceipt = getReceipt();
-        when(receiptRepository.findReceipt(any())).thenReturn(expectedReceipt);
-        Receipt actualReceipt = receiptService.findReceipt(new SearchCriteria());
+        when(wifiReceiptRepository.findReceipt(any())).thenReturn(expectedReceipt);
+        Receipt actualReceipt = wifiReceiptService.findReceipt(new SearchCriteria());
         assertEquals(expectedReceipt.getFirstName(), actualReceipt.getFirstName());
         assertEquals(expectedReceipt.getLastName(), actualReceipt.getLastName());
         assertEquals(expectedReceipt.getReceiptTotal(), actualReceipt.getReceiptTotal());
@@ -46,8 +46,8 @@ public class ReceiptServiceTest {
     @Test
     public void testWifiReceiptTotal() throws ParseException {
         WifiReceipt expectedReceipt = ReceiptsMSDomainTest.getWifiReceipt();
-        when(receiptRepository.findWifiReceipt(any())).thenReturn(expectedReceipt);
-        WifiReceipt actualReceipt = receiptService.findWifiReceipt(new WifiSearchCriteria());
+        when(wifiReceiptRepository.findWifiReceipt(any())).thenReturn(expectedReceipt);
+        WifiReceipt actualReceipt = wifiReceiptService.findWifiReceipt(new WifiSearchCriteria());
         assertThat(actualReceipt.getWifiLineItems()).isNotNull();
         assertThat(actualReceipt.getWifiLineItems().size()).isEqualTo(1);
         assertThat(actualReceipt.getWifiLineItems().get(0).getNetPrice()).isEqualTo("11.00");

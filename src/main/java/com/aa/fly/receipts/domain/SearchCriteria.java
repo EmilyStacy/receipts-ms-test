@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class SearchCriteria {
 
     private String ticketNumber;
+    private String pnr;
     private String lastName;
     private String firstName;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -49,10 +50,18 @@ public class SearchCriteria {
     public void setDepartureDate(Date departureDate) {
         this.departureDate = departureDate;
     }
+    
+    public String getPnr() {
+        return pnr;
+    }
+
+    public void setPnr(String pnr) {
+        this.pnr = pnr;
+    }
 
     @Override
     public String toString() {
         return "SearchCriteria{" + "ticketNumber='" + ticketNumber + '\'' + ", lastName='" + lastName + '\''
-                + ", firstName='" + firstName + '\'' + ", departureDate=" + departureDate + '}';
+                + ", firstName='" + firstName + '\'' + ", departureDate=" + departureDate + '\'' + ", pnr=" + pnr + '}';
     }
 }

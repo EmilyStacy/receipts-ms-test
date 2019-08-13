@@ -19,7 +19,7 @@ import com.aa.fly.receipts.domain.WifiSearchCriteria;
  * Created by 629874 on 5/9/2019.
  */
 @Repository
-public class ReceiptRepository {
+public class WifiReceiptRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

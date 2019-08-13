@@ -37,6 +37,7 @@ public class ReceiptsMSDomainTest {
         validateAccessors(WifiReceipt.class);
         validateAccessors(WifiSearchCriteria.class);
         validateAccessors(WifiLineItem.class);
+        validateAccessors(TicketSummary.class);
 
     }
 
@@ -63,12 +64,30 @@ public class ReceiptsMSDomainTest {
                 receipt.toString());
     }
 
+    @Test
+    public void testTicketSummaryToString() throws ParseException {
+        TicketSummary ticketSummary = getTicketSummary();
+        Assert.assertEquals(
+                "TicketSummary [airlineAccountCode=001, ticketNumber=2335038507, ticketIssueDate=2019-03-14, departureDate=2019-09-30, firstName=SIMON, lastName=TEST, originAirportCode=MCO, destinationAirportCode=MIA, originAirport=Orlando International, destinationAirport=Miami International, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200]",
+                ticketSummary.toString());
+    }
+
     public static WifiSearchCriteria getWifiSearchCriteria() throws ParseException {
         WifiSearchCriteria criteria = new WifiSearchCriteria();
         criteria.setLastName("smith");
         criteria.setCcLastFour("1234");
         criteria.setStartDate(dateFormat.parse("01/01/2017"));
         criteria.setEndDate(dateFormat.parse("06/01/2019"));
+        return criteria;
+    }
+
+
+    public static SearchCriteria getSearchCriteriaWithTicketNumber() throws ParseException {
+        SearchCriteria criteria = new SearchCriteria();
+        criteria.setLastName("TEST");
+        criteria.setFirstName("SIMON");
+        criteria.setTicketNumber("1234");
+        criteria.setDepartureDate(dateFormat.parse("09/30/2019"));
         return criteria;
     }
 
@@ -88,6 +107,22 @@ public class ReceiptsMSDomainTest {
         wifiReceipt.setWifiLineItems(new ArrayList<>());
         wifiReceipt.getWifiLineItems().add(lineItem);
         return wifiReceipt;
+    }
+    
+    public static TicketSummary getTicketSummary() throws ParseException {
+        TicketSummary ticketSummary = new TicketSummary();
+        ticketSummary.setAirlineAccountCode("001");
+        ticketSummary.setDepartureDate(dateFormat.parse("09/30/2019"));
+        ticketSummary.setDestinationAirport("Miami International");
+        ticketSummary.setDestinationAirportCode("MIA");
+        ticketSummary.setFirstName("SIMON");
+        ticketSummary.setLastName("TEST");
+        ticketSummary.setOriginAirport("Orlando International");
+        ticketSummary.setOriginAirportCode("MCO");
+        ticketSummary.setPnr("MRYMPT");
+        ticketSummary.setTicketNumber("2335038507");
+        ticketSummary.setTicketIssueDate(dateFormat.parse("03/14/2019"));
+        return ticketSummary;
     }
 
 }

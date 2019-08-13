@@ -14,7 +14,7 @@ import com.aa.fly.receipts.domain.Receipt;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.WifiReceipt;
 import com.aa.fly.receipts.domain.WifiSearchCriteria;
-import com.aa.fly.receipts.service.ReceiptService;
+import com.aa.fly.receipts.service.WifiReceiptService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -26,10 +26,10 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api")
-public class ReceiptController {
+public class WifiReceiptController {
 
     @Autowired
-    private ReceiptService receiptService;
+    private WifiReceiptService wifiReceiptService;
 
     @MSLogger
     @ApiOperation(value = "Find receipt by ticketNumber, firstName, lastName, departureDate")
@@ -41,7 +41,7 @@ public class ReceiptController {
     public Receipt getReceipts(@RequestBody SearchCriteria searchCriteria)
 
     {
-        return receiptService.findReceipt(searchCriteria);
+        return wifiReceiptService.findReceipt(searchCriteria);
     }
 
     @MSLogger
@@ -54,6 +54,6 @@ public class ReceiptController {
     public WifiReceipt getWifiReceipts(@RequestBody WifiSearchCriteria wifiSearchCriteria)
 
     {
-        return receiptService.findWifiReceipt(wifiSearchCriteria);
+        return wifiReceiptService.findWifiReceipt(wifiSearchCriteria);
     }
 }
