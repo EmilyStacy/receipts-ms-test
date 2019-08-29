@@ -4,14 +4,16 @@
 package com.aa.fly.receipts.domain;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * @author Shiva.Narendrula
  */
-public class TicketSummary {
+public class TicketReceipt {
     private String airlineAccountCode;
     private String ticketNumber;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -25,6 +27,9 @@ public class TicketSummary {
     private String originAirport;
     private String destinationAirport;
     private String pnr;
+
+    List<SegmentDetail> segmentDetails = new ArrayList<>();
+
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public String getAirlineAccountCode() {
@@ -115,12 +120,20 @@ public class TicketSummary {
         this.pnr = pnr;
     }
 
+    public List<SegmentDetail> getSegmentDetails() {
+        return segmentDetails;
+    }
+
+    public void setSegmentDetails(List<SegmentDetail> segmentDetails) {
+        this.segmentDetails = segmentDetails;
+    }
+
     @Override
     public String toString() {
         return "TicketSummary [airlineAccountCode=" + airlineAccountCode + ", ticketNumber=" + ticketNumber + ", ticketIssueDate=" + dateFormat.format(ticketIssueDate) + ", departureDate="
                 + dateFormat.format(departureDate)
                 + ", firstName=" + firstName + ", lastName=" + lastName + ", originAirportCode=" + originAirportCode + ", destinationAirportCode=" + destinationAirportCode + ", originAirport="
-                + originAirport + ", destinationAirport=" + destinationAirport + ", pnr=" + pnr + ", dateFormat=" + dateFormat + "]";
+                + originAirport + ", destinationAirport=" + destinationAirport + ", pnr=" + pnr + ", dateFormat=" + dateFormat + ", segmentDetails=" + segmentDetails + "]";
     }
 
 }

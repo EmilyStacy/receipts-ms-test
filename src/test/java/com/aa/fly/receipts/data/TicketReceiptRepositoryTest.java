@@ -18,14 +18,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
 import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketSummary;
+import com.aa.fly.receipts.domain.TicketReceipt;
 
 /**
  * Created by 629874 on 5/17/2019.
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TicketSummaryRepositoryTest {
+public class TicketReceiptRepositoryTest {
     @Mock
     private JdbcTemplate jdbcTemplate;
 
@@ -35,12 +35,12 @@ public class TicketSummaryRepositoryTest {
     @Test
     public void findWifiReceipt() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
-        TicketSummary ticketSummary = ReceiptsMSDomainTest.getTicketSummary();
-        List<TicketSummary> ticketSummaryList = new ArrayList<>();
-        ticketSummaryList.add(ticketSummary);
-        when(jdbcTemplate.query(anyString(), any(TicketSummaryMapper.class), anyString(), anyString(), anyString(), anyString()))
-                .thenReturn(ticketSummaryList);
-        assertEquals("MRYMPT", receiptRepository.findTicketSummaryByTicketNumber(criteria).getPnr());
+        TicketReceipt ticketReceipt = ReceiptsMSDomainTest.getTicketSummary();
+        List<TicketReceipt> ticketReceiptList = new ArrayList<>();
+        ticketReceiptList.add(ticketReceipt);
+        when(jdbcTemplate.query(anyString(), any(TicketReceiptMapper.class), anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(ticketReceiptList);
+        assertEquals("MRYMPT", receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
 
     }
 }

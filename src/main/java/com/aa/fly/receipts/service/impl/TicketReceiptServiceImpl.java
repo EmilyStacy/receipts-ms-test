@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils;
 
 import com.aa.fly.receipts.data.TicketReceiptRepository;
 import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketSummary;
+import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.TicketReceiptService;
 
 /**
@@ -20,12 +20,12 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
     private TicketReceiptRepository repository;
 
     @Override
-    public TicketSummary findTicketSummary(SearchCriteria criteria) {
-        TicketSummary ticketSummary = null;
+    public TicketReceipt findTicketReceipt(SearchCriteria criteria) {
+        TicketReceipt ticketReceipt = null;
         if (StringUtils.hasText(criteria.getTicketNumber())) {
-            ticketSummary = repository.findTicketSummaryByTicketNumber(criteria);
+            ticketReceipt = repository.findTicketReceiptByTicketNumber(criteria);
         }
-        return ticketSummary;
+        return ticketReceipt;
     }
 
 }

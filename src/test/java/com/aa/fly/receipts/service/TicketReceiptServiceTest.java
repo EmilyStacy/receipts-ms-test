@@ -14,7 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.aa.fly.receipts.data.TicketReceiptRepository;
 import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
 import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketSummary;
+import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.impl.TicketReceiptServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,10 +27,10 @@ public class TicketReceiptServiceTest {
 
     @Test
     public void testWifiReceiptTotal() throws ParseException {
-        TicketSummary expectedReceipt = ReceiptsMSDomainTest.getTicketSummary();
+        TicketReceipt expectedReceipt = ReceiptsMSDomainTest.getTicketSummary();
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
-        when(ticketReceiptRepository.findTicketSummaryByTicketNumber(criteria)).thenReturn(expectedReceipt);
-        TicketSummary actualReceipt = ticketReceiptService.findTicketSummary(criteria);
+        when(ticketReceiptRepository.findTicketReceiptByTicketNumber(criteria)).thenReturn(expectedReceipt);
+        TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria);
         assertThat(actualReceipt).isNotNull();
         assertThat(actualReceipt.getAirlineAccountCode()).isEqualTo("001");
         assertThat(actualReceipt.getPnr()).isEqualTo("MRYMPT");

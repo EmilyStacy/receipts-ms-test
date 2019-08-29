@@ -37,7 +37,7 @@ public class ReceiptsMSDomainTest {
         validateAccessors(WifiReceipt.class);
         validateAccessors(WifiSearchCriteria.class);
         validateAccessors(WifiLineItem.class);
-        validateAccessors(TicketSummary.class);
+        validateAccessors(TicketReceipt.class);
 
     }
 
@@ -66,10 +66,10 @@ public class ReceiptsMSDomainTest {
 
     @Test
     public void testTicketSummaryToString() throws ParseException {
-        TicketSummary ticketSummary = getTicketSummary();
+        TicketReceipt ticketReceipt = getTicketSummary();
         Assert.assertEquals(
-                "TicketSummary [airlineAccountCode=001, ticketNumber=2335038507, ticketIssueDate=2019-03-14, departureDate=2019-09-30, firstName=SIMON, lastName=TEST, originAirportCode=MCO, destinationAirportCode=MIA, originAirport=Orlando International, destinationAirport=Miami International, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200]",
-                ticketSummary.toString());
+                "TicketSummary [airlineAccountCode=001, ticketNumber=2335038507, ticketIssueDate=2019-03-14, departureDate=2019-09-30, firstName=SIMON, lastName=TEST, originAirportCode=MCO, destinationAirportCode=MIA, originAirport=Orlando International, destinationAirport=Miami International, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, segmentDetails=[]]",
+                ticketReceipt.toString());
     }
 
     public static WifiSearchCriteria getWifiSearchCriteria() throws ParseException {
@@ -109,20 +109,20 @@ public class ReceiptsMSDomainTest {
         return wifiReceipt;
     }
     
-    public static TicketSummary getTicketSummary() throws ParseException {
-        TicketSummary ticketSummary = new TicketSummary();
-        ticketSummary.setAirlineAccountCode("001");
-        ticketSummary.setDepartureDate(dateFormat.parse("09/30/2019"));
-        ticketSummary.setDestinationAirport("Miami International");
-        ticketSummary.setDestinationAirportCode("MIA");
-        ticketSummary.setFirstName("SIMON");
-        ticketSummary.setLastName("TEST");
-        ticketSummary.setOriginAirport("Orlando International");
-        ticketSummary.setOriginAirportCode("MCO");
-        ticketSummary.setPnr("MRYMPT");
-        ticketSummary.setTicketNumber("2335038507");
-        ticketSummary.setTicketIssueDate(dateFormat.parse("03/14/2019"));
-        return ticketSummary;
+    public static TicketReceipt getTicketSummary() throws ParseException {
+        TicketReceipt ticketReceipt = new TicketReceipt();
+        ticketReceipt.setAirlineAccountCode("001");
+        ticketReceipt.setDepartureDate(dateFormat.parse("09/30/2019"));
+        ticketReceipt.setDestinationAirport("Miami International");
+        ticketReceipt.setDestinationAirportCode("MIA");
+        ticketReceipt.setFirstName("SIMON");
+        ticketReceipt.setLastName("TEST");
+        ticketReceipt.setOriginAirport("Orlando International");
+        ticketReceipt.setOriginAirportCode("MCO");
+        ticketReceipt.setPnr("MRYMPT");
+        ticketReceipt.setTicketNumber("2335038507");
+        ticketReceipt.setTicketIssueDate(dateFormat.parse("03/14/2019"));
+        return ticketReceipt;
     }
 
 }

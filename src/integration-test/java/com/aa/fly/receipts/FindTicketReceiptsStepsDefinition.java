@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.springframework.http.HttpStatus;
 
 import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketSummary;
+import com.aa.fly.receipts.domain.TicketReceipt;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -15,13 +15,13 @@ import cucumber.api.java.en.When;
 import gherkin.deps.com.google.gson.Gson;
 import gherkin.deps.com.google.gson.GsonBuilder;
 
-public class FindTicketSummaryStepsDefinition extends SpringIntegrationTest {
+public class FindTicketReceiptsStepsDefinition extends SpringIntegrationTest {
 
     private SearchCriteria criteria = new SearchCriteria();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    @Given("^I want to find my ticket summary for scenario \"(.+)\"$")
-    public void the_client_want_to_find_ticket_summary(String scenario) {
+    @Given("^I want to find my ticket receipt for scenario \"(.+)\"$")
+    public void the_client_want_to_find_ticket_receipt(String scenario) {
 
     }
 
@@ -36,7 +36,7 @@ public class FindTicketSummaryStepsDefinition extends SpringIntegrationTest {
             criteria.setDepartureDate(dateFormat.parse(departureDate));
         } catch (ParseException e) {
         }
-        executePost(branchApplicationUrl + "/api/ticket-summary", criteria);
+        executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
     }
 
     @Then("^I get a successful response with origin airport \"(.+)\", destinationAirport \"(.+)\" and pnr \"(.+)\"$")
@@ -45,9 +45,9 @@ public class FindTicketSummaryStepsDefinition extends SpringIntegrationTest {
         Assert.assertEquals(200, currentStatusCode.value());
 
         Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        TicketSummary ticketSummary = g.fromJson(latestResponse.getBody(), TicketSummary.class);
-        Assert.assertEquals(originAirport, ticketSummary.getOriginAirportCode());
-        Assert.assertEquals(destinationAirport, ticketSummary.getDestinationAirportCode());
-        Assert.assertEquals(pnr, ticketSummary.getPnr());
+        TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
+        Assert.assertEquals(originAirport, ticketReceipt.getOriginAirportCode());
+        Assert.assertEquals(destinationAirport, ticketReceipt.getDestinationAirportCode());
+        Assert.assertEquals(pnr, ticketReceipt.getPnr());
     }
 }

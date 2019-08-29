@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aa.ct.fly.logging.annotations.MSLogger;
 import com.aa.fly.receipts.domain.Receipt;
 import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketSummary;
+import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.TicketReceiptService;
 
 import io.swagger.annotations.ApiOperation;
@@ -31,16 +31,16 @@ public class TicketReceiptController {
     private TicketReceiptService ticketReceiptService;
 
     @MSLogger
-    @ApiOperation(value = "Find ticket summary by ticketNumber, pnr, firstName, lastName, departureDate")
+    @ApiOperation(value = "Find ticket receipt by ticketNumber, pnr, firstName, lastName, departureDate")
     @ApiResponses({ @ApiResponse(
             code = 500, // HttpStatus.INTERNAL_SERVER_ERROR
             message = "Unexpected Error",
             response = Receipt.class) })
-    @PostMapping("/ticket-summary")
-    public TicketSummary getTicketSummary(@RequestBody SearchCriteria searchCriteria)
+    @PostMapping("/ticket-receipt")
+    public TicketReceipt getTicketReceipt(@RequestBody SearchCriteria searchCriteria)
 
     {
-        return ticketReceiptService.findTicketSummary(searchCriteria);
+        return ticketReceiptService.findTicketReceipt(searchCriteria);
     }
 
 }
