@@ -22,7 +22,7 @@ public class FindTicketReceiptHeaderSteps extends SpringIntegrationTest {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Given("^I want to find my ticket receipt header for scenario \"(.+)\"$")
-    public void the_client_want_to_find_ticket_summary(String scenario) {
+    public void the_client_wants_to_find_ticket_receipt(String scenario) {
 
     }
 
