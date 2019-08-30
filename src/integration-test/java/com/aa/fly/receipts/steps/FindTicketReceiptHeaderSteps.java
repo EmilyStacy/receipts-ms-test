@@ -1,4 +1,4 @@
-package com.aa.fly.receipts;
+package com.aa.fly.receipts.steps;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import org.junit.Assert;
 import org.springframework.http.HttpStatus;
 
+import com.aa.fly.receipts.SpringIntegrationTest;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
 
@@ -15,13 +16,13 @@ import cucumber.api.java.en.When;
 import gherkin.deps.com.google.gson.Gson;
 import gherkin.deps.com.google.gson.GsonBuilder;
 
-public class FindTicketReceiptsStepsDefinition extends SpringIntegrationTest {
+public class FindTicketReceiptHeaderSteps extends SpringIntegrationTest {
 
     private SearchCriteria criteria = new SearchCriteria();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    @Given("^I want to find my ticket receipt for scenario \"(.+)\"$")
-    public void the_client_want_to_find_ticket_receipt(String scenario) {
+    @Given("^I want to find my ticket receipt header for scenario \"(.+)\"$")
+    public void the_client_want_to_find_ticket_summary(String scenario) {
 
     }
 

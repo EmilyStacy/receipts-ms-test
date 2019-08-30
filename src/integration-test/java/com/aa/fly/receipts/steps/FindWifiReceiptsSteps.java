@@ -1,4 +1,4 @@
-package com.aa.fly.receipts;
+package com.aa.fly.receipts.steps;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import org.junit.Assert;
 import org.springframework.http.HttpStatus;
 
+import com.aa.fly.receipts.SpringIntegrationTest;
 import com.aa.fly.receipts.domain.WifiReceipt;
 import com.aa.fly.receipts.domain.WifiSearchCriteria;
 
@@ -15,7 +16,7 @@ import cucumber.api.java.en.When;
 import gherkin.deps.com.google.gson.Gson;
 import gherkin.deps.com.google.gson.GsonBuilder;
 
-public class FindWifiReceiptsStepsDefinition extends SpringIntegrationTest {
+public class FindWifiReceiptsSteps extends SpringIntegrationTest {
 
     private WifiSearchCriteria criteria = new WifiSearchCriteria();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

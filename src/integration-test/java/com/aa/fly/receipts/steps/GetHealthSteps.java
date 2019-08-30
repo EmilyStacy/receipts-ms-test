@@ -1,12 +1,14 @@
-package com.aa.fly.receipts;
+package com.aa.fly.receipts.steps;
 
 import org.junit.Assert;
 import org.springframework.http.HttpStatus;
 
+import com.aa.fly.receipts.SpringIntegrationTest;
+
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class GetHealthStepsDefinition extends SpringIntegrationTest {
+public class GetHealthSteps extends SpringIntegrationTest {
 
     @When("^the client calls /actuator/health$")
     public void the_client_issues_GET_health() throws Throwable {

@@ -1,4 +1,4 @@
-package com.aa.fly.receipts;
+package com.aa.fly.receipts.steps;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -12,7 +12,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 
-public class FindMultipleWifiReceiptsStepsDefinition {
+public class FindMultipleWifiReceiptsSteps {
 
     private static String REQUEST_PAYLOAD;
     private ValidatableResponse validatableResponse;

@@ -18,6 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.ResponseExtractor;
 
+import com.aa.fly.receipts.steps.ResponseResults;
+
 @SpringBootTest(classes = ReceiptsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-tests")
 @ContextConfiguration

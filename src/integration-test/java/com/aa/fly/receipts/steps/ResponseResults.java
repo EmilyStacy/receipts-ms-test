@@ -1,4 +1,4 @@
-package com.aa.fly.receipts;
+package com.aa.fly.receipts.steps;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,7 @@ public class ResponseResults {
     private final String body;
     private ResponseEntity<String> theResponseEntity;
 
-    protected ResponseResults(final ClientHttpResponse response) throws IOException {
+    public ResponseResults(final ClientHttpResponse response) throws IOException {
         this.theResponse = response;
         final InputStream bodyInputStream = response.getBody();
         if (null == bodyInputStream) {
@@ -25,7 +25,7 @@ public class ResponseResults {
         }
     }
 
-    protected ResponseResults(final ResponseEntity<String> response) {
+    public ResponseResults(final ResponseEntity<String> response) {
         this.theResponseEntity = response;
         this.body = response.getBody();
     }
