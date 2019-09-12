@@ -33,15 +33,6 @@ public class WifiReceiptRepositoryTest {
     private WifiReceiptRepository receiptRepository;
 
     @Test
-    public void findReceipt() {
-        SearchCriteria criteria = new SearchCriteria();
-        criteria.setTicketNumber("0012362111828");
-        when(jdbcTemplate.queryForObject(anyString(), any(), eq(String.class))).thenReturn("251.2000");
-        assertEquals("251.2000", receiptRepository.findReceipt(criteria).getReceiptTotal());
-
-    }
-
-    @Test
     public void findWifiReceipt() throws ParseException {
         WifiSearchCriteria criteria = ReceiptsMSDomainTest.getWifiSearchCriteria();
         WifiReceipt receipt = ReceiptsMSDomainTest.getWifiReceipt();

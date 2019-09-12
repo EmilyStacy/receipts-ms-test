@@ -27,7 +27,7 @@ public class TicketReceiptServiceTest {
 
     @Test
     public void testWifiReceiptTotal() throws ParseException {
-        TicketReceipt expectedReceipt = ReceiptsMSDomainTest.getTicketSummary();
+        TicketReceipt expectedReceipt = ReceiptsMSDomainTest.getTicketReceipt();
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
         when(ticketReceiptRepository.findTicketReceiptByTicketNumber(criteria)).thenReturn(expectedReceipt);
         TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria);

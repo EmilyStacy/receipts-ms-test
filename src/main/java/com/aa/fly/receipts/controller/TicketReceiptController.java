@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aa.ct.fly.logging.annotations.MSLogger;
-import com.aa.fly.receipts.domain.Receipt;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.TicketReceiptService;
@@ -35,7 +34,7 @@ public class TicketReceiptController {
     @ApiResponses({ @ApiResponse(
             code = 500, // HttpStatus.INTERNAL_SERVER_ERROR
             message = "Unexpected Error",
-            response = Receipt.class) })
+            response = TicketReceipt.class) })
     @PostMapping("/ticket-receipt")
     public TicketReceipt getTicketReceipt(@RequestBody SearchCriteria searchCriteria)
 

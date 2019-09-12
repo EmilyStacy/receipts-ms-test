@@ -51,7 +51,7 @@ public class FindTicketReceiptDetailOneWayNoConnectionSteps extends SpringIntegr
         TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
         SegmentDetail segmentDetail = ticketReceipt.getSegmentDetails().get(0);
 
-        Assert.assertEquals(segDepartureDate, segmentDetail.getSegmentDepartureDate());
+        Assert.assertEquals(segDepartureDate, dateFormat.format(segmentDetail.getSegmentDepartureDate()));
         Assert.assertEquals(segAirportFrom, segmentDetail.getSegmentDepartureAirportCode());
         Assert.assertEquals(segAirportTo, segmentDetail.getSegmentArrivalAirportCode());
         Assert.assertEquals(segTimeFrom, segmentDetail.getSegmentDepartureTime());

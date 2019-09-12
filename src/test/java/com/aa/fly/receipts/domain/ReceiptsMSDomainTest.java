@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.aa.fly.receipts.controller.ReceiptControllerTest;
 import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
@@ -33,7 +32,6 @@ public class ReceiptsMSDomainTest {
     public void testAccesors_shouldAccessProperField() {
 
         validateAccessors(SearchCriteria.class);
-        validateAccessors(Receipt.class);
         validateAccessors(WifiReceipt.class);
         validateAccessors(WifiSearchCriteria.class);
         validateAccessors(WifiLineItem.class);
@@ -50,13 +48,6 @@ public class ReceiptsMSDomainTest {
     }
 
     @Test
-    public void testReceiptToString() {
-        SearchCriteria criteria = ReceiptControllerTest.getSearchCriteria();
-        Receipt receipt = ReceiptControllerTest.getReceipt(criteria);
-        Assert.assertEquals("Receipt{firstName='first', lastName='last', receiptTotal='239.00'}", receipt.toString());
-    }
-
-    @Test
     public void testWifiReceiptToString() throws ParseException {
         WifiReceipt receipt = getWifiReceipt();
         Assert.assertEquals(
@@ -66,7 +57,7 @@ public class ReceiptsMSDomainTest {
 
     @Test
     public void testTicketSummaryToString() throws ParseException {
-        TicketReceipt ticketReceipt = getTicketSummary();
+        TicketReceipt ticketReceipt = getTicketReceipt();
         Assert.assertEquals(
                 "TicketSummary [airlineAccountCode=001, ticketNumber=2335038507, ticketIssueDate=2019-03-14, departureDate=2019-09-30, firstName=SIMON, lastName=TEST, originAirportCode=MCO, destinationAirportCode=MIA, originAirport=Orlando International, destinationAirport=Miami International, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, segmentDetails=[]]",
                 ticketReceipt.toString());
@@ -109,7 +100,7 @@ public class ReceiptsMSDomainTest {
         return wifiReceipt;
     }
     
-    public static TicketReceipt getTicketSummary() throws ParseException {
+    public static TicketReceipt getTicketReceipt() throws ParseException {
         TicketReceipt ticketReceipt = new TicketReceipt();
         ticketReceipt.setAirlineAccountCode("001");
         ticketReceipt.setDepartureDate(dateFormat.parse("09/30/2019"));

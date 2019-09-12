@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
@@ -29,17 +30,25 @@ public class TicketReceiptRepositoryTest {
     @Mock
     private JdbcTemplate jdbcTemplate;
 
+    @Mock
+    private SqlRowSet resultSet;
+
+    @Mock
+    private TicketReceiptMapper ticketReceiptMapper;
+
     @InjectMocks
     private TicketReceiptRepository receiptRepository;
 
     @Test
     public void findWifiReceipt() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
-        TicketReceipt ticketReceipt = ReceiptsMSDomainTest.getTicketSummary();
+        TicketReceipt ticketReceipt = ReceiptsMSDomainTest.getTicketReceipt();
         List<TicketReceipt> ticketReceiptList = new ArrayList<>();
         ticketReceiptList.add(ticketReceipt);
-        when(jdbcTemplate.query(anyString(), any(TicketReceiptMapper.class), anyString(), anyString(), anyString(), anyString()))
-                .thenReturn(ticketReceiptList);
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(resultSet);
+        when(ticketReceiptMapper.mapTicketReceipt(resultSet))
+                .thenReturn(ticketReceipt);
         assertEquals("MRYMPT", receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
 
     }

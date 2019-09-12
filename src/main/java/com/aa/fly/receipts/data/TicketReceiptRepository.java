@@ -5,12 +5,11 @@ import com.aa.fly.receipts.domain.TicketReceipt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 @Repository
 public class TicketReceiptRepository {
@@ -20,6 +19,9 @@ public class TicketReceiptRepository {
 
     @Value("${mosaic.ticket.schema.name:CERT_TCN_RECPT_VW}")
     private String ticketSchemaName;
+
+    @Autowired
+    private TicketReceiptMapper ticketReceiptMapper;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -41,13 +43,8 @@ public class TicketReceiptRepository {
                 .append("    tcust.PNR_PAX_LAST_NM AS LAST_NM, ")
                 .append("    odtkt.OD_ORIGIN_AIRPRT_IATA_CD AS ORG_ATO_CD, ")
                 .append("    odtkt.OD_DESTNTN_AIRPRT_IATA_CD AS DEST_ATO_CD, ")
-                .append("    arptstn1.AIRPRT_NM AS ORG_ATO_NM, ")
-                .append("    arptstn2.AIRPRT_NM AS DEST_ATO_NM, ")
                 .append("    tkt.PNR_LOCTR_ID AS PNR, ")
-
                 //=================== trip details =======================
-                .append("    arptstn3.AIRPRT_NM AS SEG_DEPT_ARPRT_NM, ")
-                .append("    arptstn4.AIRPRT_NM AS SEG_ARVL_ARPRT_NM, ")
                 .append("    odtktcpn.SEG_LOCAL_DEP_DT AS SEG_DEPT_DT, ")
                 .append("    odtktcpn.SEG_DEP_AIRPRT_IATA_CD AS SEG_DEPT_ARPRT_CD, ")
                 .append("    odtktcpn.SEG_ARVL_AIRPRT_IATA_CD AS SEG_ARVL_ARPRT_CD, ")
@@ -61,18 +58,11 @@ public class TicketReceiptRepository {
                 .append("ON odtkt.OD_TICKET_NBR = tcust.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = tcust.TICKET_ISSUE_DT ")
                 .append("JOIN  ").append(ticketSchemaName).append(".TICKET tkt ")
                 .append("ON odtkt.OD_TICKET_NBR = tkt.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = tkt.TICKET_ISSUE_DT ")
-                .append("JOIN  ").append(ticketSchemaName).append(".AIRPORT_STATION_CURRENT arptstn1 ")
-                .append("ON odtkt.OD_ORIGIN_AIRPRT_IATA_CD = arptstn1.AIRPRT_CD ")
-                .append("JOIN  ").append(ticketSchemaName).append(".AIRPORT_STATION_CURRENT arptstn2 ")
-                .append("ON odtkt.OD_DESTNTN_AIRPRT_IATA_CD = arptstn2.AIRPRT_CD ")
-                .append("JOIN  ").append(ticketSchemaName).append(".AIRPORT_STATION_CURRENT arptstn3 ")
-                .append("ON odtkt.OD_ORIGIN_AIRPRT_IATA_CD = arptstn3.AIRPRT_CD ")
-                .append("JOIN  ").append(ticketSchemaName).append(".AIRPORT_STATION_CURRENT arptstn4 ")
-                .append("ON odtkt.OD_DESTNTN_AIRPRT_IATA_CD = arptstn4.AIRPRT_CD ")
                 .append("JOIN  ").append(ticketSchemaName).append(".OD_TICKET_TRAVEL_COUPON odtktcpn ")
                 .append("ON odtkt.OD_TICKET_NBR = odtktcpn.OD_TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = odtktcpn.OD_TICKET_ISSUE_DT ")
                 .append("JOIN  ").append(ticketSchemaName).append(".TICKET_COUPON tktcpn ")
                 .append("ON odtktcpn.OD_TICKET_NBR = tktcpn.TICKET_NBR AND odtktcpn.OD_TICKET_ISSUE_DT = tktcpn.TICKET_ISSUE_DT ")
+                .append("AND odtktcpn.OD_TICKET_COUPON_SEQ_NBR = tktcpn.COUPON_NBR ")
                 .append("WHERE ")
                 .append("odtkt.OD_TICKET_NBR = ? ")
                 .append("AND odtkt.OD_SRC_SYS_CD = 'VCR' ")
@@ -81,11 +71,12 @@ public class TicketReceiptRepository {
                 .append("AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? ")
                 .append("AND UPPER(TRIM(tcust.PNR_PAX_LAST_NM)) = ? ")
                 .append("AND odtktcpn.OD_TYPE_CD = 'TRUE_OD' ")
+                .append("ORDER BY odtktcpn.OD_TICKET_COUPON_SEQ_NBR ")
                 .toString();
 
-        List<TicketReceipt> ticketReceiptList = jdbcTemplate.query(sql, new TicketReceiptMapper(), ticketNumber, departureDate,
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate,
                 firstName, lastName);
-        return CollectionUtils.isEmpty(ticketReceiptList) ? null : ticketReceiptList.get(0);
+        return ticketReceiptMapper.mapTicketReceipt(sqlRowSet);
     }
 
 }

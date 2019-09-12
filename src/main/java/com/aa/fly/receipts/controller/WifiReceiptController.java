@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aa.ct.fly.logging.annotations.MSLogger;
-import com.aa.fly.receipts.domain.Receipt;
-import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.WifiReceipt;
 import com.aa.fly.receipts.domain.WifiSearchCriteria;
 import com.aa.fly.receipts.service.WifiReceiptService;
@@ -30,19 +28,6 @@ public class WifiReceiptController {
 
     @Autowired
     private WifiReceiptService wifiReceiptService;
-
-    @MSLogger
-    @ApiOperation(value = "Find receipt by ticketNumber, firstName, lastName, departureDate")
-    @ApiResponses({ @ApiResponse(
-            code = 500, // HttpStatus.INTERNAL_SERVER_ERROR
-            message = "Unexpected Error",
-            response = Receipt.class) })
-    @PostMapping("/receipt")
-    public Receipt getReceipts(@RequestBody SearchCriteria searchCriteria)
-
-    {
-        return wifiReceiptService.findReceipt(searchCriteria);
-    }
 
     @MSLogger
     @ApiOperation(value = "Find wifi receipt by ccLastFour, lastName, date range")

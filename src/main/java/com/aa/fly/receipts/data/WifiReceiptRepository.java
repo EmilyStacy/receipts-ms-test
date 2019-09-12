@@ -9,8 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aa.fly.receipts.domain.Receipt;
-import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.WifiLineItem;
 import com.aa.fly.receipts.domain.WifiReceipt;
 import com.aa.fly.receipts.domain.WifiSearchCriteria;
@@ -28,19 +26,6 @@ public class WifiReceiptRepository {
     private String inflightSchemaName;
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
-    @Transactional(readOnly = true)
-    public Receipt findReceipt(SearchCriteria criteria) {
-
-        String fareTotal = jdbcTemplate.queryForObject(
-                "SELECT    FARE.FARE_TTL_AMT\n" + "FROM    CERT_TCN_VW.TCN_TICKET_FARE_CONSTRC FARE\n"
-                        + "WHERE    FARE.FARE_TTL_CURNCY_CD = 'USD'\n" + "AND        FARE.TICKET_NBR_TXT = ?",
-                new Object[] {
-                        criteria.getTicketNumber()
-                }, String.class);
-
-        return buildReceipt(criteria, fareTotal);
-    }
 
     @Transactional(readOnly = true)
     public WifiReceipt findWifiReceipt(WifiSearchCriteria criteria) {
@@ -78,14 +63,6 @@ public class WifiReceiptRepository {
         WifiReceipt wifiReceipt = new WifiReceipt();
         wifiReceipt.setWifiLineItems(wifiLineItems);
         return wifiReceipt;
-    }
-
-    private Receipt buildReceipt(SearchCriteria criteria, String fareTotal) {
-        Receipt receipt = new Receipt();
-        receipt.setFirstName(criteria.getFirstName());
-        receipt.setLastName(criteria.getLastName());
-        receipt.setReceiptTotal(fareTotal);
-        return receipt;
     }
 
 }
