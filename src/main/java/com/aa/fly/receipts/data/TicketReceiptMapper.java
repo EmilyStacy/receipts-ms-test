@@ -1,19 +1,20 @@
 package com.aa.fly.receipts.data;
 
-import com.aa.fly.receipts.domain.SegmentDetail;
-import com.aa.fly.receipts.domain.TicketReceipt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.aa.fly.receipts.domain.SegmentDetail;
+import com.aa.fly.receipts.domain.TicketReceipt;
+
 @Component
-public class TicketReceiptMapper  {
+public class TicketReceiptMapper {
 
     @Autowired
     private AirportRepository airportRepository;
 
     public TicketReceipt mapTicketReceipt(SqlRowSet rs) {
-        
+
         TicketReceipt ticketReceipt = new TicketReceipt();
         int rowCount = 0;
 
@@ -51,6 +52,7 @@ public class TicketReceiptMapper  {
         segmentDetail.setFlightNumber(rs.getString("FLIGHT_NBR") != null ? rs.getString("FLIGHT_NBR").trim() : null);
         segmentDetail.setBookingClass(rs.getString("BOOKING_CLASS") != null ? rs.getString("BOOKING_CLASS").trim() : null);
         segmentDetail.setFareBasis(rs.getString("FARE_BASE") != null ? rs.getString("FARE_BASE").trim() : null);
+        segmentDetail.setCouponSeqNumber(rs.getString("COUPON_SEQ_NBR") != null ? rs.getString("COUPON_SEQ_NBR").trim() : null);
 
         return segmentDetail;
     }

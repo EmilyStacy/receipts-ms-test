@@ -1,7 +1,7 @@
 package com.aa.fly.receipts.data;
 
-import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketReceipt;
+import java.text.SimpleDateFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +9,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
+import com.aa.fly.receipts.domain.SearchCriteria;
+import com.aa.fly.receipts.domain.TicketReceipt;
 
 @Repository
 public class TicketReceiptRepository {
@@ -34,7 +35,7 @@ public class TicketReceiptRepository {
         String ticketNumber = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
 
         String sql = new StringBuilder("SELECT ")
-                //================= header ==============================
+                // ================= header ==============================
                 .append("    odtkt.OD_TICKET_AIRLN_ACCT_CD AS AIRLN_ACCT_CD, ")
                 .append("    odtkt.OD_TICKET_NBR AS TICKET_NBR, ")
                 .append("    odtkt.OD_TICKET_ISSUE_DT AS TICKET_ISSUE_DT, ")
@@ -44,7 +45,7 @@ public class TicketReceiptRepository {
                 .append("    odtkt.OD_ORIGIN_AIRPRT_IATA_CD AS ORG_ATO_CD, ")
                 .append("    odtkt.OD_DESTNTN_AIRPRT_IATA_CD AS DEST_ATO_CD, ")
                 .append("    tkt.PNR_LOCTR_ID AS PNR, ")
-                //=================== trip details =======================
+                // =================== trip details =======================
                 .append("    odtktcpn.SEG_LOCAL_DEP_DT AS SEG_DEPT_DT, ")
                 .append("    odtktcpn.SEG_DEP_AIRPRT_IATA_CD AS SEG_DEPT_ARPRT_CD, ")
                 .append("    odtktcpn.SEG_ARVL_AIRPRT_IATA_CD AS SEG_ARVL_ARPRT_CD, ")
@@ -52,7 +53,8 @@ public class TicketReceiptRepository {
                 .append("    odtktcpn.SEG_LOCAL_IN_TM AS SEG_ARVL_TM, ")
                 .append("    tktcpn.FLOWN_OPERAT_FLIGHT_NBR AS FLIGHT_NBR, ")
                 .append("    tktcpn.ACCT_FARE_CLASS_CD AS BOOKING_CLASS, ")
-                .append("    tktcpn.FARE_BASE_CD AS FARE_BASE ")
+                .append("    tktcpn.FARE_BASE_CD AS FARE_BASE, ")
+                .append("    odtktcpn.OD_TICKET_COUPON_SEQ_NBR AS COUPON_SEQ_NBR ")
                 .append("FROM ").append(ticketSchemaName).append(".OD_TICKET odtkt ")
                 .append("JOIN  ").append(ticketSchemaName).append(".TICKET_CUSTOMER tcust ")
                 .append("ON odtkt.OD_TICKET_NBR = tcust.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = tcust.TICKET_ISSUE_DT ")
@@ -71,7 +73,7 @@ public class TicketReceiptRepository {
                 .append("AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? ")
                 .append("AND UPPER(TRIM(tcust.PNR_PAX_LAST_NM)) = ? ")
                 .append("AND odtktcpn.OD_TYPE_CD = 'TRUE_OD' ")
-                .append("ORDER BY odtktcpn.OD_TICKET_COUPON_SEQ_NBR ")
+                .append("ORDER BY odtktcpn.SEG_LOCAL_DEP_DT, odtktcpn.SEG_LOCAL_OUT_TM ")
                 .toString();
 
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate,

@@ -36,6 +36,7 @@ public class ReceiptsMSDomainTest {
         validateAccessors(WifiSearchCriteria.class);
         validateAccessors(WifiLineItem.class);
         validateAccessors(TicketReceipt.class);
+        validateAccessors(SegmentDetail.class);
 
     }
 
@@ -72,7 +73,6 @@ public class ReceiptsMSDomainTest {
         return criteria;
     }
 
-
     public static SearchCriteria getSearchCriteriaWithTicketNumber() throws ParseException {
         SearchCriteria criteria = new SearchCriteria();
         criteria.setLastName("TEST");
@@ -99,7 +99,7 @@ public class ReceiptsMSDomainTest {
         wifiReceipt.getWifiLineItems().add(lineItem);
         return wifiReceipt;
     }
-    
+
     public static TicketReceipt getTicketReceipt() throws ParseException {
         TicketReceipt ticketReceipt = new TicketReceipt();
         ticketReceipt.setAirlineAccountCode("001");

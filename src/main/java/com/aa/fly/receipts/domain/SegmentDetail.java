@@ -4,8 +4,7 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class SegmentDetail
-{
+public class SegmentDetail {
     private String segmentDepartureAirportName;
     private String segmentArrivalAirportName;
     private String segmentDepartureAirportCode;
@@ -20,6 +19,7 @@ public class SegmentDetail
     private String flightNumber;
     private String bookingClass;
     private String fareBasis;
+    private String couponSeqNumber;
 
     public String getSegmentDepartureAirportName() {
         return segmentDepartureAirportName;
@@ -109,7 +109,16 @@ public class SegmentDetail
         this.fareBasis = fareBasis;
     }
 
-    @Override public String toString() {
+    public String getCouponSeqNumber() {
+        return couponSeqNumber;
+    }
+
+    public void setCouponSeqNumber(String couponSeqNumber) {
+        this.couponSeqNumber = couponSeqNumber;
+    }
+
+    @Override
+    public String toString() {
         return "SegmentDetail{" +
                 "segmentDepartureAirportName='" + segmentDepartureAirportName + '\'' +
                 ", segmentArrivalAirportName='" + segmentArrivalAirportName + '\'' +
@@ -122,6 +131,7 @@ public class SegmentDetail
                 ", flightNumber='" + flightNumber + '\'' +
                 ", bookingClass='" + bookingClass + '\'' +
                 ", fareBasis='" + fareBasis + '\'' +
+                ", couponSeqNumber='" + couponSeqNumber + '\'' +
                 '}';
     }
 }

@@ -1,7 +1,12 @@
 package com.aa.fly.receipts.data;
 
-import com.aa.fly.receipts.domain.SegmentDetail;
-import com.aa.fly.receipts.domain.TicketReceipt;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,12 +15,8 @@ import org.mockito.Mockito;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.aa.fly.receipts.domain.SegmentDetail;
+import com.aa.fly.receipts.domain.TicketReceipt;
 
 /**
  * Created by 629874 on 5/17/2019.
@@ -52,7 +53,7 @@ public class TicketReceiptMapperTest {
         Mockito.when(airportRepository.getAirportName("MIA")).thenReturn("Miami International", "Miami International");
         Mockito.when(resultSet.getString("PNR")).thenReturn("MRYMPT");
 
-        //mock segment details
+        // mock segment details
         Mockito.when(resultSet.getDate("SEG_DEPT_DT")).thenReturn(new java.sql.Date(departureDate.getTime()));
         Mockito.when(resultSet.getString("SEG_DEPT_ARPRT_CD")).thenReturn("MCO");
         Mockito.when(resultSet.getString("SEG_ARVL_ARPRT_CD")).thenReturn("MIA");
@@ -63,11 +64,11 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("FLIGHT_NBR")).thenReturn("1536");
         Mockito.when(resultSet.getString("BOOKING_CLASS")).thenReturn("B");
         Mockito.when(resultSet.getString("FARE_BASE")).thenReturn("QVAJZNB3");
-
+        Mockito.when(resultSet.getString("COUPON_SEQ_NBR")).thenReturn("1");
 
         TicketReceipt item = ticketReceiptMapper.mapTicketReceipt(resultSet);
 
-        //header
+        // header
         assertThat(item.getAirlineAccountCode()).isEqualTo("001");
         assertThat(item.getTicketNumber()).isEqualTo("2335038507");
         assertThat(item.getTicketIssueDate()).isEqualTo(dateFormat.parse("2019-03-14"));
@@ -80,7 +81,7 @@ public class TicketReceiptMapperTest {
         assertThat(item.getDestinationAirport()).isEqualTo("Miami International");
         assertThat(item.getPnr()).isEqualTo("MRYMPT");
 
-        //segment details
+        // segment details
         assertThat(item.getSegmentDetails().size()).isEqualTo(1);
         SegmentDetail segmentDetail = item.getSegmentDetails().get(0);
         assertThat(segmentDetail.getSegmentDepartureAirportName()).isEqualTo("Orlando International");
@@ -95,11 +96,10 @@ public class TicketReceiptMapperTest {
         assertThat(segmentDetail.getCarrierCode()).isEqualTo("AA");
         assertThat(segmentDetail.getBookingClass()).isEqualTo("B");
         assertThat(segmentDetail.getFareBasis()).isEqualTo("QVAJZNB3");
-
-
+        assertThat(segmentDetail.getCouponSeqNumber()).isEqualTo("1");
 
     }
-    
+
     @Test
     public void mapResultSetWithNulls() throws SQLException, ParseException {
 
