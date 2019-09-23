@@ -193,16 +193,16 @@ pipeline {
                 ]
             }
         }
-
-        stage ('job:bff-e2e') {
-            when {
-                branch 'master'
-            }
-            
-            steps {
-                build job: 'AA-DevOps/AA-CustTech-Fly/AA-CT-Fly-Receipts/CrossApps/bff-e2e'
-            }
-        }
+        
+//        stage ('job:bff-e2e') {
+//            when {
+//                branch 'master'
+//            }
+//            
+//            steps {
+//                build job: 'AA-DevOps/AA-CustTech-Fly/AA-CT-Fly-Receipts/CrossApps/bff-e2e'
+//            }
+//        }
 
         stage('deploy stage') {
             when {
