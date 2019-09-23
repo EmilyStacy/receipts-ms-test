@@ -131,7 +131,7 @@ public class SegmentDetail {
                 ", flightNumber='" + flightNumber + '\'' +
                 ", bookingClass='" + bookingClass + '\'' +
                 ", fareBasis='" + fareBasis + '\'' +
-                ", couponSeqNumber='" + isReturnTrip + '\'' +
+                ", isReturnTrip='" + isReturnTrip + '\'' +
                 '}';
     }
 }
