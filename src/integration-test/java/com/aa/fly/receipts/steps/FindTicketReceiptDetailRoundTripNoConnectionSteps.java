@@ -41,10 +41,10 @@ public class FindTicketReceiptDetailRoundTripNoConnectionSteps extends SpringInt
         executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
     }
 
-    @Then("^I get a successful response for round trip ticket receipt with firstSegDepartureDate \"([^\"]*)\", firstSegAirportFrom \"([^\"]*)\", firstSegAirportTo \"([^\"]*)\", firstSegTimeFrom \"([^\"]*)\", firstSegTimeTo \"([^\"]*)\", firstSegFlightNum \\\"([^\\\"]*)\\\", firstSegCouponSeqNumber \\\"([^\\\"]*)\\\", secondSegDepartureDate \\\"([^\\\"]*)\\\", secondSegAirportFrom \\\"([^\\\"]*)\\\", secondSegAirportTo \"([^\"]*)\", secondSegTimeFrom \"([^\"]*)\", secondSegTimeTo \"([^\"]*)\", secondSegFlightNum \"([^\"]*)\", secondSegCouponSeqNumber \"([^\"]*)\"$")
+    @Then("^I get a successful response for round trip ticket receipt with firstSegDepartureDate \"([^\"]*)\", firstSegAirportFrom \"([^\"]*)\", firstSegAirportTo \"([^\"]*)\", firstSegTimeFrom \"([^\"]*)\", firstSegTimeTo \"([^\"]*)\", firstSegFlightNum \\\"([^\\\"]*)\\\", firstSegReturnTrip \\\"([^\\\"]*)\\\", secondSegDepartureDate \\\"([^\\\"]*)\\\", secondSegAirportFrom \\\"([^\\\"]*)\\\", secondSegAirportTo \"([^\"]*)\", secondSegTimeFrom \"([^\"]*)\", secondSegTimeTo \"([^\"]*)\", secondSegFlightNum \"([^\"]*)\", secondSegReturnTrip \"([^\"]*)\"$")
     public void i_submit_my_request(String firstSegDepartureDate, String firstSegAirportFrom, String firstSegAirportTo, String firstSegTimeFrom, String firstSegTimeTo, String firstSegFlightNum,
-            String firstSegCouponSeqNumber, String secondSegDepartureDate,
-            String secondSegAirportFrom, String secondSegAirportTo, String secondSegTimeFrom, String secondSegTimeTo, String secondSegFlightNum, String secondSegCouponSeqNumber)
+            boolean firstSegReturnTrip, String secondSegDepartureDate,
+            String secondSegAirportFrom, String secondSegAirportTo, String secondSegTimeFrom, String secondSegTimeTo, String secondSegFlightNum, boolean secondSegReturnTrip)
             throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
@@ -60,7 +60,7 @@ public class FindTicketReceiptDetailRoundTripNoConnectionSteps extends SpringInt
         Assert.assertEquals(firstSegTimeFrom, firstSegmentDetail.getSegmentDepartureTime());
         Assert.assertEquals(firstSegTimeTo, firstSegmentDetail.getSegmentArrivalTime());
         Assert.assertEquals(firstSegFlightNum, firstSegmentDetail.getFlightNumber());
-        Assert.assertEquals(firstSegCouponSeqNumber, firstSegmentDetail.getCouponSeqNumber());
+        Assert.assertEquals(Boolean.valueOf(firstSegReturnTrip), firstSegmentDetail.isReturnTrip());
 
         Assert.assertEquals(secondSegDepartureDate, dateFormat.format(secondSegmentDetail.getSegmentDepartureDate()));
         Assert.assertEquals(secondSegAirportFrom, secondSegmentDetail.getSegmentDepartureAirportCode());
@@ -68,6 +68,6 @@ public class FindTicketReceiptDetailRoundTripNoConnectionSteps extends SpringInt
         Assert.assertEquals(secondSegTimeFrom, secondSegmentDetail.getSegmentDepartureTime());
         Assert.assertEquals(secondSegTimeTo, secondSegmentDetail.getSegmentArrivalTime());
         Assert.assertEquals(secondSegFlightNum, secondSegmentDetail.getFlightNumber());
-        Assert.assertEquals(secondSegCouponSeqNumber, secondSegmentDetail.getCouponSeqNumber());
+        Assert.assertEquals(Boolean.valueOf(secondSegReturnTrip), secondSegmentDetail.isReturnTrip());
     }
 }

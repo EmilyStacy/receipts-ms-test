@@ -33,13 +33,13 @@ public class TicketReceiptMapper {
                 ticketReceipt.setPnr(rs.getString("PNR"));
             }
 
-            ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs));
+            ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));
             rowCount++;
         }
         return ticketReceipt;
     }
 
-    private SegmentDetail mapSegmentDetails(SqlRowSet rs) {
+    private SegmentDetail mapSegmentDetails(SqlRowSet rs, int rowCount) {
         SegmentDetail segmentDetail = new SegmentDetail();
         segmentDetail.setSegmentDepartureDate(rs.getDate("SEG_DEPT_DT"));
         segmentDetail.setSegmentDepartureAirportCode(rs.getString("SEG_DEPT_ARPRT_CD") != null ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : null);
@@ -52,7 +52,7 @@ public class TicketReceiptMapper {
         segmentDetail.setFlightNumber(rs.getString("FLIGHT_NBR") != null ? rs.getString("FLIGHT_NBR").trim() : null);
         segmentDetail.setBookingClass(rs.getString("BOOKING_CLASS") != null ? rs.getString("BOOKING_CLASS").trim() : null);
         segmentDetail.setFareBasis(rs.getString("FARE_BASE") != null ? rs.getString("FARE_BASE").trim() : null);
-        segmentDetail.setCouponSeqNumber(rs.getString("COUPON_SEQ_NBR") != null ? rs.getString("COUPON_SEQ_NBR").trim() : null);
+        segmentDetail.setReturnTrip(rs.getString("COUPON_SEQ_NBR") != null && rs.getString("COUPON_SEQ_NBR").equals("1") && rowCount != 0 ? true : false);
 
         return segmentDetail;
     }

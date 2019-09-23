@@ -96,8 +96,7 @@ public class TicketReceiptMapperTest {
         assertThat(segmentDetail.getCarrierCode()).isEqualTo("AA");
         assertThat(segmentDetail.getBookingClass()).isEqualTo("B");
         assertThat(segmentDetail.getFareBasis()).isEqualTo("QVAJZNB3");
-        assertThat(segmentDetail.getCouponSeqNumber()).isEqualTo("1");
-
+        assertThat(segmentDetail.isReturnTrip()).isFalse();
     }
 
     @Test

@@ -19,7 +19,7 @@ public class SegmentDetail {
     private String flightNumber;
     private String bookingClass;
     private String fareBasis;
-    private String couponSeqNumber;
+    private boolean isReturnTrip;
 
     public String getSegmentDepartureAirportName() {
         return segmentDepartureAirportName;
@@ -109,12 +109,12 @@ public class SegmentDetail {
         this.fareBasis = fareBasis;
     }
 
-    public String getCouponSeqNumber() {
-        return couponSeqNumber;
+    public boolean isReturnTrip() {
+        return isReturnTrip;
     }
 
-    public void setCouponSeqNumber(String couponSeqNumber) {
-        this.couponSeqNumber = couponSeqNumber;
+    public void setReturnTrip(boolean isReturnTrip) {
+        this.isReturnTrip = isReturnTrip;
     }
 
     @Override
@@ -131,7 +131,7 @@ public class SegmentDetail {
                 ", flightNumber='" + flightNumber + '\'' +
                 ", bookingClass='" + bookingClass + '\'' +
                 ", fareBasis='" + fareBasis + '\'' +
-                ", couponSeqNumber='" + couponSeqNumber + '\'' +
+                ", couponSeqNumber='" + isReturnTrip + '\'' +
                 '}';
     }
 }
