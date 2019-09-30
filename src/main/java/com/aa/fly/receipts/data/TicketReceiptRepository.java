@@ -64,7 +64,7 @@ public class TicketReceiptRepository {
                 .append("ON odtkt.OD_TICKET_NBR = odtktcpn.OD_TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = odtktcpn.OD_TICKET_ISSUE_DT ")
                 .append("JOIN  ").append(ticketSchemaName).append(".TICKET_COUPON tktcpn ")
                 .append("ON odtktcpn.OD_TICKET_NBR = tktcpn.TICKET_NBR AND odtktcpn.OD_TICKET_ISSUE_DT = tktcpn.TICKET_ISSUE_DT ")
-                .append("AND odtktcpn.OD_TICKET_COUPON_SEQ_NBR = tktcpn.COUPON_NBR ")
+                .append("AND odtktcpn.SEG_LOCAL_DEP_DT = tktcpn.SEG_DEP_DT AND odtktcpn.SEG_LOCAL_OUT_TM = tktcpn.SEG_DEP_TM ")
                 .append("WHERE ")
                 .append("odtkt.OD_TICKET_NBR = ? ")
                 .append("AND odtkt.OD_SRC_SYS_CD = 'VCR' ")
