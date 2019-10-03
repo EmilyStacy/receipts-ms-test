@@ -1,16 +1,16 @@
 package com.aa.fly.receipts.steps;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.hasItems;
-
-import java.text.ParseException;
-
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+
+import java.text.ParseException;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.hasItems;
 
 public class FindMultipleWifiReceiptsSteps {
 

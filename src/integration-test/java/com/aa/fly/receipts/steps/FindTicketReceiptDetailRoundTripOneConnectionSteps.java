@@ -68,7 +68,7 @@ public class FindTicketReceiptDetailRoundTripOneConnectionSteps extends SpringIn
         Assert.assertEquals(departSeg1TimeFrom, firstDepartureSegmentDetail.getSegmentDepartureTime());
         Assert.assertEquals(departSeg1TimeTo, firstDepartureSegmentDetail.getSegmentArrivalTime());
         Assert.assertEquals(departSeg1FlightNum, firstDepartureSegmentDetail.getFlightNumber());
-        Assert.assertEquals(Boolean.valueOf(departSeg1_isReturnTrip), firstDepartureSegmentDetail.isReturnTrip());
+        Assert.assertEquals(departSeg1_isReturnTrip, firstDepartureSegmentDetail.getReturnTrip());
 
         Assert.assertEquals(departSeg2DepartureDate, dateFormat.format(secondDepartureSegmentDetail.getSegmentDepartureDate()));
         Assert.assertEquals(departSeg2AirportFrom, secondDepartureSegmentDetail.getSegmentDepartureAirportCode());
@@ -76,7 +76,7 @@ public class FindTicketReceiptDetailRoundTripOneConnectionSteps extends SpringIn
         Assert.assertEquals(departSeg2TimeFrom, secondDepartureSegmentDetail.getSegmentDepartureTime());
         Assert.assertEquals(departSeg2TimeTo, secondDepartureSegmentDetail.getSegmentArrivalTime());
         Assert.assertEquals(departSeg2FlightNum, secondDepartureSegmentDetail.getFlightNumber());
-        Assert.assertEquals(Boolean.valueOf(departSeg2ReturnTrip), secondDepartureSegmentDetail.isReturnTrip());
+        Assert.assertEquals(departSeg2ReturnTrip, secondDepartureSegmentDetail.getReturnTrip());
 
 
         Assert.assertEquals(returnSeg1DepartureDate, dateFormat.format(firstReturnSegmentDetail.getSegmentDepartureDate()));
@@ -85,7 +85,7 @@ public class FindTicketReceiptDetailRoundTripOneConnectionSteps extends SpringIn
         Assert.assertEquals(returnSeg1TimeFrom, firstReturnSegmentDetail.getSegmentDepartureTime());
         Assert.assertEquals(returnSeg1TimeTo, firstReturnSegmentDetail.getSegmentArrivalTime());
         Assert.assertEquals(returnSeg1FlightNum, firstReturnSegmentDetail.getFlightNumber());
-        //Assert.assertEquals(Boolean.valueOf(returnSeg1ReturnTrip), firstReturnSegmentDetail.isReturnTrip());
+        Assert.assertEquals(returnSeg1ReturnTrip, firstReturnSegmentDetail.getReturnTrip());
 
         Assert.assertEquals(returnSeg2DepartureDate, dateFormat.format(secondReturnSegmentDetail.getSegmentDepartureDate()));
         Assert.assertEquals(returnSeg2AirportFrom, secondReturnSegmentDetail.getSegmentDepartureAirportCode());

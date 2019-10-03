@@ -19,7 +19,7 @@ public class SegmentDetail {
     private String flightNumber;
     private String bookingClass;
     private String fareBasis;
-    private boolean isReturnTrip;
+    private String returnTrip;
 
     public String getSegmentDepartureAirportName() {
         return segmentDepartureAirportName;
@@ -109,12 +109,12 @@ public class SegmentDetail {
         this.fareBasis = fareBasis;
     }
 
-    public boolean isReturnTrip() {
-        return isReturnTrip;
+    public String getReturnTrip() {
+        return returnTrip;
     }
 
-    public void setReturnTrip(boolean isReturnTrip) {
-        this.isReturnTrip = isReturnTrip;
+    public void setReturnTrip(String returnTrip) {
+        this.returnTrip = returnTrip;
     }
 
     @Override
@@ -131,7 +131,7 @@ public class SegmentDetail {
                 ", flightNumber='" + flightNumber + '\'' +
                 ", bookingClass='" + bookingClass + '\'' +
                 ", fareBasis='" + fareBasis + '\'' +
-                ", isReturnTrip='" + isReturnTrip + '\'' +
+                ", returnTrip='" + returnTrip + '\'' +
                 '}';
     }
 }
