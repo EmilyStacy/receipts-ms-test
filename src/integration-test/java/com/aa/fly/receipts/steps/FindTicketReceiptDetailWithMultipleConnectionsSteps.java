@@ -75,10 +75,20 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
 
     private String buildSegmentString(SegmentDetail segment) {
         //AA4063 leaving TYR to DFW on 2019-10-26 at 06:45:00 and arriving 07:48:00 in class OWBVZNB5
-        String segmentString = segment.getCarrierCode() + segment.getFlightNumber();
-        segmentString = segmentString + " leaving " + segment.getSegmentDepartureAirportCode() + " to " + segment.getSegmentArrivalAirportCode();
-        segmentString = segmentString + " on " + dateFormat.format(segment.getSegmentDepartureDate()) + " at " + segment.getSegmentDepartureTime();
-        segmentString = segmentString + " and arriving " + segment.getSegmentArrivalTime() + " in class " + segment.getFareBasis();
-        return segmentString;
+        StringBuilder sb =  new StringBuilder(segment.getCarrierCode());
+        sb.append(segment.getFlightNumber());
+        sb.append(" leaving ");
+        sb.append(segment.getSegmentDepartureAirportCode());
+        sb.append(" to ");
+        sb.append(segment.getSegmentArrivalAirportCode());
+        sb.append(" on ");
+        sb.append(dateFormat.format(segment.getSegmentDepartureDate()));
+        sb.append(" at ");
+        sb.append(segment.getSegmentDepartureTime());
+        sb.append(" and arriving ");
+        sb.append(segment.getSegmentArrivalTime());
+        sb.append(" in class ");
+        sb.append(segment.getFareBasis());
+        return sb.toString();
     }
 }
