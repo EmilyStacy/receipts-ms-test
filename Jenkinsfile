@@ -90,7 +90,7 @@ pipeline {
             }
         }
 
-        stage ('sonar code review') {
+        /*stage ('sonar code review') {
             when {
                 changeRequest()
             }
@@ -108,7 +108,7 @@ pipeline {
                     -Dsonar.github.endpoint=https://ghe.aa.com/api/v3/ \
                 """
             }
-        }
+        }*/
 
         stage('coverage') {
             steps {
