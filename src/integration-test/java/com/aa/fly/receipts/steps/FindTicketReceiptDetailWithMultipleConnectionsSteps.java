@@ -21,12 +21,12 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
     private SearchCriteria criteria = new SearchCriteria();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    @Given("^I want to find round trip or one way with more than one connection ticket receipt for scenario \"(.+)\"$")
+    @Given("^I want to find trip details for scenario \"(.+)\"$")
     public void the_client_wants_to_find_ticket_receipt(String scenario) {
 
     }
 
-    @When("^I search for round trip or one way with multiple connections ticket number \"(.+)\", last name \"(.+)\", first name \"(.+)\", departure date \"(.+)\"$")
+    @When("^I search for my trip with ticket number \"(.+)\", last name \"(.+)\", first name \"(.+)\", departure date \"(.+)\"$")
     public void the_client_enters_ticket_number(String ticketNumber, String lastName, String firstName, String departureDate) {
         String branchApplicationUrl = System.getProperty("branch.application.url");
 
@@ -78,10 +78,18 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
         StringBuilder sb =  new StringBuilder(segment.getCarrierCode());
         sb.append(segment.getFlightNumber());
         sb.append(" leaving ");
-        sb.append(segment.getSegmentDepartureAirportCode());
-        sb.append(" to ");
-        sb.append(segment.getSegmentArrivalAirportCode());
-        sb.append(" on ");
+        sb.append(segment.getDepartureAirport().getCode());
+        sb.append("(");
+        sb.append(segment.getDepartureAirport().getCity());
+        sb.append(", ");
+        sb.append(segment.getDepartureAirport().getStateCode());
+        sb.append(") to ");
+        sb.append(segment.getArrivalAirport().getCode());
+        sb.append("(");
+        sb.append(segment.getArrivalAirport().getCity());
+        sb.append(", ");
+        sb.append(segment.getArrivalAirport().getStateCode());
+        sb.append(") on ");
         sb.append(dateFormat.format(segment.getSegmentDepartureDate()));
         sb.append(" at ");
         sb.append(segment.getSegmentDepartureTime());

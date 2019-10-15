@@ -30,14 +30,15 @@ public class ReceiptsMSDomainTest {
 
     @Test
     public void testAccesors_shouldAccessProperField() {
-
         validateAccessors(SearchCriteria.class);
         validateAccessors(WifiReceipt.class);
         validateAccessors(WifiSearchCriteria.class);
         validateAccessors(WifiLineItem.class);
         validateAccessors(TicketReceipt.class);
         validateAccessors(SegmentDetail.class);
-
+        validateAccessors(Airport.class);
+        validateAccessors(AirportLookup.class);
+        validateAccessors(AirportLookupObject.class);
     }
 
     @Test
@@ -60,7 +61,7 @@ public class ReceiptsMSDomainTest {
     public void testTicketSummaryToString() throws ParseException {
         TicketReceipt ticketReceipt = getTicketReceipt();
         Assert.assertEquals(
-                "TicketSummary [airlineAccountCode=001, ticketNumber=2335038507, ticketIssueDate=2019-03-14, departureDate=2019-09-30, firstName=SIMON, lastName=TEST, originAirportCode=MCO, destinationAirportCode=MIA, originAirport=Orlando International, destinationAirport=Miami International, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, segmentDetails=[]]",
+                "TicketSummary [airlineAccountCode=001, ticketNumber=2335038507, ticketIssueDate=2019-03-14, departureDate=2019-09-30, firstName=SIMON, lastName=TEST, originAirport=Airport{code='MCO', name='Orlando International', stateCode='FL', city='Orlando', countryCode='USA', countryName='United States}, destinationAirport=Airport{code='MIA', name='Miami International', stateCode='FL', city='Miami', countryCode='USA', countryName='United States}, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, segmentDetails=[]]",
                 ticketReceipt.toString());
     }
 
@@ -104,16 +105,25 @@ public class ReceiptsMSDomainTest {
         TicketReceipt ticketReceipt = new TicketReceipt();
         ticketReceipt.setAirlineAccountCode("001");
         ticketReceipt.setDepartureDate(dateFormat.parse("09/30/2019"));
-        ticketReceipt.setDestinationAirport("Miami International");
-        ticketReceipt.setDestinationAirportCode("MIA");
+        ticketReceipt.setDestinationAirport(getAirport("MIA", "Miami International", "Miami", "FL", "USA", "United States"));
         ticketReceipt.setFirstName("SIMON");
         ticketReceipt.setLastName("TEST");
-        ticketReceipt.setOriginAirport("Orlando International");
-        ticketReceipt.setOriginAirportCode("MCO");
+        ticketReceipt.setOriginAirport(getAirport("MCO", "Orlando International", "Orlando", "FL", "USA", "United States"));
         ticketReceipt.setPnr("MRYMPT");
         ticketReceipt.setTicketNumber("2335038507");
         ticketReceipt.setTicketIssueDate(dateFormat.parse("03/14/2019"));
         return ticketReceipt;
     }
 
+
+    public static Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {
+        Airport airport = new Airport();
+        airport.setCode(code);
+        airport.setCity(city);
+        airport.setCountryCode(countryCode);
+        airport.setCountryName(countryName);
+        airport.setName(name);
+        airport.setStateCode(state);
+        return airport;
+    }
 }

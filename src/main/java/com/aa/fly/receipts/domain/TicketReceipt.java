@@ -22,10 +22,8 @@ public class TicketReceipt {
     private Date departureDate;
     private String firstName;
     private String lastName;
-    private String originAirportCode;
-    private String destinationAirportCode;
-    private String originAirport;
-    private String destinationAirport;
+    private Airport originAirport;
+    private Airport destinationAirport;
     private String pnr;
 
     List<SegmentDetail> segmentDetails = new ArrayList<>();
@@ -80,35 +78,19 @@ public class TicketReceipt {
         this.lastName = lastName;
     }
 
-    public String getOriginAirportCode() {
-        return originAirportCode;
-    }
-
-    public void setOriginAirportCode(String originAirportCode) {
-        this.originAirportCode = originAirportCode;
-    }
-
-    public String getDestinationAirportCode() {
-        return destinationAirportCode;
-    }
-
-    public void setDestinationAirportCode(String destinationAirportCode) {
-        this.destinationAirportCode = destinationAirportCode;
-    }
-
-    public String getOriginAirport() {
+    public Airport getOriginAirport() {
         return originAirport;
     }
 
-    public void setOriginAirport(String originAirport) {
+    public void setOriginAirport(Airport originAirport) {
         this.originAirport = originAirport;
     }
 
-    public String getDestinationAirport() {
+    public Airport getDestinationAirport() {
         return destinationAirport;
     }
 
-    public void setDestinationAirport(String destinationAirport) {
+    public void setDestinationAirport(Airport destinationAirport) {
         this.destinationAirport = destinationAirport;
     }
 
@@ -132,7 +114,7 @@ public class TicketReceipt {
     public String toString() {
         return "TicketSummary [airlineAccountCode=" + airlineAccountCode + ", ticketNumber=" + ticketNumber + ", ticketIssueDate=" + dateFormat.format(ticketIssueDate) + ", departureDate="
                 + dateFormat.format(departureDate)
-                + ", firstName=" + firstName + ", lastName=" + lastName + ", originAirportCode=" + originAirportCode + ", destinationAirportCode=" + destinationAirportCode + ", originAirport="
+                + ", firstName=" + firstName + ", lastName=" + lastName + ", originAirport="
                 + originAirport + ", destinationAirport=" + destinationAirport + ", pnr=" + pnr + ", dateFormat=" + dateFormat + ", segmentDetails=" + segmentDetails + "]";
     }
 

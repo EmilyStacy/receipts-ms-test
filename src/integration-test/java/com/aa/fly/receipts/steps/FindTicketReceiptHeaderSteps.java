@@ -47,8 +47,8 @@ public class FindTicketReceiptHeaderSteps extends SpringIntegrationTest {
 
         Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
-        Assert.assertEquals(originAirport, ticketReceipt.getOriginAirportCode());
-        Assert.assertEquals(destinationAirport, ticketReceipt.getDestinationAirportCode());
+        Assert.assertEquals(originAirport, ticketReceipt.getOriginAirport().getCode());
+        Assert.assertEquals(destinationAirport, ticketReceipt.getDestinationAirport().getCode());
         Assert.assertEquals(pnr, ticketReceipt.getPnr());
     }
 }

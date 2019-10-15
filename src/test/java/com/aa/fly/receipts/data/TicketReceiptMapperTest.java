@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.aa.fly.receipts.domain.Airport;
+import com.aa.fly.receipts.service.AirportService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,7 +30,7 @@ public class TicketReceiptMapperTest {
     private SqlRowSet resultSet;
 
     @Mock
-    private AirportRepository airportRepository;
+    private AirportService airportService;
 
     @InjectMocks
     private TicketReceiptMapper ticketReceiptMapper;
@@ -49,8 +51,8 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("LAST_NM")).thenReturn("TEST");
         Mockito.when(resultSet.getString("ORG_ATO_CD")).thenReturn("MCO");
         Mockito.when(resultSet.getString("DEST_ATO_CD")).thenReturn("MIA");
-        Mockito.when(airportRepository.getAirportName("MCO")).thenReturn("Orlando International", "Orlando International");
-        Mockito.when(airportRepository.getAirportName("MIA")).thenReturn("Miami International", "Miami International");
+        Mockito.when(airportService.getAirport("MCO")).thenReturn(getAirport("MCO", "Orlando International", "Orlando", "FL", "USA", "United States"));
+        Mockito.when(airportService.getAirport("MIA")).thenReturn(getAirport("MIA", "Miami International", "Miami", "FL", "USA", "United States"));
         Mockito.when(resultSet.getString("PNR")).thenReturn("MRYMPT");
 
         // mock segment details
@@ -75,20 +77,20 @@ public class TicketReceiptMapperTest {
         assertThat(item.getDepartureDate()).isEqualTo(departureDate);
         assertThat(item.getFirstName()).isEqualTo("SIMON");
         assertThat(item.getLastName()).isEqualTo("TEST");
-        assertThat(item.getOriginAirportCode()).isEqualTo("MCO");
-        assertThat(item.getDestinationAirportCode()).isEqualTo("MIA");
-        assertThat(item.getOriginAirport()).isEqualTo("Orlando International");
-        assertThat(item.getDestinationAirport()).isEqualTo("Miami International");
+        assertThat(item.getOriginAirport().getCode()).isEqualTo("MCO");
+        assertThat(item.getDestinationAirport().getCode()).isEqualTo("MIA");
+        assertThat(item.getOriginAirport().getName()).isEqualTo("Orlando International");
+        assertThat(item.getDestinationAirport().getName()).isEqualTo("Miami International");
         assertThat(item.getPnr()).isEqualTo("MRYMPT");
 
         // segment details
         assertThat(item.getSegmentDetails().size()).isEqualTo(1);
         SegmentDetail segmentDetail = item.getSegmentDetails().get(0);
-        assertThat(segmentDetail.getSegmentDepartureAirportName()).isEqualTo("Orlando International");
-        assertThat(segmentDetail.getSegmentArrivalAirportName()).isEqualTo("Miami International");
+        assertThat(segmentDetail.getDepartureAirport().getName()).isEqualTo("Orlando International");
+        assertThat(segmentDetail.getArrivalAirport().getName()).isEqualTo("Miami International");
         assertThat(segmentDetail.getSegmentDepartureDate()).isEqualTo(departureDate);
-        assertThat(segmentDetail.getSegmentDepartureAirportCode()).isEqualTo("MCO");
-        assertThat(segmentDetail.getSegmentArrivalAirportCode()).isEqualTo("MIA");
+        assertThat(segmentDetail.getDepartureAirport().getCode()).isEqualTo("MCO");
+        assertThat(segmentDetail.getArrivalAirport().getCode()).isEqualTo("MIA");
 
         assertThat(segmentDetail.getSegmentDepartureTime()).isEqualTo(segmentDepartureTime);
         assertThat(segmentDetail.getSegmentArrivalTime()).isEqualTo(segmentArrivalTime);
@@ -112,7 +114,7 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("LAST_NM")).thenReturn("TEST");
         Mockito.when(resultSet.getString("ORG_ATO_CD")).thenReturn(null);
         Mockito.when(resultSet.getString("DEST_ATO_CD")).thenReturn(null);
-        Mockito.when(airportRepository.getAirportName(null)).thenReturn(null, null, null, null);
+        Mockito.when(airportService.getAirport(null)).thenReturn(null);
         Mockito.when(resultSet.getString("PNR")).thenReturn("MRYMPT");
 
         TicketReceipt item = ticketReceiptMapper.mapTicketReceipt(resultSet);
@@ -122,8 +124,19 @@ public class TicketReceiptMapperTest {
         assertThat(item.getDepartureDate()).isEqualTo(dateFormat.parse("2019-09-30"));
         assertThat(item.getFirstName()).isEqualTo("SIMON");
         assertThat(item.getLastName()).isEqualTo("TEST");
-        assertThat(item.getOriginAirportCode()).isNull();
-        assertThat(item.getDestinationAirportCode()).isNull();
+        assertThat(item.getOriginAirport()).isNull();
+        assertThat(item.getDestinationAirport()).isNull();
         assertThat(item.getPnr()).isEqualTo("MRYMPT");
+    }
+
+    public Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {
+        Airport airport = new Airport();
+        airport.setCode(code);
+        airport.setCity(city);
+        airport.setCountryCode(countryCode);
+        airport.setCountryName(countryName);
+        airport.setName(name);
+        airport.setStateCode(state);
+        return airport;
     }
 }

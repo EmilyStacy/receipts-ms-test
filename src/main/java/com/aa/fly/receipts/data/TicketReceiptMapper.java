@@ -1,5 +1,6 @@
 package com.aa.fly.receipts.data;
 
+import com.aa.fly.receipts.service.AirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import com.aa.fly.receipts.domain.TicketReceipt;
 public class TicketReceiptMapper {
 
     @Autowired
-    private AirportRepository airportRepository;
+    private AirportService airportService;
 
     public TicketReceipt mapTicketReceipt(SqlRowSet rs) {
 
@@ -26,10 +27,8 @@ public class TicketReceiptMapper {
                 ticketReceipt.setDepartureDate(rs.getDate("DEP_DT"));
                 ticketReceipt.setFirstName(rs.getString("FIRST_NM"));
                 ticketReceipt.setLastName(rs.getString("LAST_NM"));
-                ticketReceipt.setOriginAirportCode(rs.getString("ORG_ATO_CD") != null ? rs.getString("ORG_ATO_CD").trim() : null);
-                ticketReceipt.setDestinationAirportCode(rs.getString("DEST_ATO_CD") != null ? rs.getString("DEST_ATO_CD").trim() : null);
-                ticketReceipt.setOriginAirport(airportRepository.getAirportName(ticketReceipt.getOriginAirportCode()));
-                ticketReceipt.setDestinationAirport(airportRepository.getAirportName(ticketReceipt.getDestinationAirportCode()));
+                ticketReceipt.setOriginAirport(airportService.getAirport(rs.getString("ORG_ATO_CD") != null ? rs.getString("ORG_ATO_CD").trim() : null));
+                ticketReceipt.setDestinationAirport(airportService.getAirport(rs.getString("DEST_ATO_CD") != null ? rs.getString("DEST_ATO_CD").trim() : null));
                 ticketReceipt.setPnr(rs.getString("PNR"));
             }
 
@@ -42,10 +41,8 @@ public class TicketReceiptMapper {
     private SegmentDetail mapSegmentDetails(SqlRowSet rs, int rowCount) {
         SegmentDetail segmentDetail = new SegmentDetail();
         segmentDetail.setSegmentDepartureDate(rs.getDate("SEG_DEPT_DT"));
-        segmentDetail.setSegmentDepartureAirportCode(rs.getString("SEG_DEPT_ARPRT_CD") != null ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : null);
-        segmentDetail.setSegmentArrivalAirportCode(rs.getString("SEG_ARVL_ARPRT_CD") != null ? rs.getString("SEG_ARVL_ARPRT_CD").trim() : null);
-        segmentDetail.setSegmentDepartureAirportName(airportRepository.getAirportName(segmentDetail.getSegmentDepartureAirportCode()));
-        segmentDetail.setSegmentArrivalAirportName(airportRepository.getAirportName(segmentDetail.getSegmentArrivalAirportCode()));
+        segmentDetail.setDepartureAirport(airportService.getAirport(rs.getString("SEG_DEPT_ARPRT_CD") != null ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : null));
+        segmentDetail.setArrivalAirport(airportService.getAirport(rs.getString("SEG_ARVL_ARPRT_CD") != null ? rs.getString("SEG_ARVL_ARPRT_CD").trim() : null));
         segmentDetail.setSegmentDepartureTime(rs.getString("SEG_DEPT_TM"));
         segmentDetail.setSegmentArrivalTime(rs.getString("SEG_ARVL_TM"));
         segmentDetail.setCarrierCode("AA");

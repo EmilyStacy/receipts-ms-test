@@ -5,10 +5,8 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class SegmentDetail {
-    private String segmentDepartureAirportName;
-    private String segmentArrivalAirportName;
-    private String segmentDepartureAirportCode;
-    private String segmentArrivalAirportCode;
+    private Airport departureAirport;
+    private Airport arrivalAirport;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date segmentDepartureDate;
@@ -21,36 +19,20 @@ public class SegmentDetail {
     private String fareBasis;
     private String returnTrip;
 
-    public String getSegmentDepartureAirportName() {
-        return segmentDepartureAirportName;
+    public Airport getDepartureAirport() {
+        return departureAirport;
     }
 
-    public void setSegmentDepartureAirportName(String segmentDepartureAirportName) {
-        this.segmentDepartureAirportName = segmentDepartureAirportName;
+    public void setDepartureAirport(Airport departureAirport) {
+        this.departureAirport = departureAirport;
     }
 
-    public String getSegmentArrivalAirportName() {
-        return segmentArrivalAirportName;
+    public Airport getArrivalAirport() {
+        return arrivalAirport;
     }
 
-    public void setSegmentArrivalAirportName(String segmentArrivalAirportName) {
-        this.segmentArrivalAirportName = segmentArrivalAirportName;
-    }
-
-    public String getSegmentDepartureAirportCode() {
-        return segmentDepartureAirportCode;
-    }
-
-    public void setSegmentDepartureAirportCode(String segmentDepartureAirportCode) {
-        this.segmentDepartureAirportCode = segmentDepartureAirportCode;
-    }
-
-    public String getSegmentArrivalAirportCode() {
-        return segmentArrivalAirportCode;
-    }
-
-    public void setSegmentArrivalAirportCode(String segmentArrivalAirportCode) {
-        this.segmentArrivalAirportCode = segmentArrivalAirportCode;
+    public void setArrivalAirport(Airport arrivalAirport) {
+        this.arrivalAirport = arrivalAirport;
     }
 
     public Date getSegmentDepartureDate() {
@@ -120,10 +102,8 @@ public class SegmentDetail {
     @Override
     public String toString() {
         return "SegmentDetail{" +
-                "segmentDepartureAirportName='" + segmentDepartureAirportName + '\'' +
-                ", segmentArrivalAirportName='" + segmentArrivalAirportName + '\'' +
-                ", segmentDepartureAirportCode='" + segmentDepartureAirportCode + '\'' +
-                ", segmentArrivalAirportCode='" + segmentArrivalAirportCode + '\'' +
+                "departureAirport='" + departureAirport + '\'' +
+                ", arrivalAirport='" + arrivalAirport + '\'' +
                 ", segmentDepartureDate=" + segmentDepartureDate +
                 ", segmentDepartureTime=" + segmentDepartureTime +
                 ", segmentArrivalTime=" + segmentArrivalTime +

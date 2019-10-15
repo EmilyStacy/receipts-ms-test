@@ -16,6 +16,10 @@ mosaic:
     schema:
       name: CERT_TCN_RECPT_VW
 
+airport:
+  service:
+    url: https://cdn.flyaa.aa.com/api/places/airports/v1.0?Client-Id=Receipts-MS
+
 logging:
   level:
     root: ERROR
