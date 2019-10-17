@@ -45,7 +45,7 @@ public class TicketReceiptMapper {
         segmentDetail.setArrivalAirport(airportService.getAirport(rs.getString("SEG_ARVL_ARPRT_CD") != null ? rs.getString("SEG_ARVL_ARPRT_CD").trim() : null));
         segmentDetail.setSegmentDepartureTime(rs.getString("SEG_DEPT_TM"));
         segmentDetail.setSegmentArrivalTime(rs.getString("SEG_ARVL_TM"));
-        segmentDetail.setCarrierCode("AA");
+        segmentDetail.setCarrierCode(rs.getString("SEG_OPERAT_CARRIER_CD") != null ? rs.getString("SEG_OPERAT_CARRIER_CD").trim() : null);
         segmentDetail.setFlightNumber(rs.getString("FLIGHT_NBR") != null ? rs.getString("FLIGHT_NBR").trim() : null);
         segmentDetail.setBookingClass(rs.getString("BOOKING_CLASS") != null ? rs.getString("BOOKING_CLASS").trim() : null);
         segmentDetail.setFareBasis(rs.getString("FARE_BASE") != null ? rs.getString("FARE_BASE").trim() : null);
