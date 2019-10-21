@@ -45,6 +45,7 @@ public class TicketReceiptRepository {
                 .append("    odtkt.OD_ORIGIN_AIRPRT_IATA_CD AS ORG_ATO_CD, ")
                 .append("    odtkt.OD_DESTNTN_AIRPRT_IATA_CD AS DEST_ATO_CD, ")
                 .append("    tkt.PNR_LOCTR_ID AS PNR, ")
+                .append("    frqtr.LYLTY_ACCT_ID AS AADVANT_NBR, ")
                 // =================== trip details =======================
                 .append("    odtktcpn.SEG_LOCAL_DEP_DT AS SEG_DEPT_DT, ")
                 .append("    odtktcpn.SEG_DEP_AIRPRT_IATA_CD AS SEG_DEPT_ARPRT_CD, ")
@@ -66,6 +67,9 @@ public class TicketReceiptRepository {
                 .append("JOIN  ").append(ticketSchemaName).append(".TICKET_COUPON tktcpn ")
                 .append("ON odtktcpn.OD_TICKET_NBR = tktcpn.TICKET_NBR AND odtktcpn.OD_TICKET_ISSUE_DT = tktcpn.TICKET_ISSUE_DT ")
                 .append("AND odtktcpn.SEG_LOCAL_DEP_DT = tktcpn.SEG_DEP_DT AND odtktcpn.SEG_LOCAL_OUT_TM = tktcpn.SEG_DEP_TM ")
+                .append("LEFT JOIN  ").append(ticketSchemaName).append(".PNR_FREQ_TRAVLR frqtr ")
+                .append("ON tcust.PNR_ORIGNL_ID = frqtr.PNR_LOCTR_ID AND tcust.PNR_ORIGNL_CREATE_DT = frqtr.PNR_CREATE_DT ")
+                .append("AND tcust.PARTY_ID = frqtr.PARTY_ID ")
                 .append("WHERE ")
                 .append("odtkt.OD_TICKET_NBR = ? ")
                 .append("AND odtkt.OD_SRC_SYS_CD = 'VCR' ")

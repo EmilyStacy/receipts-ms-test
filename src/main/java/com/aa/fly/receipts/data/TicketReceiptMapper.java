@@ -1,12 +1,12 @@
 package com.aa.fly.receipts.data;
 
-import com.aa.fly.receipts.service.AirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.service.AirportService;
 
 @Component
 public class TicketReceiptMapper {
@@ -30,6 +30,7 @@ public class TicketReceiptMapper {
                 ticketReceipt.setOriginAirport(airportService.getAirport(rs.getString("ORG_ATO_CD") != null ? rs.getString("ORG_ATO_CD").trim() : null));
                 ticketReceipt.setDestinationAirport(airportService.getAirport(rs.getString("DEST_ATO_CD") != null ? rs.getString("DEST_ATO_CD").trim() : null));
                 ticketReceipt.setPnr(rs.getString("PNR"));
+                ticketReceipt.setAdvantageNumber(rs.getString("AADVANT_NBR"));
             }
 
             ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));
