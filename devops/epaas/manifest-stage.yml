@@ -15,9 +15,9 @@ applications:
       -XX:NewSize=512m
       -XX:MaxNewSize=512m
       -Djava.security.egd=file:///dev/urandom
-      -Dhttp.proxyHost=inetgw.aa.com
+      -Dhttp.proxyHost=nonprod.inetgw.aa.com
       -Dhttp.proxyPort=9093
-      -Dhttps.proxyHost=inetgw.aa.com
+      -Dhttps.proxyHost=nonprod.inetgw.aa.com
       -Dhttps.proxyPort=9093
       -Dhttp.nonProxyHosts="*.aa.com"
   services:
