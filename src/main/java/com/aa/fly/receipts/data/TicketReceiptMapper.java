@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.AirportService;
@@ -22,15 +23,19 @@ public class TicketReceiptMapper {
         while (rs.next()) {
             if (rowCount == 0) {
                 ticketReceipt.setAirlineAccountCode(rs.getString("AIRLN_ACCT_CD") != null ? rs.getString("AIRLN_ACCT_CD").trim() : null);
-                ticketReceipt.setTicketNumber(rs.getString("TICKET_NBR"));
                 ticketReceipt.setTicketIssueDate(rs.getDate("TICKET_ISSUE_DT"));
                 ticketReceipt.setDepartureDate(rs.getDate("DEP_DT"));
-                ticketReceipt.setFirstName(rs.getString("FIRST_NM"));
-                ticketReceipt.setLastName(rs.getString("LAST_NM"));
                 ticketReceipt.setOriginAirport(airportService.getAirport(rs.getString("ORG_ATO_CD") != null ? rs.getString("ORG_ATO_CD").trim() : null));
                 ticketReceipt.setDestinationAirport(airportService.getAirport(rs.getString("DEST_ATO_CD") != null ? rs.getString("DEST_ATO_CD").trim() : null));
                 ticketReceipt.setPnr(rs.getString("PNR"));
-                ticketReceipt.setAdvantageNumber(rs.getString("AADVANT_NBR"));
+
+                PassengerDetail passengerDetail = new PassengerDetail();
+                passengerDetail.setTicketNumber(rs.getString("TICKET_NBR"));
+                passengerDetail.setFirstName(rs.getString("FIRST_NM"));
+                passengerDetail.setLastName(rs.getString("LAST_NM"));
+                passengerDetail.setAdvantageNumber(rs.getString("AADVANT_NBR"));
+
+                ticketReceipt.getPassengerDetails().add(passengerDetail);
             }
 
             ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));

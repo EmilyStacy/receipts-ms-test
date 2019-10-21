@@ -15,18 +15,15 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 public class TicketReceipt {
     private String airlineAccountCode;
-    private String ticketNumber;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date ticketIssueDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date departureDate;
-    private String firstName;
-    private String lastName;
     private Airport originAirport;
     private Airport destinationAirport;
     private String pnr;
-    private String advantageNumber;
 
+    List<PassengerDetail> passengerDetails = new ArrayList<>();
     List<SegmentDetail> segmentDetails = new ArrayList<>();
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -37,14 +34,6 @@ public class TicketReceipt {
 
     public void setAirlineAccountCode(String airlineAccountCode) {
         this.airlineAccountCode = airlineAccountCode;
-    }
-
-    public String getTicketNumber() {
-        return ticketNumber;
-    }
-
-    public void setTicketNumber(String ticketNumber) {
-        this.ticketNumber = ticketNumber;
     }
 
     public Date getTicketIssueDate() {
@@ -61,22 +50,6 @@ public class TicketReceipt {
 
     public void setDepartureDate(Date departureDate) {
         this.departureDate = departureDate;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public Airport getOriginAirport() {
@@ -103,14 +76,6 @@ public class TicketReceipt {
         this.pnr = pnr;
     }
 
-    public String getAdvantageNumber() {
-        return advantageNumber;
-    }
-
-    public void setAdvantageNumber(String advantageNumber) {
-        this.advantageNumber = advantageNumber;
-    }
-
     public List<SegmentDetail> getSegmentDetails() {
         return segmentDetails;
     }
@@ -119,13 +84,20 @@ public class TicketReceipt {
         this.segmentDetails = segmentDetails;
     }
 
+    public List<PassengerDetail> getPassengerDetails() {
+        return passengerDetails;
+    }
+
+    public void setPassengerDetails(List<PassengerDetail> passengerDetails) {
+        this.passengerDetails = passengerDetails;
+    }
+
     @Override
     public String toString() {
-        return "TicketSummary [airlineAccountCode=" + airlineAccountCode + ", ticketNumber=" + ticketNumber + ", ticketIssueDate=" + dateFormat.format(ticketIssueDate) + ", departureDate="
-                + dateFormat.format(departureDate)
-                + ", firstName=" + firstName + ", lastName=" + lastName + ", originAirport="
-                + originAirport + ", destinationAirport=" + destinationAirport + ", pnr=" + pnr + ", advantageNumber=" + advantageNumber + ", dateFormat=" + dateFormat + ", segmentDetails="
-                + segmentDetails + "]";
+        return "TicketSummary [airlineAccountCode=" + airlineAccountCode + ", ticketIssueDate=" + dateFormat.format(ticketIssueDate) + ", departureDate="
+                + dateFormat.format(departureDate) + ", originAirport="
+                + originAirport + ", destinationAirport=" + destinationAirport + ", pnr=" + pnr + ", dateFormat=" + dateFormat + ", passengerDetails="
+                + passengerDetails + ", segmentDetails=" + segmentDetails + "]";
     }
 
 }
