@@ -40,8 +40,8 @@ public class FindTicketReceiptHeaderSteps extends SpringIntegrationTest {
         executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
     }
 
-    @Then("^I get a successful response with origin airport \"(.+)\", destinationAirport \"(.+)\" and pnr \"(.+)\"$")
-    public void i_submit_my_request(String originAirport, String destinationAirport, String pnr) throws Throwable {
+    @Then("^I get a successful response with origin airport \"(.+)\", destinationAirport \"(.+)\" and pnr \"(.+)\" and advantageNumber \"(.+)\"$")
+    public void i_submit_my_request(String originAirport, String destinationAirport, String pnr, String advantageNumber) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
 
@@ -50,5 +50,6 @@ public class FindTicketReceiptHeaderSteps extends SpringIntegrationTest {
         Assert.assertEquals(originAirport, ticketReceipt.getOriginAirport().getCode());
         Assert.assertEquals(destinationAirport, ticketReceipt.getDestinationAirport().getCode());
         Assert.assertEquals(pnr, ticketReceipt.getPnr());
+        Assert.assertEquals(advantageNumber, ticketReceipt.getPassengerDetails().get(0).getAdvantageNumber());
     }
 }
