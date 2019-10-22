@@ -35,6 +35,7 @@ public class ReceiptsMSDomainTest {
         validateAccessors(WifiSearchCriteria.class);
         validateAccessors(WifiLineItem.class);
         validateAccessors(TicketReceipt.class);
+        validateAccessors(PassengerDetail.class);
         validateAccessors(SegmentDetail.class);
         validateAccessors(Airport.class);
         validateAccessors(AirportLookup.class);
@@ -61,8 +62,16 @@ public class ReceiptsMSDomainTest {
     public void testTicketSummaryToString() throws ParseException {
         TicketReceipt ticketReceipt = getTicketReceipt();
         Assert.assertEquals(
-                "TicketSummary [airlineAccountCode=001, ticketNumber=2335038507, ticketIssueDate=2019-03-14, departureDate=2019-09-30, firstName=SIMON, lastName=TEST, originAirport=Airport{code='MCO', name='Orlando International', stateCode='FL', city='Orlando', countryCode='USA', countryName='United States}, destinationAirport=Airport{code='MIA', name='Miami International', stateCode='FL', city='Miami', countryCode='USA', countryName='United States}, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, segmentDetails=[]]",
+                "TicketSummary [airlineAccountCode=001, ticketIssueDate=2019-03-14, departureDate=2019-09-30, originAirport=Airport{code='MCO', name='Orlando International', stateCode='FL', city='Orlando', countryCode='USA', countryName='United States}, destinationAirport=Airport{code='MIA', name='Miami International', stateCode='FL', city='Miami', countryCode='USA', countryName='United States}, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, passengerDetails=[], segmentDetails=[]]",
                 ticketReceipt.toString());
+    }
+
+    @Test
+    public void testPassengerDetailToString() throws ParseException {
+        TicketReceipt ticketReceipt = getTicketReceipt();
+        Assert.assertEquals(
+                "PassengerDetail: [ticketNumber=2371661425, firstName=SIMON, lastName=TEST, advantageNumber=XYZ1234]",
+                ticketReceipt.getPassengerDetails().get(0).toString());
     }
 
     public static WifiSearchCriteria getWifiSearchCriteria() throws ParseException {
@@ -106,15 +115,20 @@ public class ReceiptsMSDomainTest {
         ticketReceipt.setAirlineAccountCode("001");
         ticketReceipt.setDepartureDate(dateFormat.parse("09/30/2019"));
         ticketReceipt.setDestinationAirport(getAirport("MIA", "Miami International", "Miami", "FL", "USA", "United States"));
-        ticketReceipt.setFirstName("SIMON");
-        ticketReceipt.setLastName("TEST");
         ticketReceipt.setOriginAirport(getAirport("MCO", "Orlando International", "Orlando", "FL", "USA", "United States"));
         ticketReceipt.setPnr("MRYMPT");
-        ticketReceipt.setTicketNumber("2335038507");
         ticketReceipt.setTicketIssueDate(dateFormat.parse("03/14/2019"));
+
+        PassengerDetail passengerDetail = new PassengerDetail();
+        passengerDetail.setTicketNumber("2371661425");
+        passengerDetail.setFirstName("SIMON");
+        passengerDetail.setLastName("TEST");
+        passengerDetail.setAdvantageNumber("XYZ1234");
+
+        ticketReceipt.getPassengerDetails().add(passengerDetail);
+
         return ticketReceipt;
     }
-
 
     public static Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {
         Airport airport = new Airport();

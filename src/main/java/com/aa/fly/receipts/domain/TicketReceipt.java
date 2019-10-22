@@ -99,5 +99,4 @@ public class TicketReceipt {
                 + originAirport + ", destinationAirport=" + destinationAirport + ", pnr=" + pnr + ", dateFormat=" + dateFormat + ", passengerDetails="
                 + passengerDetails + ", segmentDetails=" + segmentDetails + "]";
     }
-
 }

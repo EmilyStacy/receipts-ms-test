@@ -7,8 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.aa.fly.receipts.domain.Airport;
-import com.aa.fly.receipts.service.AirportService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,8 +15,11 @@ import org.mockito.Mockito;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.aa.fly.receipts.domain.Airport;
+import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.service.AirportService;
 
 /**
  * Created by 629874 on 5/17/2019.
@@ -46,7 +47,7 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getDate("TICKET_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
         final Date departureDate = dateFormat.parse("2019-09-30");
         Mockito.when(resultSet.getDate("DEP_DT")).thenReturn(new java.sql.Date(departureDate.getTime()));
-        ;
+
         Mockito.when(resultSet.getString("FIRST_NM")).thenReturn("SIMON");
         Mockito.when(resultSet.getString("LAST_NM")).thenReturn("TEST");
         Mockito.when(resultSet.getString("ORG_ATO_CD")).thenReturn("MCO");
@@ -54,6 +55,13 @@ public class TicketReceiptMapperTest {
         Mockito.when(airportService.getAirport("MCO")).thenReturn(getAirport("MCO", "Orlando International", "Orlando", "FL", "USA", "United States"));
         Mockito.when(airportService.getAirport("MIA")).thenReturn(getAirport("MIA", "Miami International", "Miami", "FL", "USA", "United States"));
         Mockito.when(resultSet.getString("PNR")).thenReturn("MRYMPT");
+        Mockito.when(resultSet.getString("AADVANT_NBR")).thenReturn("279RFY4");
+
+        // mock passenger details
+        Mockito.when(resultSet.getString("TICKET_NBR")).thenReturn("2335038507");
+        Mockito.when(resultSet.getString("FIRST_NM")).thenReturn("SIMON");
+        Mockito.when(resultSet.getString("LAST_NM")).thenReturn("TEST");
+        Mockito.when(resultSet.getString("AADVANT_NBR")).thenReturn("279RFY4");
 
         // mock segment details
         Mockito.when(resultSet.getDate("SEG_DEPT_DT")).thenReturn(new java.sql.Date(departureDate.getTime()));
@@ -73,16 +81,21 @@ public class TicketReceiptMapperTest {
 
         // header
         assertThat(item.getAirlineAccountCode()).isEqualTo("001");
-        assertThat(item.getTicketNumber()).isEqualTo("2335038507");
         assertThat(item.getTicketIssueDate()).isEqualTo(dateFormat.parse("2019-03-14"));
         assertThat(item.getDepartureDate()).isEqualTo(departureDate);
-        assertThat(item.getFirstName()).isEqualTo("SIMON");
-        assertThat(item.getLastName()).isEqualTo("TEST");
         assertThat(item.getOriginAirport().getCode()).isEqualTo("MCO");
         assertThat(item.getDestinationAirport().getCode()).isEqualTo("MIA");
         assertThat(item.getOriginAirport().getName()).isEqualTo("Orlando International");
         assertThat(item.getDestinationAirport().getName()).isEqualTo("Miami International");
         assertThat(item.getPnr()).isEqualTo("MRYMPT");
+
+        // passenger details
+        assertThat(item.getPassengerDetails().size()).isEqualTo(1);
+        PassengerDetail passengerDetail = item.getPassengerDetails().get(0);
+        assertThat(passengerDetail.getTicketNumber()).isEqualTo("2335038507");
+        assertThat(passengerDetail.getFirstName()).isEqualTo("SIMON");
+        assertThat(passengerDetail.getLastName()).isEqualTo("TEST");
+        assertThat(passengerDetail.getAdvantageNumber()).isEqualTo("279RFY4");
 
         // segment details
         assertThat(item.getSegmentDetails().size()).isEqualTo(1);
@@ -110,7 +123,7 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("TICKET_NBR")).thenReturn("2335038507");
         Mockito.when(resultSet.getDate("TICKET_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
         Mockito.when(resultSet.getDate("DEP_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-09-30").getTime()));
-        ;
+
         Mockito.when(resultSet.getString("FIRST_NM")).thenReturn("SIMON");
         Mockito.when(resultSet.getString("LAST_NM")).thenReturn("TEST");
         Mockito.when(resultSet.getString("ORG_ATO_CD")).thenReturn(null);
@@ -120,11 +133,8 @@ public class TicketReceiptMapperTest {
 
         TicketReceipt item = ticketReceiptMapper.mapTicketReceipt(resultSet);
         assertThat(item.getAirlineAccountCode()).isNull();
-        assertThat(item.getTicketNumber()).isEqualTo("2335038507");
         assertThat(item.getTicketIssueDate()).isEqualTo(dateFormat.parse("2019-03-14"));
         assertThat(item.getDepartureDate()).isEqualTo(dateFormat.parse("2019-09-30"));
-        assertThat(item.getFirstName()).isEqualTo("SIMON");
-        assertThat(item.getLastName()).isEqualTo("TEST");
         assertThat(item.getOriginAirport()).isNull();
         assertThat(item.getDestinationAirport()).isNull();
         assertThat(item.getPnr()).isEqualTo("MRYMPT");
