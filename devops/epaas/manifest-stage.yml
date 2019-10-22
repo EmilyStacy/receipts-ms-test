@@ -20,6 +20,7 @@ applications:
       -Dhttps.proxyHost=nonprod.inetgw.aa.com
       -Dhttps.proxyPort=9093
       -Dhttp.nonProxyHosts="*.aa.com"
+      -Djavax.net.debug=all
   services:
     - mosaic-receipts
     - splunk-drains

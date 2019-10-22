@@ -36,6 +36,10 @@ public class AirportServiceImpl implements AirportService {
     public void loadAirports() {
         try {
             logger.info("Loading airports........");
+            logger.info("http proxy == " + System.getProperty("http.proxyHost"));
+            logger.info("http port == " + System.getProperty("http.proxyPort"));
+            logger.info("https proxy == " + System.getProperty("https.proxyHost"));
+            logger.info("https port == " + System.getProperty("https.proxyPort"));
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<AirportLookupObject> airportLookupEntity = restTemplate.getForEntity(airportServiceUrl, AirportLookupObject.class);
             if (HttpStatus.OK.equals(airportLookupEntity.getStatusCode())) {

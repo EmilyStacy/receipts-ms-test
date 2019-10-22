@@ -2,8 +2,8 @@ pipeline {
     libraries { lib 'SharedLibrary' }
 
     environment {
-        http_proxy='http://inetgw.aa.com:9093'
-        https_proxy='http://inetgw.aa.com:9093'
+        http_proxy='http://nonprod.inetgw.aa.com:9093'
+        https_proxy='https://nonprod.inetgw.aa.com:9093'
 
         pcfAppName='receipts-ms'
         deployAppName="$pcfAppName" + "${BRANCH_NAME == 'master' ? '' : "-" + BRANCH_NAME.replaceAll('_','-')}" + "-dev"
@@ -16,7 +16,7 @@ pipeline {
         // NOTIFYUSERS="DL_eTDS_TeamReceipts@aa.com"
         PCF_PRODP_URL='api.system.ppepaas.aa.com'
         PCF_PRODC_URL='api.system.cpepaas.aa.com'
-        PCF_PRODP_DOMAIN='apps.ppepaas.aa.com'
+
         PCF_PRODC_DOMAIN='apps.cpepaas.aa.com'
         PCF_GTM_DOMAIN='apps.aa.com'
         PCF_DEV_SPACE='Dev'
@@ -134,7 +134,7 @@ pipeline {
 
                 sh """
                     chmod u+x ./devops/epaas/deploy.sh
-                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${deployAppName} ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
+                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${deployAppName} ${jarPath} ${cfKeepRollback} ${https_proxy} manifest-dev.yml
                   """                  
             }
         }
