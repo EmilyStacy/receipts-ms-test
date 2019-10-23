@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         http_proxy='http://nonprod.inetgw.aa.com:9093'
-        https_proxy='https://nonprod.inetgw.aa.com:9093'
+        https_proxy='http://nonprod.inetgw.aa.com:9093'
 
         pcfAppName='receipts-ms'
         deployAppName="$pcfAppName" + "${BRANCH_NAME == 'master' ? '' : "-" + BRANCH_NAME.replaceAll('_','-')}" + "-dev"
