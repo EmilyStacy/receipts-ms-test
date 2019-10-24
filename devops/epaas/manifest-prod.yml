@@ -19,7 +19,6 @@ applications:
       -Dhttp.proxyPort=9093
       -Dhttps.proxyHost=inetgw.aa.com
       -Dhttps.proxyPort=9093
-      -Dhttp.nonProxyHosts="*.aa.com"
   services:
     - mosaic-receipts
     - splunk-drains
