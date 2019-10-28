@@ -82,13 +82,21 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
         sb.append("(");
         sb.append(segment.getDepartureAirport().getCity());
         sb.append(", ");
-        sb.append(segment.getDepartureAirport().getStateCode());
+        if ("US".equals(segment.getDepartureAirport().getCountryCode())) {
+            sb.append(segment.getDepartureAirport().getStateCode());
+        } else {
+            sb.append(segment.getDepartureAirport().getCountryName());
+        }
         sb.append(") to ");
         sb.append(segment.getArrivalAirport().getCode());
         sb.append("(");
         sb.append(segment.getArrivalAirport().getCity());
         sb.append(", ");
-        sb.append(segment.getArrivalAirport().getStateCode());
+        if ("US".equals(segment.getArrivalAirport().getCountryCode())) {
+            sb.append(segment.getArrivalAirport().getStateCode());
+        } else {
+            sb.append(segment.getArrivalAirport().getCountryName());
+        }
         sb.append(") on ");
         sb.append(dateFormat.format(segment.getSegmentDepartureDate()));
         sb.append(" at ");
