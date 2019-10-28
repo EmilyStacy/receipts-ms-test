@@ -117,6 +117,22 @@ pipeline {
             }
         }
 
+        stage('coverity setup') {
+            when {
+                branch 'master'
+            }
+            steps {
+                 script {
+                      coverityScan(
+                            APP_NAME: 'receipts-ms',
+                            CONFIG: ['java'],
+                            COV_ENV: 'prod',
+                            NOTIFYUSERS: "DL_eTDS_TeamReceipts"
+                      )
+                 }
+            }
+        }
+
         stage('branch to dev') {
             when {
                 // if it is a branch and not a PR
