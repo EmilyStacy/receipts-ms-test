@@ -11,6 +11,9 @@ public class SegmentDetail {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date segmentDepartureDate;
     private String segmentDepartureTime;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date segmentArrivalDate;
     private String segmentArrivalTime;
 
     private String carrierCode;
@@ -49,6 +52,14 @@ public class SegmentDetail {
 
     public void setSegmentDepartureTime(String segmentDepartureTime) {
         this.segmentDepartureTime = segmentDepartureTime;
+    }
+
+    public Date getSegmentArrivalDate() {
+        return segmentArrivalDate;
+    }
+
+    public void setSegmentArrivalDate(Date segmentArrivalDate) {
+        this.segmentArrivalDate = segmentArrivalDate;
     }
 
     public String getSegmentArrivalTime() {
@@ -106,6 +117,7 @@ public class SegmentDetail {
                 ", arrivalAirport='" + arrivalAirport + '\'' +
                 ", segmentDepartureDate=" + segmentDepartureDate +
                 ", segmentDepartureTime=" + segmentDepartureTime +
+                ", segmentArrivalDate=" + segmentArrivalDate +
                 ", segmentArrivalTime=" + segmentArrivalTime +
                 ", carrierCode='" + carrierCode + '\'' +
                 ", flightNumber='" + flightNumber + '\'' +

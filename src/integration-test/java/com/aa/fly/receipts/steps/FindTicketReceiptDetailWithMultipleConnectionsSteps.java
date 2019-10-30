@@ -74,7 +74,7 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
     }
 
     private String buildSegmentString(SegmentDetail segment) {
-        //AA4063 leaving TYR to DFW on 2019-10-26 at 06:45:00 and arriving 07:48:00 in class OWBVZNB5
+        //AA4063 leaving TYR to DFW on 2019-10-26 at 06:45:00 and arriving on 2019-10-26 at 07:48:00 in class OWBVZNB5
         StringBuilder sb =  new StringBuilder(segment.getCarrierCode());
         sb.append(segment.getFlightNumber());
         sb.append(" leaving ");
@@ -101,7 +101,9 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
         sb.append(dateFormat.format(segment.getSegmentDepartureDate()));
         sb.append(" at ");
         sb.append(segment.getSegmentDepartureTime());
-        sb.append(" and arriving ");
+        sb.append(" and arriving on ");
+        sb.append(dateFormat.format(segment.getSegmentArrivalDate()));
+        sb.append(" at ");
         sb.append(segment.getSegmentArrivalTime());
         sb.append(" in class ");
         sb.append(segment.getFareBasis());

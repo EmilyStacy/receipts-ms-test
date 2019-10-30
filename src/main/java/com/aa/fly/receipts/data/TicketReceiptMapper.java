@@ -47,6 +47,7 @@ public class TicketReceiptMapper {
     private SegmentDetail mapSegmentDetails(SqlRowSet rs, int rowCount) {
         SegmentDetail segmentDetail = new SegmentDetail();
         segmentDetail.setSegmentDepartureDate(rs.getDate("SEG_DEPT_DT"));
+        segmentDetail.setSegmentArrivalDate(rs.getDate("SEG_ARVL_DT"));
         segmentDetail.setDepartureAirport(airportService.getAirport(rs.getString("SEG_DEPT_ARPRT_CD") != null ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : null));
         segmentDetail.setArrivalAirport(airportService.getAirport(rs.getString("SEG_ARVL_ARPRT_CD") != null ? rs.getString("SEG_ARVL_ARPRT_CD").trim() : null));
         segmentDetail.setSegmentDepartureTime(rs.getString("SEG_DEPT_TM"));
