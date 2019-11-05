@@ -96,6 +96,7 @@ pipeline {
             }
 	   }
 
+	 /*
         stage ('sonar code review') {
             steps {
                 script {
@@ -118,6 +119,7 @@ pipeline {
                     " -Dsonar.github.repository=${SCM_REPO} " 
             }
         }
+	*/
 
         stage('coverity setup') {
             when {
