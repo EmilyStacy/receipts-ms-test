@@ -100,9 +100,6 @@ pipeline {
             when {
                 changeRequest()
             }
-        } 
-
-        stage('sonar coverage') {
             steps {
                 script {
                 SCM_REPO = "${GIT_URL}".trim().minus("https://ghe.aa.com/")
