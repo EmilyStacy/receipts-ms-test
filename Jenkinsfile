@@ -39,7 +39,9 @@ pipeline {
         GIT_REPO = "AA-CustTech-Fly/receipts-ms"
         GITHUB = credentials('Jing-GHE-Receipts')
         GIT_URL = scm.getUserRemoteConfigs()[0].getUrl()
-        SONAR_API_KEY = credentials('SONAR_API_KEY')
+        SONARQUBE_API_KEY = credentials('RECEIPTS_SONARQUBE_API_KEY')
+        SONARQUBE_PROJECT_KEY = 'tr.receipts-ms'
+        SONARQUBE_PROJECT_NAME = 'tr.receipts-ms'
     }
     
     options {
@@ -81,39 +83,43 @@ pipeline {
             }
         }
 
-        stage ('sonar code scan') {
-            when {
-                branch 'master'
-            }
+        stage('coverage') {
             steps {
-                sh """ mvn -s .settings.xml sonar:sonar"""
+                sh sh "mvn -Dskip.integration.tests=true -s .settings.xml verify -P coverage jacoco:check"
+                jacoco()
             }
         }
+
+        stage ('sonar code scan') {
+    		steps {
+                sh "mvn -s .settings.xml test verify surefire-report:report-only sonar:sonar -Dsonar.host.url=${env.SonarQubeOSS} -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} -Dsonar.login=${SONARQUBE_API_KEY} -Dsonar.password="
+            }
+	   }
 
         stage ('sonar code review') {
             when {
                 changeRequest()
             }
-            steps {
-                sh """
-                    mvn --settings .settings.xml \
-                    sonar:sonar \
-                    -Dsonar.login=$SONAR_API_KEY \
-                    -Dsonar.password="" \
-                    -Dsonar.analysis.mode=preview \
-                    -Dsonar.github.pullRequest=${env.CHANGE_ID} \
-                    -Dsonar.github.repository=$GIT_REPO \
-                    -Dsonar.github.login=$GITHUB_USR \
-                    -Dsonar.github.oauth=$GITHUB_PSW \
-                    -Dsonar.github.endpoint=https://ghe.aa.com/api/v3/ \
-                """
-            }
-        }
-
+            
         stage('coverage') {
             steps {
-                sh "mvn -s .settings.xml jacoco:check"
-                jacoco()
+                SCM_REPO = "${GIT_URL}".trim().minus("https://ghe.aa.com/")
+                    SCM_REPO = "${SCM_REPO}".reverse().drop(4).reverse()
+                }
+                sh "mvn -s .settings.xml sonar:sonar " +
+                    " -Dsonar.analysis.mode=preview " +
+                    " -Dsonar.host.url=${env.SonarQubeOSS} " +
+                    " -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} " +
+                    " -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} " +
+                    " -Dsonar.login=${SONARQUBE_API_KEY} " +
+                    " -Dsonar.password=" +
+                    " -Dsonar.issuesReport.console.enable=true " +
+                    " -Dsonar.verbose=true " +
+                    " -Dsonar.forceUpdate=true" +
+                    " -Dsonar.github.endpoint=https://ghe.aa.com/api/v3 " +
+                    " -Dsonar.github.pullRequest=${env.CHANGE_ID} " +
+                    " -Dsonar.github.oauth=${GITHUB_PSW} " +
+                    " -Dsonar.github.repository=${SCM_REPO} " 
             }
         }
 
