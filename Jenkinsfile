@@ -85,7 +85,7 @@ pipeline {
 
         stage('coverage') {
             steps {
-                sh sh "mvn -Dskip.integration.tests=true -s .settings.xml verify -P coverage jacoco:check"
+                sh "mvn -Dskip.integration.tests=true -s .settings.xml verify -P coverage jacoco:check"
                 jacoco()
             }
         }
@@ -103,6 +103,7 @@ pipeline {
             
         stage('coverage') {
             steps {
+                script {
                 SCM_REPO = "${GIT_URL}".trim().minus("https://ghe.aa.com/")
                     SCM_REPO = "${SCM_REPO}".reverse().drop(4).reverse()
                 }
