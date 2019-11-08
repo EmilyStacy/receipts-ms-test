@@ -3,6 +3,7 @@ package com.aa.fly.receipts.domain;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,6 +41,7 @@ public class ReceiptsMSDomainTest {
         validateAccessors(Airport.class);
         validateAccessors(AirportLookup.class);
         validateAccessors(AirportLookupObject.class);
+        validateAccessors(FormOfPayment.class);
     }
 
     @Test
@@ -62,7 +64,7 @@ public class ReceiptsMSDomainTest {
     public void testTicketSummaryToString() throws ParseException {
         TicketReceipt ticketReceipt = getTicketReceipt();
         Assert.assertEquals(
-                "TicketSummary [airlineAccountCode=001, ticketIssueDate=2019-03-14, departureDate=2019-09-30, originAirport=Airport{code='MCO', name='Orlando International', stateCode='FL', city='Orlando', countryCode='USA', countryName='United States}, destinationAirport=Airport{code='MIA', name='Miami International', stateCode='FL', city='Miami', countryCode='USA', countryName='United States}, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, passengerDetails=[ticketNumber=2371661425, firstName=SIMON, lastName=TEST, advantageNumber=XYZ1234], segmentDetails=[]]",
+                "TicketSummary [airlineAccountCode=001, ticketIssueDate=2019-03-14, departureDate=2019-09-30, originAirport=Airport{code='MCO', name='Orlando International', stateCode='FL', city='Orlando', countryCode='USA', countryName='United States}, destinationAirport=Airport{code='MIA', name='Miami International', stateCode='FL', city='Miami', countryCode='USA', countryName='United States}, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, passengerDetails=[ticketNumber=2371661425, firstName=SIMON, lastName=TEST, advantageNumber=XYZ1234, formOfPayments=[FormOfPayment{fopIssueDate=2019-03-14, fopTypeCode='CCBA', fopTypeDescription='null', fopAccountNumberLast4='0006', fopAmount='225295', fopCurrencyCode='USD2'}]], segmentDetails=[]]",
                 ticketReceipt.toString());
     }
 
@@ -70,7 +72,7 @@ public class ReceiptsMSDomainTest {
     public void testPassengerDetailToString() throws ParseException {
         TicketReceipt ticketReceipt = getTicketReceipt();
         Assert.assertEquals(
-                "ticketNumber=2371661425, firstName=SIMON, lastName=TEST, advantageNumber=XYZ1234",
+                "ticketNumber=2371661425, firstName=SIMON, lastName=TEST, advantageNumber=XYZ1234, formOfPayments=[FormOfPayment{fopIssueDate=2019-03-14, fopTypeCode='CCBA', fopTypeDescription='null', fopAccountNumberLast4='0006', fopAmount='225295', fopCurrencyCode='USD2'}]",
                 ticketReceipt.getPassengerDetails().get(0).toString());
     }
 
@@ -124,6 +126,11 @@ public class ReceiptsMSDomainTest {
         passengerDetail.setFirstName("SIMON");
         passengerDetail.setLastName("TEST");
         passengerDetail.setAdvantageNumber("XYZ1234");
+
+        List<FormOfPayment> formOfPaymentList = new ArrayList<>();
+        FormOfPayment fop = new FormOfPayment(dateFormat.parse("03/14/2019"), "CCBA",  "0006", "225295", "USD2");
+        formOfPaymentList.add(fop);
+        passengerDetail.setFormOfPayments(formOfPaymentList);
 
         ticketReceipt.getPassengerDetails().add(passengerDetail);
 

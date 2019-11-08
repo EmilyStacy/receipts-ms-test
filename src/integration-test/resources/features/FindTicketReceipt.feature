@@ -32,3 +32,14 @@ Feature: Search with ticket number should return ticket receipt
       | One way with one connection                       | 0012371661436 | ONEWAYCONNECTION | HILTON      | 2020-04-19    | ARMHEN | YV5823 leaving BHM(Birmingham, AL) to DFW(Dallas/Fort Worth, TX) on 2020-04-19 at 06:02:00 and arriving on 2020-04-19 at 08:00:00 in class K7AZZNN1. AA1064 leaving DFW(Dallas/Fort Worth, TX) to SAN(San Diego, CA) on 2020-04-19 at 08:50:00 and arriving on 2020-04-19 at 09:45:00 in class K7AZZNN1. |  |
       | One way with no connection                        | 0012371661425 | ONEWAY           | JOSEPH      | 2020-04-19    | EKAYXI | AA2386 leaving DFW(Dallas/Fort Worth, TX) to MIA(Miami, FL) on 2020-04-19 at 07:15:00 and arriving on 2020-04-19 at 11:13:00 in class K0AIZRN1.  |   |
       | International round trip with 1 connection        | 0012371391449 | SOUTHWESTERN     | FLAGSHIP    | 2019-09-28    | XJLOIW | AA1841 leaving IAH(Houston, TX) to MIA(Miami, FL) on 2019-09-28 at 07:22:00 and arriving on 2019-09-28 at 11:04:00 in class Y50AND. AA1307 leaving MIA(Miami, FL) to LIM(Lima, Peru) on 2019-09-28 at 15:41:00 and arriving on 2019-09-28 at 20:19:00 in class Y50AND. | AA1558 leaving LIM(Lima, Peru) to MIA(Miami, FL) on 2019-10-08 at 06:53:00 and arriving on 2019-10-08 at 13:54:00 in class U30MUN. AA2475 leaving MIA(Miami, FL) to IAH(Houston, TX) on 2019-10-08 at 20:02:00 and arriving on 2019-10-08 at 21:50:00 in class U30MUN. |
+
+
+  Scenario Outline: Verify Form of Payment Details
+
+    Given I want to retrieve payment details for scenario "<scenario>"
+    When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
+    Then I get a successful response with fopIssueDate "<fopIssueDate>", fopTypeCode "<fopTypeCode>",  fopTypeDescription "<fopTypeDescription>",  fopAccountNumberLastFour "<fopAccountNumberLastFour>", fopAmount "<fopAmount>", and fopCurrencyCode "<fopCurrencyCode>"
+
+    Examples:
+      | scenario                                        | ticketNumber   | lastName | firstName | departureDate  | fopIssueDate  | fopTypeCode  | fopTypeDescription | fopAccountNumberLastFour | fopAmount | fopCurrencyCode |
+      | CreditCard Visa                                 | 0012372186607  | TUCSON   | FLAGSHIP  | 2020-01-15     | 2019-10-30    | CCBA         | Visa               | 0006                     | 225295    | USD2            |

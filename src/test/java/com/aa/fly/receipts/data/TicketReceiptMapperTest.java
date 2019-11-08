@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,9 @@ import org.mockito.Mockito;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.aa.fly.receipts.config.AppConfig;
 import com.aa.fly.receipts.domain.Airport;
+import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
@@ -143,6 +146,25 @@ public class TicketReceiptMapperTest {
         assertThat(item.getPnr()).isEqualTo("MRYMPT");
     }
 
+    @Test
+    public void testMapCostDetails() throws ParseException {
+        Mockito.when(resultSet.next()).thenReturn(true, false);
+        Mockito.when(resultSet.getString("FOP_ACCT_NBR_LAST4")).thenReturn("0006");
+        Mockito.when(resultSet.getDate("FOP_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
+        Mockito.when(resultSet.getString("FOP_AMT")).thenReturn("225295");
+        Mockito.when(resultSet.getString("FOP_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("FOP_TYPE_CD")).thenReturn("CCBA");
+
+        ticketReceiptMapper.setFopTypeMap(new AppConfig().fopTypeMap());
+        List<FormOfPayment> fops = ticketReceiptMapper.mapCostDetails(resultSet);
+        assertThat(fops.size()).isEqualTo(1);
+        assertThat(fops.get(0).getFopAccountNumberLast4()).isEqualTo("0006");
+        assertThat(fops.get(0).getFopIssueDate()).isEqualTo(dateFormat.parse("2019-03-14"));
+        assertThat(fops.get(0).getFopAmount()).isEqualTo("225295");
+        assertThat(fops.get(0).getFopCurrencyCode()).isEqualTo("USD2");
+        assertThat(fops.get(0).getFopTypeCode()).isEqualTo("CCBA");
+    }
+
     public Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {
         Airport airport = new Airport();
         airport.setCode(code);
@@ -153,4 +175,5 @@ public class TicketReceiptMapperTest {
         airport.setStateCode(state);
         return airport;
     }
+
 }

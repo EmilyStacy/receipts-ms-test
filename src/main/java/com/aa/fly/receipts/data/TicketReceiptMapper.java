@@ -1,9 +1,14 @@
 package com.aa.fly.receipts.data;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
@@ -14,6 +19,13 @@ public class TicketReceiptMapper {
 
     @Autowired
     private AirportService airportService;
+
+    private Map<String, String> fopTypeMap;
+
+    @Autowired
+    public void setFopTypeMap(Map<String, String> fopTypeMap) {
+        this.fopTypeMap = fopTypeMap;
+    }
 
     public TicketReceipt mapTicketReceipt(SqlRowSet rs) {
 
@@ -59,6 +71,23 @@ public class TicketReceiptMapper {
         segmentDetail.setReturnTrip(rs.getString("COUPON_SEQ_NBR") != null && ("1").equals(rs.getString("COUPON_SEQ_NBR")) && rowCount != 0 ? "true" : "false");
 
         return segmentDetail;
+    }
+
+    public List<FormOfPayment> mapCostDetails(SqlRowSet rs) {
+        List<FormOfPayment> formOfPayments = new ArrayList<>();
+
+        while (rs.next()) {
+            FormOfPayment formOfPayment = new FormOfPayment();
+            formOfPayment.setFopAccountNumberLast4(rs.getString("FOP_ACCT_NBR_LAST4") != null ? rs.getString("FOP_ACCT_NBR_LAST4").trim() : null);
+            formOfPayment.setFopIssueDate(rs.getDate("FOP_ISSUE_DT"));
+            formOfPayment.setFopAmount(rs.getString("FOP_AMT") != null ? rs.getString("FOP_AMT").trim() : null);
+            formOfPayment.setFopCurrencyCode(rs.getString("FOP_CURR_TYPE_CD") != null ? rs.getString("FOP_CURR_TYPE_CD").trim() : null);
+            formOfPayment.setFopTypeCode(rs.getString("FOP_TYPE_CD") != null ? rs.getString("FOP_TYPE_CD").trim() : null);
+            formOfPayment.setFopTypeDescription(fopTypeMap.get(formOfPayment.getFopTypeCode()));
+            formOfPayments.add(formOfPayment);
+        }
+
+        return formOfPayments;
     }
 
 }

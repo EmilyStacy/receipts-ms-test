@@ -3,11 +3,14 @@
  */
 package com.aa.fly.receipts.domain;
 
+import java.util.List;
+
 public class PassengerDetail {
     private String ticketNumber;
     private String firstName;
     private String lastName;
     private String advantageNumber;
+    private List<FormOfPayment> formOfPayments;
 
     public String getTicketNumber() {
         return ticketNumber;
@@ -41,9 +44,19 @@ public class PassengerDetail {
         this.advantageNumber = advantageNumber;
     }
 
+    public List<FormOfPayment> getFormOfPayments() {
+        return formOfPayments;
+    }
+
+    public void setFormOfPayments(List<FormOfPayment> formOfPayments) {
+        this.formOfPayments = formOfPayments;
+    }
+
     @Override
     public String toString() {
         return "ticketNumber=" + ticketNumber
-                + ", firstName=" + firstName + ", lastName=" + lastName + ", advantageNumber=" + advantageNumber;
+                + ", firstName=" + firstName + ", lastName=" + lastName + ", advantageNumber=" + advantageNumber
+                + ", formOfPayments=" + formOfPayments ;
     }
+
 }
