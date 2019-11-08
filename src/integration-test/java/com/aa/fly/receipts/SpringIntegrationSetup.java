@@ -23,7 +23,7 @@ import com.aa.fly.receipts.steps.ResponseResults;
 @SpringBootTest(classes = ReceiptsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-tests")
 @ContextConfiguration
-public class SpringIntegrationTest {
+public class SpringIntegrationSetup {
     protected static ResponseResults latestResponse = null;
 
     @Autowired

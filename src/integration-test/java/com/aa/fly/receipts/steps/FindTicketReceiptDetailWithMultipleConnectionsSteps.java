@@ -1,6 +1,6 @@
 package com.aa.fly.receipts.steps;
 
-import com.aa.fly.receipts.SpringIntegrationTest;
+import com.aa.fly.receipts.SpringIntegrationSetup;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
@@ -16,7 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringIntegrationTest {
+public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringIntegrationSetup {
 
     private SearchCriteria criteria = new SearchCriteria();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
