@@ -48,6 +48,7 @@ public class TicketReceiptRepository {
                 .append("    odtkt.OD_DESTNTN_AIRPRT_IATA_CD AS DEST_ATO_CD, ")
                 .append("    tkt.PNR_LOCTR_ID AS PNR, ")
                 .append("    frqtr.LYLTY_ACCT_ID AS AADVANT_NBR, ")
+                .append("    frqtr.LYLTY_PGM_OWN_CD AS LYLTY_OWN_CD,")
                 // =================== trip details =======================
                 .append("    odtktcpn.SEG_LOCAL_DEP_DT AS SEG_DEPT_DT, ")
                 .append("    odtktcpn.SEG_LOCAL_OUT_TM AS SEG_DEPT_TM, ")

@@ -40,8 +40,8 @@ public class FindTicketReceiptHeaderSteps extends SpringIntegrationSetup {
         executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
     }
 
-    @Then("^I get a successful response with origin airport \"(.+)\", destinationAirport \"(.+)\" and pnr \"(.+)\" and advantageNumber \"(.+)\"$")
-    public void i_submit_my_request(String originAirport, String destinationAirport, String pnr, String advantageNumber) throws Throwable {
+    @Then("^I get a successful response with origin airport \"(.+)\", destinationAirport \"(.+)\" and pnr \"(.+)\" and advantageNumber \"(.+)\" and loyaltyOwnerCode \"(.+)\"$")
+    public void i_submit_my_request(String originAirport, String destinationAirport, String pnr, String advantageNumber, String loyaltyOwnerCode) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
 
@@ -51,5 +51,6 @@ public class FindTicketReceiptHeaderSteps extends SpringIntegrationSetup {
         Assert.assertEquals(destinationAirport, ticketReceipt.getDestinationAirport().getCode());
         Assert.assertEquals(pnr, ticketReceipt.getPnr());
         Assert.assertEquals(advantageNumber, ticketReceipt.getPassengerDetails().get(0).getAdvantageNumber());
+        Assert.assertEquals(loyaltyOwnerCode, ticketReceipt.getPassengerDetails().get(0).getLoyaltyOwnerCode());
     }
 }

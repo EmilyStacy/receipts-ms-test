@@ -9,6 +9,7 @@ public class PassengerDetail {
     private String ticketNumber;
     private String firstName;
     private String lastName;
+    private String loyaltyOwnerCode;
     private String advantageNumber;
     private List<FormOfPayment> formOfPayments;
 
@@ -52,11 +53,19 @@ public class PassengerDetail {
         this.formOfPayments = formOfPayments;
     }
 
+    public String getLoyaltyOwnerCode() {
+        return loyaltyOwnerCode;
+    }
+
+    public void setLoyaltyOwnerCode(String loyaltyOwnerCode) {
+        this.loyaltyOwnerCode = loyaltyOwnerCode;
+    }
+
     @Override
     public String toString() {
         return "ticketNumber=" + ticketNumber
                 + ", firstName=" + firstName + ", lastName=" + lastName + ", advantageNumber=" + advantageNumber
-                + ", formOfPayments=" + formOfPayments ;
+                + ", loyaltyOwnerCode=" + loyaltyOwnerCode + ", formOfPayments=" + formOfPayments ;
     }
 
 }

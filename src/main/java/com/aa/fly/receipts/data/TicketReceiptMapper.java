@@ -46,6 +46,7 @@ public class TicketReceiptMapper {
                 passengerDetail.setFirstName(rs.getString("FIRST_NM"));
                 passengerDetail.setLastName(rs.getString("LAST_NM"));
                 passengerDetail.setAdvantageNumber(rs.getString("AADVANT_NBR"));
+                passengerDetail.setLoyaltyOwnerCode(rs.getString("LYLTY_OWN_CD") != null ? rs.getString("LYLTY_OWN_CD").trim() : null);
 
                 ticketReceipt.getPassengerDetails().add(passengerDetail);
             }

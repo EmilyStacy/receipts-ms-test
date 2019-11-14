@@ -66,6 +66,7 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("FIRST_NM")).thenReturn("SIMON");
         Mockito.when(resultSet.getString("LAST_NM")).thenReturn("TEST");
         Mockito.when(resultSet.getString("AADVANT_NBR")).thenReturn("279RFY4");
+        Mockito.when(resultSet.getString("LYLTY_OWN_CD")).thenReturn("AA  ");
 
         // mock segment details
         Mockito.when(resultSet.getDate("SEG_DEPT_DT")).thenReturn(new java.sql.Date(departureDate.getTime()));
@@ -101,6 +102,7 @@ public class TicketReceiptMapperTest {
         assertThat(passengerDetail.getFirstName()).isEqualTo("SIMON");
         assertThat(passengerDetail.getLastName()).isEqualTo("TEST");
         assertThat(passengerDetail.getAdvantageNumber()).isEqualTo("279RFY4");
+        assertThat(passengerDetail.getLoyaltyOwnerCode()).isEqualTo("AA");
 
         // segment details
         assertThat(item.getSegmentDetails().size()).isEqualTo(1);
@@ -136,6 +138,7 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("DEST_ATO_CD")).thenReturn(null);
         Mockito.when(airportService.getAirport(null)).thenReturn(null);
         Mockito.when(resultSet.getString("PNR")).thenReturn("MRYMPT");
+        Mockito.when(resultSet.getString("LYLTY_OWN_CD")).thenReturn(null);
 
         TicketReceipt item = ticketReceiptMapper.mapTicketReceipt(resultSet);
         assertThat(item.getAirlineAccountCode()).isNull();
