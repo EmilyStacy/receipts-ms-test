@@ -151,6 +151,8 @@ public class TicketReceiptMapperTest {
 
     @Test
     public void testMapCostDetails() throws ParseException {
+        PassengerDetail passengerDetail = new PassengerDetail();
+
         Mockito.when(resultSet.next()).thenReturn(true, false);
         Mockito.when(resultSet.getString("FOP_ACCT_NBR_LAST4")).thenReturn("0006");
         Mockito.when(resultSet.getDate("FOP_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
@@ -158,8 +160,16 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("FOP_CURR_TYPE_CD")).thenReturn("USD2");
         Mockito.when(resultSet.getString("FOP_TYPE_CD")).thenReturn("CCBA");
 
+        Mockito.when(resultSet.getString("FNUM_FARE_AMT")).thenReturn("77674");
+        Mockito.when(resultSet.getString("FNUM_FARE_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("EQFN_FARE_AMT")).thenReturn("0");
+        Mockito.when(resultSet.getString("EQFN_FARE_CURR_TYPE_CD")).thenReturn("");
+        Mockito.when(resultSet.getString("FARE_TDAM_AMT")).thenReturn("84930");
+
         ticketReceiptMapper.setFopTypeMap(new AppConfig().fopTypeMap());
-        List<FormOfPayment> fops = ticketReceiptMapper.mapCostDetails(resultSet);
+        passengerDetail = ticketReceiptMapper.mapCostDetails(resultSet, passengerDetail);
+        List<FormOfPayment> fops = passengerDetail.getFormOfPayments();
+
         assertThat(fops.size()).isEqualTo(1);
         assertThat(fops.get(0).getFopAccountNumberLast4()).isEqualTo("0006");
         assertThat(fops.get(0).getFopIssueDate()).isEqualTo(dateFormat.parse("2019-03-14"));

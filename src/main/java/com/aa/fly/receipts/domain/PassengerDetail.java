@@ -11,6 +11,7 @@ public class PassengerDetail {
     private String lastName;
     private String loyaltyOwnerCode;
     private String advantageNumber;
+    private FareTaxesFees fareTaxesFees;
     private List<FormOfPayment> formOfPayments;
 
     public String getTicketNumber() {
@@ -53,6 +54,14 @@ public class PassengerDetail {
         this.formOfPayments = formOfPayments;
     }
 
+    public FareTaxesFees getFareTaxesFees() {
+        return fareTaxesFees;
+    }
+
+    public void setFareTaxesFees(FareTaxesFees fareTaxesFees) {
+        this.fareTaxesFees = fareTaxesFees;
+    }
+
     public String getLoyaltyOwnerCode() {
         return loyaltyOwnerCode;
     }
@@ -65,7 +74,7 @@ public class PassengerDetail {
     public String toString() {
         return "ticketNumber=" + ticketNumber
                 + ", firstName=" + firstName + ", lastName=" + lastName + ", advantageNumber=" + advantageNumber
-                + ", loyaltyOwnerCode=" + loyaltyOwnerCode + ", formOfPayments=" + formOfPayments ;
+                + ", fareTaxesFees=" + fareTaxesFees
+                + ", loyaltyOwnerCode=" + loyaltyOwnerCode + ", formOfPayments=" + formOfPayments;
     }
-
 }

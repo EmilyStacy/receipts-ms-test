@@ -16,7 +16,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class ReceiptsApplication {
-    private static Logger logger = LoggerFactory.getLogger(ReceiptsApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(ReceiptsApplication.class, args);

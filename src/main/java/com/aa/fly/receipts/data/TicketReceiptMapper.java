@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
@@ -74,8 +75,9 @@ public class TicketReceiptMapper {
         return segmentDetail;
     }
 
-    public List<FormOfPayment> mapCostDetails(SqlRowSet rs) {
+    public PassengerDetail mapCostDetails(SqlRowSet rs, PassengerDetail passengerDetail) {
         List<FormOfPayment> formOfPayments = new ArrayList<>();
+        boolean isFirst = true;
 
         while (rs.next()) {
             FormOfPayment formOfPayment = new FormOfPayment();
@@ -86,9 +88,38 @@ public class TicketReceiptMapper {
             formOfPayment.setFopTypeCode(rs.getString("FOP_TYPE_CD") != null ? rs.getString("FOP_TYPE_CD").trim() : null);
             formOfPayment.setFopTypeDescription(fopTypeMap.get(formOfPayment.getFopTypeCode()));
             formOfPayments.add(formOfPayment);
+
+            passengerDetail.setFormOfPayments(formOfPayments);
+
+            if (isFirst) {
+                isFirst = false;
+                FareTaxesFees fareTaxesFees = mapCostDetailsFTF(rs);
+                passengerDetail.setFareTaxesFees(fareTaxesFees);
+            }
         }
 
-        return formOfPayments;
+        return passengerDetail;
     }
 
+    private FareTaxesFees mapCostDetailsFTF(SqlRowSet rs) {
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+
+        String baseFareAmount;
+        String baseFareCurrencyCode;
+
+        int eqfnFareAmt = Integer.parseInt(rs.getString("EQFN_FARE_AMT"));
+        if (eqfnFareAmt == 0) {
+            baseFareAmount = rs.getString("FNUM_FARE_AMT");
+            baseFareCurrencyCode = rs.getString("FNUM_FARE_CURR_TYPE_CD");
+        } else {
+            baseFareAmount = rs.getString("EQFN_FARE_AMT");
+            baseFareCurrencyCode = rs.getString("EQFN_FARE_CURR_TYPE_CD");
+        }
+
+        fareTaxesFees.setBaseFareAmount(baseFareAmount);
+        fareTaxesFees.setBaseFareCurrencyCode(baseFareCurrencyCode);
+        fareTaxesFees.setTotalFareAmount(rs.getString("FARE_TDAM_AMT"));
+
+        return fareTaxesFees;
+    }
 }

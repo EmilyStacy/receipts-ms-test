@@ -1,7 +1,6 @@
 package com.aa.fly.receipts.data;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +9,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.aa.fly.receipts.domain.FormOfPayment;
+import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
 
@@ -58,7 +57,6 @@ public class TicketReceiptRepository {
                 .append("    odtktcpn.SEG_LOCAL_IN_TM AS SEG_ARVL_TM, ")
                 .append("    odtktcpn.SEG_ARVL_AIRPRT_IATA_CD AS SEG_ARVL_ARPRT_CD, ")
 
-
                 .append("    tktcpn.FLOWN_OPERAT_FLIGHT_NBR AS FLIGHT_NBR, ")
                 .append("    tktcpn.ACCT_FARE_CLASS_CD AS BOOKING_CLASS, ")
                 .append("    tktcpn.FARE_BASE_CD AS FARE_BASE, ")
@@ -90,10 +88,10 @@ public class TicketReceiptRepository {
 
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate,
                 firstName, lastName);
-        return  ticketReceiptMapper.mapTicketReceipt(sqlRowSet);
+        return ticketReceiptMapper.mapTicketReceipt(sqlRowSet);
     }
 
-    public List<FormOfPayment> findCostDetailsByTicketNumber(SearchCriteria criteria) {
+    public PassengerDetail findCostDetailsByTicketNumber(SearchCriteria criteria, PassengerDetail passengerDetail) {
 
         String lastName = criteria.getLastName().toUpperCase().trim();
         String firstName = criteria.getFirstName().toUpperCase().trim() + '%';
@@ -101,6 +99,8 @@ public class TicketReceiptRepository {
         String ticketNumberSc = criteria.getTicketNumber().trim();
         String ticketNumber10 = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
         String ticketNumber13 = (ticketNumberSc.length() == 13) ? ticketNumberSc : new StringBuilder("001").append(ticketNumberSc).toString();
+
+        String commaSpace = "    , ";
 
         String sql = new StringBuilder("\nSELECT ")
                 .append(" odtkt.OD_TICKET_AIRLN_ACCT_CD AS AIRLN_ACCT_CD \n")
@@ -114,10 +114,16 @@ public class TicketReceiptRepository {
                 .append("    , rcptfop.FOP_AMT \n")
                 .append("    , right(rcptfop.FOP_ACCT_NBR, 4) AS FOP_ACCT_NBR_LAST4 \n")
                 .append("    , rcptfop.FOP_CURR_TYPE_CD \n")
+                .append("    , rcptfare.FNUM_FARE_AMT \n")
+                .append("    , rcptfare.FNUM_FARE_CURR_TYPE_CD \n")
+                .append("    , rcptfare.EQFN_FARE_AMT \n")
+                .append("    , rcptfare.EQFN_FARE_CURR_TYPE_CD \n")
+                .append("    , rcptfare.FARE_TDAM_AMT \n")
                 .append("FROM \n")
-                .append("    CERT_TCN_RECPT_VW.OD_TICKET odtkt \n")
-                .append("    , CERT_TCN_RECPT_VW.TICKET_CUSTOMER tcust \n")
-                .append("    , CERT_TCN_RECPT_VW.TCN_RECEIPT_FOP rcptfop \n")
+                .append("      ").append(ticketSchemaName).append(".OD_TICKET odtkt \n")
+                .append(commaSpace).append(ticketSchemaName).append(".TICKET_CUSTOMER tcust \n")
+                .append(commaSpace).append(ticketSchemaName).append(".TCN_RECEIPT_FOP rcptfop \n")
+                .append(commaSpace).append(ticketSchemaName).append(".TCN_RECEIPT_FARE rcptfare \n")
                 .append("WHERE \n")
                 .append("    odtkt.OD_TICKET_NBR = tcust.TICKET_NBR \n")
                 .append("    AND odtkt.OD_TICKET_ISSUE_DT = tcust.TICKET_ISSUE_DT \n")
@@ -126,6 +132,8 @@ public class TicketReceiptRepository {
                 .append("    AND odtkt.OD_TICKET_ISSUE_DT = rcptfop.ISSUE_DT \n")
                 .append("    AND odtkt.OD_TICKET_NBR = ? \n")
                 .append("    AND rcptfop.DOC_NBR = ? \n")
+                .append("    AND rcptfop.DOC_NBR = rcptfare.DOC_NBR \n")
+                .append("    AND rcptfop.ISSUE_DT = rcptfare.ISSUE_DT \n")
                 .append("    AND odtkt.OD_LOCAL_DEP_DT = to_date(? , 'YYYY-MM-DD') \n")
                 .append("    AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? \n")
                 .append("    AND UPPER(TRIM(tcust.PNR_PAX_LAST_NM)) = ? \n")
@@ -133,6 +141,7 @@ public class TicketReceiptRepository {
 
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber10, ticketNumber13, departureDate,
                 firstName, lastName);
-        return ticketReceiptMapper.mapCostDetails(sqlRowSet);
+
+        return ticketReceiptMapper.mapCostDetails(sqlRowSet, passengerDetail);
     }
 }

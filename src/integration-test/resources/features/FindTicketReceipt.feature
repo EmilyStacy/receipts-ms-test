@@ -34,12 +34,15 @@ Feature: Search with ticket number should return ticket receipt
       | International round trip with 1 connection        | 0012371391449 | SOUTHWESTERN     | FLAGSHIP    | 2019-09-28    | XJLOIW | AA1841 leaving IAH(Houston, TX) to MIA(Miami, FL) on 2019-09-28 at 07:22:00 and arriving on 2019-09-28 at 11:04:00 in class Y50AND. AA1307 leaving MIA(Miami, FL) to LIM(Lima, Peru) on 2019-09-28 at 15:41:00 and arriving on 2019-09-28 at 20:19:00 in class Y50AND. | AA1558 leaving LIM(Lima, Peru) to MIA(Miami, FL) on 2019-10-08 at 06:53:00 and arriving on 2019-10-08 at 13:54:00 in class U30MUN. AA2475 leaving MIA(Miami, FL) to IAH(Houston, TX) on 2019-10-08 at 20:02:00 and arriving on 2019-10-08 at 21:50:00 in class U30MUN. |
 
 
-  Scenario Outline: Verify Form of Payment Details
+  Scenario Outline: Verify Form of Payment and ticket fare details
 
     Given I want to retrieve payment details for scenario "<scenario>"
     When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
     Then I get a successful response with fopIssueDate "<fopIssueDate>", fopTypeCode "<fopTypeCode>",  fopTypeDescription "<fopTypeDescription>",  fopAccountNumberLastFour "<fopAccountNumberLastFour>", fopAmount "<fopAmount>", and fopCurrencyCode "<fopCurrencyCode>"
+    Then I get a successful response with baseFareAmount "<baseFareAmount>", baseFareCurrencyCode "<baseFareCurrencyCode>", and totalFareAmount "<totalFareAmount>"
 
     Examples:
-      | scenario                                        | ticketNumber   | lastName | firstName | departureDate  | fopIssueDate  | fopTypeCode  | fopTypeDescription | fopAccountNumberLastFour | fopAmount | fopCurrencyCode |
-      | CreditCard Visa                                 | 0012372186607  | TUCSON   | FLAGSHIP  | 2020-01-15     | 2019-10-30    | CCBA         | Visa               | 0006                     | 225295    | USD2            |
+      | scenario                                        | ticketNumber   | lastName | firstName | departureDate  | fopIssueDate  | fopTypeCode  | fopTypeDescription | fopAccountNumberLastFour | fopAmount | fopCurrencyCode | baseFareAmount | baseFareCurrencyCode | totalFareAmount |
+      | CreditCard Visa                                 | 0012372186607  | TUCSON   | FLAGSHIP  | 2020-01-15     | 2019-10-30    | CCBA         | Visa               | 0006                     | 225295    | USD2            | 192900         | USD2                 | 225295          |
+      | Fare paid in USD & originated from US           | 0012372303346  | martin   | adam      | 2019-11-08     | 2019-11-07    | CCBA         | Visa               | 0006                     | 84930     | USD2            | 77674          | USD2                 | 84930           |
+      
