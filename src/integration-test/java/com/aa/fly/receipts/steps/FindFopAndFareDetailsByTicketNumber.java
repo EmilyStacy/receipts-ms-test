@@ -56,5 +56,4 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
         Assert.assertEquals(baseFareCurrencyCode, fareTaxesFees.getBaseFareCurrencyCode());
         Assert.assertEquals(totalFareAmount, fareTaxesFees.getTotalFareAmount());
     }
-
 }

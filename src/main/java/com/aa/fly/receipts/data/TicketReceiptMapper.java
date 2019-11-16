@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -102,8 +103,6 @@ public class TicketReceiptMapper {
     }
 
     private FareTaxesFees mapCostDetailsFTF(SqlRowSet rs) {
-        FareTaxesFees fareTaxesFees = new FareTaxesFees();
-
         String baseFareAmount;
         String baseFareCurrencyCode;
 
@@ -116,9 +115,43 @@ public class TicketReceiptMapper {
             baseFareCurrencyCode = rs.getString("EQFN_FARE_CURR_TYPE_CD");
         }
 
-        fareTaxesFees.setBaseFareAmount(baseFareAmount);
-        fareTaxesFees.setBaseFareCurrencyCode(baseFareCurrencyCode);
-        fareTaxesFees.setTotalFareAmount(rs.getString("FARE_TDAM_AMT"));
+        return tuneAmountCurrency(baseFareAmount, rs.getString("FARE_TDAM_AMT"), baseFareCurrencyCode);
+    }
+
+    private FareTaxesFees tuneAmountCurrency(String baseFareAmount, String totalFareAmount, String baseFareCurrencyCode) {
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+
+        String lastChar = baseFareCurrencyCode.substring(baseFareCurrencyCode.length() - 1);
+
+        if (StringUtils.isNumeric(lastChar)) {
+            fareTaxesFees.setBaseFareCurrencyCode(baseFareCurrencyCode.substring(0, baseFareCurrencyCode.length() - 1));
+
+            switch (lastChar) {
+                case "0":
+                    fareTaxesFees.setBaseFareAmount(baseFareAmount);
+                    fareTaxesFees.setTotalFareAmount(totalFareAmount);
+                    break;
+                case "1":
+                    fareTaxesFees.setBaseFareAmount(String.valueOf(Float.parseFloat(baseFareAmount) / 10));
+                    fareTaxesFees.setTotalFareAmount(String.valueOf(Float.parseFloat(totalFareAmount) / 10));
+                    break;
+                case "2":
+                    fareTaxesFees.setBaseFareAmount(String.valueOf(Float.parseFloat(baseFareAmount) / 100));
+                    fareTaxesFees.setTotalFareAmount(String.valueOf(Float.parseFloat(totalFareAmount) / 100));
+                    break;
+                case "3":
+                    fareTaxesFees.setBaseFareAmount(String.valueOf(Float.parseFloat(baseFareAmount) / 1000));
+                    fareTaxesFees.setTotalFareAmount(String.valueOf(Float.parseFloat(totalFareAmount) / 1000));
+                    break;
+                default:
+                    fareTaxesFees.setBaseFareAmount(baseFareAmount);
+                    fareTaxesFees.setTotalFareAmount(totalFareAmount);
+            }
+        } else {
+            fareTaxesFees.setBaseFareCurrencyCode(baseFareCurrencyCode);
+            fareTaxesFees.setBaseFareAmount(baseFareAmount);
+            fareTaxesFees.setTotalFareAmount(totalFareAmount);
+        }
 
         return fareTaxesFees;
     }
