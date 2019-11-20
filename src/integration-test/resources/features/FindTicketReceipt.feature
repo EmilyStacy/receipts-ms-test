@@ -14,6 +14,7 @@ Feature: Search with ticket number should return ticket receipt
       | scenario                                        | ticketNumber   | lastName | firstName | departureDate  | originAirport | destinationAirport | pnr    | advantageNumber | loyaltyOwnerCode |
       | One way with over night connection              | 0012336961822  | SOUTHERN | FLAGSHIP  | 2019-05-20     | GRU           | LHR                | GZNJJP | 270RFY8         | AA               |
       | One way non-stop                                | 0012337074732  | BRAVO    | ALPHA     | 2019-06-26     | LGA           | DTW                | DNSBYR | 273RFY0         | AA               |
+      | Other airline frequent flier                    | 0012372233531  | CEN      | FEI       | 2019-11-05     | DFW           | OKC                | KRFGEE | WM072           | 7C               |
 
 
   Scenario Outline: Ticket receipt details for different types of itineraries
