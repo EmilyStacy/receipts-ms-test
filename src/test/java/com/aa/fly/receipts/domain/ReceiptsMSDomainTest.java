@@ -57,7 +57,7 @@ public class ReceiptsMSDomainTest {
     public void testWifiReceiptToString() throws ParseException {
         WifiReceipt receipt = getWifiReceipt();
         Assert.assertEquals(
-                "WifiReceipt{WifiLineItem{orderId='123', purchaseDate='2019-06-01', productName='Wifi Monthly Subscription', productPrice='10.00', currencyCode='USD', taxAmount='1.00', netPrice='11.00', ccLastFour='1234', ccTypeCode='MC', lastName='last'}}",
+                "WifiReceipt{WifiLineItem{orderId='123', purchaseDate='2019-06-01', productName='Wifi Monthly Subscription', productPrice='10.00', currencyCode='USD', taxAmount='1.00', netPrice='11.00', ccLastFour='1234', ccTypeCode='MC', ccTypeName='MASTERCARD', lastName='last'}}",
                 receipt.toString());
     }
 
@@ -100,6 +100,7 @@ public class ReceiptsMSDomainTest {
         WifiLineItem lineItem = new WifiLineItem();
         lineItem.setCcLastFour("1234");
         lineItem.setCcTypeCode("MC");
+        lineItem.setCcTypeName("MASTERCARD");
         lineItem.setCurrencyCode("USD");
         lineItem.setLastName("last");
         lineItem.setNetPrice("11.00");

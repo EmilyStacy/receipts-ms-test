@@ -22,6 +22,7 @@ public class WifiLineItem {
     private String netPrice;
     private String ccLastFour;
     private String ccTypeCode;
+    private String ccTypeName;
     private String lastName;
     private String seller;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -98,6 +99,14 @@ public class WifiLineItem {
         this.ccTypeCode = ccTypeCode;
     }
 
+    public String getCcTypeName() {
+        return ccTypeName;
+    }
+
+    public void setCcTypeName(String ccTypeName) {
+        this.ccTypeName = ccTypeName;
+    }
+
     public String getLastName() {
         return lastName;
     }
@@ -119,7 +128,7 @@ public class WifiLineItem {
         return "WifiLineItem{" + "orderId='" + orderId + '\'' + ", purchaseDate='" + dateFormat.format(purchaseDate)
                 + '\'' + ", productName='" + productName + '\'' + ", productPrice='" + productPrice + '\''
                 + ", currencyCode='" + currencyCode + '\'' + ", taxAmount='" + taxAmount + '\'' + ", netPrice='"
-                + netPrice + '\'' + ", ccLastFour='" + ccLastFour + '\'' + ", ccTypeCode='" + ccTypeCode + '\''
+                + netPrice + '\'' + ", ccLastFour='" + ccLastFour + '\'' + ", ccTypeCode='" + ccTypeCode + '\'' + ", ccTypeName='" + ccTypeName + '\''
                 + ", lastName='" + lastName + '\'' + '}';
     }
 }

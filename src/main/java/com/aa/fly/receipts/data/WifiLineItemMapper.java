@@ -13,7 +13,8 @@ public class WifiLineItemMapper implements RowMapper<WifiLineItem> {
     public WifiLineItem mapRow(ResultSet rs, int rowNum) throws SQLException {
         WifiLineItem lineItem = new WifiLineItem();
         lineItem.setCcLastFour(rs.getString("CREDIT_CARD_LAST_4_NBR") != null ? rs.getString("CREDIT_CARD_LAST_4_NBR").trim() : null);
-        lineItem.setCcTypeCode(rs.getString("CC_TYPE_CD") != null ? rs.getString("CC_TYPE_CD").trim() : null);
+        lineItem.setCcTypeCode(rs.getString("CREDIT_CARD_TYPE") != null ? rs.getString("CREDIT_CARD_TYPE").trim() : null);
+        lineItem.setCcTypeName(rs.getString("CC_TYPE_NM") != null ? rs.getString("CC_TYPE_NM").trim() : null);
         lineItem.setCurrencyCode(rs.getString("CURNCY_CD") != null ? rs.getString("CURNCY_CD").trim() : null);
         lineItem.setLastName(
                 rs.getString("CARD_HLDR_LAST_NM") != null ? rs.getString("CARD_HLDR_LAST_NM").trim() : null);

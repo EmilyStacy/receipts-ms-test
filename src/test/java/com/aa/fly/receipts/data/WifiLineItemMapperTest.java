@@ -29,7 +29,8 @@ public class WifiLineItemMapperTest {
     @Test
     public void mapResultSet() throws SQLException, ParseException {
         Mockito.when(resultSet.getString("CREDIT_CARD_LAST_4_NBR")).thenReturn("1234");
-        Mockito.when(resultSet.getString("CC_TYPE_CD")).thenReturn("MC");
+        Mockito.when(resultSet.getString("CREDIT_CARD_TYPE")).thenReturn("MC");
+        Mockito.when(resultSet.getString("CC_TYPE_NM")).thenReturn("MASTERCARD");
         Mockito.when(resultSet.getString("CURNCY_CD")).thenReturn("USD");
         Mockito.when(resultSet.getString("CARD_HLDR_LAST_NM")).thenReturn("LAST");
         Mockito.when(resultSet.getString("NET_PRICE")).thenReturn("11.00");
@@ -56,7 +57,8 @@ public class WifiLineItemMapperTest {
     @Test
     public void mapResultSetWithOptionalNulls() throws SQLException, ParseException {
         Mockito.when(resultSet.getString("CREDIT_CARD_LAST_4_NBR")).thenReturn(null);
-        Mockito.when(resultSet.getString("CC_TYPE_CD")).thenReturn(null);
+        Mockito.when(resultSet.getString("CREDIT_CARD_TYPE")).thenReturn(null);
+        Mockito.when(resultSet.getString("CC_TYPE_NM")).thenReturn(null);
         Mockito.when(resultSet.getString("CURNCY_CD")).thenReturn(null);
         Mockito.when(resultSet.getString("CARD_HLDR_LAST_NM")).thenReturn(null);
         Mockito.when(resultSet.getString("NET_PRICE")).thenReturn("11.00");
