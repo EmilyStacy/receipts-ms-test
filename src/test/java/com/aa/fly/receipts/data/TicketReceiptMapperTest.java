@@ -166,6 +166,11 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("EQFN_FARE_CURR_TYPE_CD")).thenReturn("");
         Mockito.when(resultSet.getString("FARE_TDAM_AMT")).thenReturn("84930");
 
+        Mockito.when(resultSet.getString("TAX_CD_SEQ_ID")).thenReturn("1");
+        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XA");
+        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("450");
+        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD2");
+
         ticketReceiptMapper.setFopTypeMap(new AppConfig().fopTypeMap());
         passengerDetail = ticketReceiptMapper.mapCostDetails(resultSet, passengerDetail);
         List<FormOfPayment> fops = passengerDetail.getFormOfPayments();
@@ -173,8 +178,8 @@ public class TicketReceiptMapperTest {
         assertThat(fops.size()).isEqualTo(1);
         assertThat(fops.get(0).getFopAccountNumberLast4()).isEqualTo("0006");
         assertThat(fops.get(0).getFopIssueDate()).isEqualTo(dateFormat.parse("2019-03-14"));
-        assertThat(fops.get(0).getFopAmount()).isEqualTo("225295");
-        assertThat(fops.get(0).getFopCurrencyCode()).isEqualTo("USD2");
+        assertThat(fops.get(0).getFopAmount()).isEqualTo("2252.95");
+        assertThat(fops.get(0).getFopCurrencyCode()).isEqualTo("USD");
         assertThat(fops.get(0).getFopTypeCode()).isEqualTo("CCBA");
     }
 

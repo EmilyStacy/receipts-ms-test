@@ -44,6 +44,6 @@ Feature: Search with ticket number should return ticket receipt
 
     Examples:
       | scenario                                        | ticketNumber   | lastName | firstName | departureDate  | fopIssueDate  | fopTypeCode  | fopTypeDescription | fopAccountNumberLastFour | fopAmount | fopCurrencyCode | baseFareAmount | baseFareCurrencyCode | totalFareAmount |
-      | CreditCard Visa                                 | 0012372186607  | TUCSON   | FLAGSHIP  | 2020-01-15     | 2019-10-30    | CCBA         | Visa               | 0006                     | 225295    | USD2            | 1929.0         | USD                  | 2252.95         |
-      | Fare paid in USD & originated from US           | 0012372303346  | martin   | adam      | 2019-11-08     | 2019-11-07    | CCBA         | Visa               | 0006                     | 84930     | USD2            | 776.74         | USD                  | 849.3           |
+      | CreditCard Visa                                 | 0012372186607  | TUCSON   | FLAGSHIP  | 2020-01-15     | 2019-10-30    | CCBA         | Visa               | 0006                     | 2252.95   | USD             | 1929.0         | USD                  | 2252.95         |
+      | Fare paid in USD & originated from US           | 0012372303346  | martin   | adam      | 2019-11-08     | 2019-11-07    | CCBA         | Visa               | 0006                     | 849.3     | USD             | 776.74         | USD                  | 849.3           |
       

@@ -1,10 +1,14 @@
 package com.aa.fly.receipts.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class FareTaxesFees {
 
     private String baseFareAmount;
     private String baseFareCurrencyCode;
     private String totalFareAmount;
+    private Set<Tax> taxes = new HashSet<>();
 
     public FareTaxesFees() {
     }
@@ -39,12 +43,21 @@ public class FareTaxesFees {
         this.totalFareAmount = totalFareAmount;
     }
 
+    public Set<Tax> getTaxes() {
+        return taxes;
+    }
+
+    public void setTaxes(Set<Tax> taxes) {
+        this.taxes = taxes;
+    }
+
     @Override
     public String toString() {
         return "FareTaxesFees{" +
                 "baseFareAmount='" + baseFareAmount + '\'' +
                 ", baseFareCurrencyCode='" + baseFareCurrencyCode + '\'' +
                 ", totalFareAmount='" + totalFareAmount + '\'' +
+                ", taxes='" + taxes + '\'' +
                 '}';
     }
 }

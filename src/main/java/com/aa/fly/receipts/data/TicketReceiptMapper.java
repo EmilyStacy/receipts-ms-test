@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.aa.fly.receipts.domain.AmountAndCurrency;
 import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
+import com.aa.fly.receipts.domain.Tax;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.AirportService;
 
@@ -78,33 +79,44 @@ public class TicketReceiptMapper {
 
     public PassengerDetail mapCostDetails(SqlRowSet rs, PassengerDetail passengerDetail) {
         List<FormOfPayment> formOfPayments = new ArrayList<>();
-        boolean isFirst = true;
+        FareTaxesFees fareTaxesFees = null;
+        int rowCount = 0;
 
         while (rs.next()) {
-            FormOfPayment formOfPayment = new FormOfPayment();
-            formOfPayment.setFopAccountNumberLast4(rs.getString("FOP_ACCT_NBR_LAST4") != null ? rs.getString("FOP_ACCT_NBR_LAST4").trim() : null);
-            formOfPayment.setFopIssueDate(rs.getDate("FOP_ISSUE_DT"));
-            formOfPayment.setFopAmount(rs.getString("FOP_AMT") != null ? rs.getString("FOP_AMT").trim() : null);
-            formOfPayment.setFopCurrencyCode(rs.getString("FOP_CURR_TYPE_CD") != null ? rs.getString("FOP_CURR_TYPE_CD").trim() : null);
-            formOfPayment.setFopTypeCode(rs.getString("FOP_TYPE_CD") != null ? rs.getString("FOP_TYPE_CD").trim() : null);
-            formOfPayment.setFopTypeDescription(fopTypeMap.get(formOfPayment.getFopTypeCode()));
-            formOfPayments.add(formOfPayment);
 
-            passengerDetail.setFormOfPayments(formOfPayments);
+            if (rowCount == 0) {
+                FormOfPayment formOfPayment = new FormOfPayment();
+                formOfPayment.setFopAccountNumberLast4(rs.getString("FOP_ACCT_NBR_LAST4") != null ? rs.getString("FOP_ACCT_NBR_LAST4").trim() : null);
+                formOfPayment.setFopIssueDate(rs.getDate("FOP_ISSUE_DT"));
 
-            if (isFirst) {
-                isFirst = false;
-                FareTaxesFees fareTaxesFees = mapCostDetailsFTF(rs);
+                AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency( rs.getString("FOP_AMT") != null ? rs.getString("FOP_AMT").trim() : null,  rs.getString("FOP_CURR_TYPE_CD") != null ? rs.getString("FOP_CURR_TYPE_CD").trim() : "" );
+                formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
+                formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
+
+                formOfPayment.setFopTypeCode(rs.getString("FOP_TYPE_CD") != null ? rs.getString("FOP_TYPE_CD").trim() : null);
+                formOfPayment.setFopTypeDescription(fopTypeMap.get(formOfPayment.getFopTypeCode()));
+                formOfPayments.add(formOfPayment);
+
+                passengerDetail.setFormOfPayments(formOfPayments);
+                fareTaxesFees = mapFareTaxAndFees(rs);
                 passengerDetail.setFareTaxesFees(fareTaxesFees);
+            } else {
+                fareTaxesFees.getTaxes().add(mapTax(rs));
             }
+            rowCount++;
         }
 
         return passengerDetail;
     }
 
-    private FareTaxesFees mapCostDetailsFTF(SqlRowSet rs) {
+    private FareTaxesFees mapFareTaxAndFees(SqlRowSet rs) {
+
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+
         String baseFareAmount;
         String baseFareCurrencyCode;
+
+        String totalFareAmount = rs.getString("FARE_TDAM_AMT");
 
         int eqfnFareAmt = Integer.parseInt(rs.getString("EQFN_FARE_AMT"));
         if (eqfnFareAmt == 0) {
@@ -115,44 +127,25 @@ public class TicketReceiptMapper {
             baseFareCurrencyCode = rs.getString("EQFN_FARE_CURR_TYPE_CD");
         }
 
-        return tuneAmountCurrency(baseFareAmount, rs.getString("FARE_TDAM_AMT"), baseFareCurrencyCode);
-    }
+        AmountAndCurrency baseFareAmountAndCurrency = new AmountAndCurrency(baseFareAmount, baseFareCurrencyCode);
+        AmountAndCurrency totalFareAmountAndCurrency = new AmountAndCurrency(totalFareAmount, baseFareCurrencyCode);
 
-    private FareTaxesFees tuneAmountCurrency(String baseFareAmount, String totalFareAmount, String baseFareCurrencyCode) {
-        FareTaxesFees fareTaxesFees = new FareTaxesFees();
-
-        String lastChar = baseFareCurrencyCode.substring(baseFareCurrencyCode.length() - 1);
-
-        if (StringUtils.isNumeric(lastChar)) {
-            fareTaxesFees.setBaseFareCurrencyCode(baseFareCurrencyCode.substring(0, baseFareCurrencyCode.length() - 1));
-
-            switch (lastChar) {
-                case "0":
-                    fareTaxesFees.setBaseFareAmount(baseFareAmount);
-                    fareTaxesFees.setTotalFareAmount(totalFareAmount);
-                    break;
-                case "1":
-                    fareTaxesFees.setBaseFareAmount(String.valueOf(Float.parseFloat(baseFareAmount) / 10));
-                    fareTaxesFees.setTotalFareAmount(String.valueOf(Float.parseFloat(totalFareAmount) / 10));
-                    break;
-                case "2":
-                    fareTaxesFees.setBaseFareAmount(String.valueOf(Float.parseFloat(baseFareAmount) / 100));
-                    fareTaxesFees.setTotalFareAmount(String.valueOf(Float.parseFloat(totalFareAmount) / 100));
-                    break;
-                case "3":
-                    fareTaxesFees.setBaseFareAmount(String.valueOf(Float.parseFloat(baseFareAmount) / 1000));
-                    fareTaxesFees.setTotalFareAmount(String.valueOf(Float.parseFloat(totalFareAmount) / 1000));
-                    break;
-                default:
-                    fareTaxesFees.setBaseFareAmount(baseFareAmount);
-                    fareTaxesFees.setTotalFareAmount(totalFareAmount);
-            }
-        } else {
-            fareTaxesFees.setBaseFareCurrencyCode(baseFareCurrencyCode);
-            fareTaxesFees.setBaseFareAmount(baseFareAmount);
-            fareTaxesFees.setTotalFareAmount(totalFareAmount);
-        }
-
+        fareTaxesFees.setBaseFareCurrencyCode(baseFareAmountAndCurrency.getCurrencyCode());
+        fareTaxesFees.setBaseFareAmount(baseFareAmountAndCurrency.getAmount());
+        fareTaxesFees.setTotalFareAmount(totalFareAmountAndCurrency.getAmount());
+        fareTaxesFees.getTaxes().add(mapTax(rs));
         return fareTaxesFees;
+
     }
+
+    private Tax mapTax(SqlRowSet rs) {
+        Tax tax = new Tax();
+        tax.setTaxCodeSequenceId(rs.getString("TAX_CD_SEQ_ID"));
+        tax.setTaxCode(rs.getString("TAX_CD"));
+        AmountAndCurrency amountAndCurrency = new AmountAndCurrency(rs.getString("TAX_AMT"), rs.getString("TAX_CURR_TYPE_CD"));
+        tax.setTaxAmount(amountAndCurrency.getAmount());
+        tax.setTaxCurrencyCode(amountAndCurrency.getCurrencyCode());
+        return tax;
+    }
+
 }
