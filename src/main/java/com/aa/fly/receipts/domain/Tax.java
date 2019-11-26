@@ -9,6 +9,18 @@ public class Tax {
     private String taxAmount;
     private String taxCurrencyCode;
 
+    public Tax() {
+
+    }
+
+    public Tax(String taxCodeSequenceId, String taxCode, String taxDescription, String taxAmount, String taxCurrencyCode) {
+        this.taxCodeSequenceId = taxCodeSequenceId;
+        this.taxCode = taxCode;
+        this.taxDescription = taxDescription;
+        this.taxAmount = taxAmount;
+        this.taxCurrencyCode = taxCurrencyCode;
+    }
+
     public String getTaxCodeSequenceId() {
         return taxCodeSequenceId;
     }

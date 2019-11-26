@@ -44,6 +44,15 @@ Feature: Search with ticket number should return ticket receipt
 
     Examples:
       | scenario                                        | ticketNumber   | lastName | firstName | departureDate  | fopIssueDate  | fopTypeCode  | fopTypeDescription | fopAccountNumberLastFour | fopAmount | fopCurrencyCode | baseFareAmount | baseFareCurrencyCode | totalFareAmount |
-      | CreditCard Visa                                 | 0012372186607  | TUCSON   | FLAGSHIP  | 2020-01-15     | 2019-10-30    | CCBA         | Visa               | 0006                     | 2252.95   | USD             | 1929.0         | USD                  | 2252.95         |
-      | Fare paid in USD & originated from US           | 0012372303346  | martin   | adam      | 2019-11-08     | 2019-11-07    | CCBA         | Visa               | 0006                     | 849.3     | USD             | 776.74         | USD                  | 849.3           |
-      
+      | CreditCard Visa                                 | 0012372186607  | TUCSON   | FLAGSHIP  | 2020-01-15     | 2019-10-30    | CCBA         | Visa               | 0006                     | 2252.95   | USD             | 1929.00        | USD                  | 2252.95         |
+      | Fare paid in USD & originated from US           | 0012372303346  | martin   | adam      | 2019-11-08     | 2019-11-07    | CCBA         | Visa               | 0006                     | 849.30    | USD             | 776.74         | USD                  | 849.30          |
+
+  Scenario Outline: Verify Taxes
+
+    Given I want to retrieve payment details for scenario "<scenario>"
+    When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
+    Then I get a successful response with baseFareAmount "<baseFareAmount>", baseFareCurrencyCode "<baseFareCurrencyCode>", totalFareAmount "<totalFareAmount>", and taxesString "<taxesString>"
+
+    Examples:
+      | scenario                                        | ticketNumber   | lastName | firstName | departureDate  |  baseFareAmount | baseFareCurrencyCode | totalFareAmount | taxesString |
+      | Taxes - base fare currency CAD, XF USD          | 0012372187652  | CANADA   | MONTREAL  | 2020-04-29     | 385.99          | CAD                  | 536.28          | 1,XG8, description,19.90,CAD; 2,XG9,description,1.50,CAD; 3,SQ,description,30.00,CAD;4,XQ4,description,2.99,CAD;5,CA4,description,12.10,CAD; 6,US2,description,48.60,CAD; 7,AY,description,7.32,CAD; 8,YC,description,7.69,CAD; 9,XY2,description,9.14,CAD; 10,XA,description,5.17,CAD;11,XF,description,5.88,CAD;|

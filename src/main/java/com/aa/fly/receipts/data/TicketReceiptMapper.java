@@ -1,8 +1,11 @@
 package com.aa.fly.receipts.data;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -89,7 +92,10 @@ public class TicketReceiptMapper {
                 formOfPayment.setFopAccountNumberLast4(rs.getString("FOP_ACCT_NBR_LAST4") != null ? rs.getString("FOP_ACCT_NBR_LAST4").trim() : null);
                 formOfPayment.setFopIssueDate(rs.getDate("FOP_ISSUE_DT"));
 
-                AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency( rs.getString("FOP_AMT") != null ? rs.getString("FOP_AMT").trim() : null,  rs.getString("FOP_CURR_TYPE_CD") != null ? rs.getString("FOP_CURR_TYPE_CD").trim() : "" );
+                String fopAmount = rs.getString("FOP_AMT") != null ? rs.getString("FOP_AMT").trim() : null;
+                String fopCurrencyCode = rs.getString("FOP_CURR_TYPE_CD") != null ? rs.getString("FOP_CURR_TYPE_CD").trim() : "";
+                AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency(fopAmount, fopCurrencyCode );
+
                 formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
                 formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
@@ -106,8 +112,9 @@ public class TicketReceiptMapper {
             rowCount++;
         }
 
-        return passengerDetail;
+        return adjustTaxesWithOtherCurrencies(passengerDetail);
     }
+
 
     private FareTaxesFees mapFareTaxAndFees(SqlRowSet rs) {
 
@@ -148,4 +155,27 @@ public class TicketReceiptMapper {
         return tax;
     }
 
+
+    public PassengerDetail adjustTaxesWithOtherCurrencies(PassengerDetail passengerDetail) {
+        if(passengerDetail == null || passengerDetail.getFareTaxesFees() == null) return passengerDetail;
+
+        FareTaxesFees fareTaxesFees = passengerDetail.getFareTaxesFees();
+        String baseFareCurrencyCode = fareTaxesFees.getBaseFareCurrencyCode();
+        BigDecimal totalFareAmount = new BigDecimal(fareTaxesFees.getTotalFareAmount());
+        BigDecimal baseFareAmount = new BigDecimal(fareTaxesFees.getBaseFareAmount());
+        BigDecimal totalTaxAmount = totalFareAmount.subtract(baseFareAmount);
+
+        Set<Tax> taxes = passengerDetail.getFareTaxesFees().getTaxes();
+
+        long count = taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).count();
+
+        if(count > 0) {
+            double baseFareCurencyTaxAmoutDouble = taxes.stream().filter(t -> baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).mapToDouble(t -> Double.valueOf(t.getTaxAmount())).sum();
+            BigDecimal baseFareCurrencyTax = BigDecimal.valueOf(baseFareCurencyTaxAmoutDouble);
+            String taxAmount = (totalTaxAmount.subtract(baseFareCurrencyTax)).divide(new BigDecimal(count)).setScale(2, RoundingMode.CEILING).toString();
+            taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).forEach(t -> {t.setTaxAmount(taxAmount); t.setTaxCurrencyCode(baseFareCurrencyCode);});
+        }
+
+        return passengerDetail;
+    }
 }

@@ -1,6 +1,7 @@
 package com.aa.fly.receipts.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -18,9 +19,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aa.fly.receipts.config.AppConfig;
 import com.aa.fly.receipts.domain.Airport;
+import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
+import com.aa.fly.receipts.domain.Tax;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.AirportService;
 
@@ -42,7 +45,7 @@ public class TicketReceiptMapperTest {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Test
-    public void mapResultSet() throws SQLException, ParseException {
+    public void mapResultSet() throws ParseException {
 
         Mockito.when(resultSet.next()).thenReturn(true, false); // first time return true and second time return false
         Mockito.when(resultSet.getString("AIRLN_ACCT_CD")).thenReturn("001");
@@ -124,7 +127,7 @@ public class TicketReceiptMapperTest {
     }
 
     @Test
-    public void mapResultSetWithNulls() throws SQLException, ParseException {
+    public void mapResultSetWithNulls() throws ParseException {
 
         Mockito.when(resultSet.next()).thenReturn(true, false); // first time return true and second time return false
         Mockito.when(resultSet.getString("AIRLN_ACCT_CD")).thenReturn(null);
@@ -183,6 +186,46 @@ public class TicketReceiptMapperTest {
         assertThat(fops.get(0).getFopTypeCode()).isEqualTo("CCBA");
     }
 
+    @Test
+    public void testAdjustTaxesWithOtherCurrencies_oneCreditCardAsFop() {
+        PassengerDetail passengerDetail = new PassengerDetail();
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.setTotalFareAmount("1000.00");
+        fareTaxesFees.setBaseFareAmount("700");
+        fareTaxesFees.setBaseFareCurrencyCode("USD");
+
+        Tax gbTax = new Tax();
+        gbTax.setTaxCode("GB");
+        gbTax.setTaxAmount("200");
+        gbTax.setTaxCodeSequenceId("1");
+        gbTax.setTaxCurrencyCode("USD");
+
+        Tax xfTax = new Tax();
+        xfTax.setTaxCode("XF");
+        xfTax.setTaxAmount("75");
+        xfTax.setTaxCodeSequenceId("2");
+        xfTax.setTaxCurrencyCode("CAD");
+
+        Tax xaTax = new Tax();
+        xaTax.setTaxCode("XA");
+        xaTax.setTaxAmount("50");
+        xaTax.setTaxCodeSequenceId("3");
+        xaTax.setTaxCurrencyCode("USD");
+
+        fareTaxesFees.getTaxes().add(gbTax);
+        fareTaxesFees.getTaxes().add(xfTax);
+        fareTaxesFees.getTaxes().add(xaTax);
+
+        passengerDetail.setFareTaxesFees(fareTaxesFees);
+
+        ticketReceiptMapper.adjustTaxesWithOtherCurrencies(passengerDetail);
+
+        Tax adjustedTax = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().orElse(null);
+        assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
+        assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("USD");
+        assertThat(adjustedTax.getTaxAmount()).isEqualTo("50.00");
+    }
+
     public Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {
         Airport airport = new Airport();
         airport.setCode(code);
@@ -193,5 +236,6 @@ public class TicketReceiptMapperTest {
         airport.setStateCode(state);
         return airport;
     }
+
 
 }

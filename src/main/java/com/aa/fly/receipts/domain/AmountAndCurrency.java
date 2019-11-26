@@ -1,5 +1,7 @@
 package com.aa.fly.receipts.domain;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +21,7 @@ public class AmountAndCurrency {
         } else {
             String numberOfDecimals = matcher.group(2);
             this.currencyCode = matcher.group(1);
-            this.amount = String.valueOf(Float.parseFloat(amount) / Math.pow(10, Double.valueOf(numberOfDecimals)));
+            this.amount = new BigDecimal(amount).divide(BigDecimal.valueOf(10).pow(Integer.parseInt(numberOfDecimals))).setScale(2, RoundingMode.CEILING).toString();
         }
     }
 
