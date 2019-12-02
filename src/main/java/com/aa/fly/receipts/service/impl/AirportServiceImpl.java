@@ -41,12 +41,14 @@ public class AirportServiceImpl implements AirportService {
                 if (airportLookup != null && !CollectionUtils.isEmpty(airportLookup.getAirportList())) {
                     airportMap.clear();
                     airportLookup.getAirportList().stream().forEach(airport -> airportMap.put(airport.getCode(), airport));
-                    logger.info("Loaded " + airportMap.size() + " airports from airport lookup service");
+                    if (logger.isInfoEnabled()) {
+                        logger.info("Loaded {} airports from airport lookup service", airportMap.size());
+                    }
                 } else {
                     logger.error("Zero airports received from airport lookup service!!!");
                 }
             } else {
-                logger.error("Airports lookup failed with status code " + airportLookupEntity.getStatusCode());
+                logger.error("Airports lookup failed with status code {}", airportLookupEntity.getStatusCode());
             }
         } catch (Exception e) {
             logger.error("Exception occured while doing airport lookup", e);

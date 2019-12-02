@@ -16,6 +16,7 @@ import com.aa.fly.receipts.domain.TicketReceipt;
 @Repository
 public class TicketReceiptRepository {
 
+    public static final String JOIN = "JOIN  ";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -63,13 +64,13 @@ public class TicketReceiptRepository {
                 .append("    odtktcpn.OD_TICKET_COUPON_SEQ_NBR AS COUPON_SEQ_NBR, ")
                 .append("    odtktcpn.OPERAT_AIRLN_IATA_CD AS SEG_OPERAT_CARRIER_CD ")
                 .append("FROM ").append(ticketSchemaName).append(".OD_TICKET odtkt ")
-                .append("JOIN  ").append(ticketSchemaName).append(".TICKET_CUSTOMER tcust ")
+                .append(JOIN).append(ticketSchemaName).append(".TICKET_CUSTOMER tcust ")
                 .append("ON odtkt.OD_TICKET_NBR = tcust.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = tcust.TICKET_ISSUE_DT ")
-                .append("JOIN  ").append(ticketSchemaName).append(".TICKET tkt ")
+                .append(JOIN).append(ticketSchemaName).append(".TICKET tkt ")
                 .append("ON odtkt.OD_TICKET_NBR = tkt.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = tkt.TICKET_ISSUE_DT ")
-                .append("JOIN  ").append(ticketSchemaName).append(".OD_TICKET_TRAVEL_COUPON odtktcpn ")
+                .append(JOIN).append(ticketSchemaName).append(".OD_TICKET_TRAVEL_COUPON odtktcpn ")
                 .append("ON odtkt.OD_TICKET_NBR = odtktcpn.OD_TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = odtktcpn.OD_TICKET_ISSUE_DT ")
-                .append("JOIN  ").append(ticketSchemaName).append(".TICKET_COUPON tktcpn ")
+                .append(JOIN).append(ticketSchemaName).append(".TICKET_COUPON tktcpn ")
                 .append("ON odtktcpn.OD_TICKET_NBR = tktcpn.TICKET_NBR AND odtktcpn.OD_TICKET_ISSUE_DT = tktcpn.TICKET_ISSUE_DT ")
                 .append("AND odtktcpn.SEG_LOCAL_DEP_DT = tktcpn.SEG_DEP_DT AND odtktcpn.SEG_LOCAL_OUT_TM = tktcpn.SEG_DEP_TM ")
                 .append("LEFT JOIN  ").append(ticketSchemaName).append(".PNR_FREQ_TRAVLR frqtr ")

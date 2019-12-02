@@ -16,16 +16,16 @@ public class AppConfigTest {
     @Test
     public void testFopTypeMap() {
         Map<String, String> fopTypeMap = config.fopTypeMap();
-        assertEquals(fopTypeMap.get("CCAX"), "American Express");
-        assertEquals(fopTypeMap.get("CCDC"), "Diners Club");
-        assertEquals(fopTypeMap.get("CCDS"), "Discover");
-        assertEquals(fopTypeMap.get("CCBA"), "Visa");
-        assertEquals(fopTypeMap.get("CCVI"), "Visa");
-        assertEquals(fopTypeMap.get("CCIK"), "Master Card");
-        assertEquals(fopTypeMap.get("CCMC"), "Master Card");
-        assertEquals(fopTypeMap.get("CCCA"), "Master Card");
-        assertEquals(fopTypeMap.get("CCAA"), "American Airlines Credit Card");
-        assertEquals(fopTypeMap.get("CCTP"), "UATP");
-        assertEquals(fopTypeMap.get("CCJP"), "Japan Credit Card");
+        assertEquals("American Express", fopTypeMap.get("CCAX"));
+        assertEquals("Diners Club", fopTypeMap.get("CCDC"));
+        assertEquals("Discover", fopTypeMap.get("CCDS"));
+        assertEquals("Visa", fopTypeMap.get("CCBA"));
+        assertEquals("Visa", fopTypeMap.get("CCVI"));
+        assertEquals("Master Card", fopTypeMap.get("CCIK"));
+        assertEquals("Master Card", fopTypeMap.get("CCMC"));
+        assertEquals("Master Card", fopTypeMap.get("CCCA"));
+        assertEquals("American Airlines Credit Card", fopTypeMap.get("CCAA"));
+        assertEquals("UATP", fopTypeMap.get("CCTP"));
+        assertEquals("Japan Credit Card", fopTypeMap.get("CCJP"));
     }
 }

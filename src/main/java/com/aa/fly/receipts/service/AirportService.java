@@ -1,8 +1,6 @@
 package com.aa.fly.receipts.service;
 
 import com.aa.fly.receipts.domain.Airport;
-import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketReceipt;
 
 public interface AirportService {
 
