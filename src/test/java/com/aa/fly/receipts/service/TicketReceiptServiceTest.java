@@ -31,7 +31,7 @@ public class TicketReceiptServiceTest {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
         when(ticketReceiptRepository.findTicketReceiptByTicketNumber(criteria)).thenReturn(expectedReceipt);
         when(ticketReceiptRepository.findCostDetailsByTicketNumber(criteria, expectedReceipt.getPassengerDetails().get(0))).thenReturn(expectedReceipt.getPassengerDetails().get(0));
-        TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria);
+        TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria).getBody();
         assertThat(actualReceipt).isNotNull();
         assertThat(actualReceipt.getAirlineAccountCode()).isEqualTo("001");
         assertThat(actualReceipt.getPnr()).isEqualTo("MRYMPT");

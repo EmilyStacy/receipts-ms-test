@@ -1,6 +1,8 @@
 package com.aa.fly.receipts.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -21,18 +23,22 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
     private TicketReceiptRepository repository;
 
     @Override
-    public TicketReceipt findTicketReceipt(SearchCriteria criteria) {
+    public ResponseEntity<TicketReceipt> findTicketReceipt(SearchCriteria criteria) {
+        ResponseEntity<TicketReceipt> ticketReceiptResponse = null;
         TicketReceipt ticketReceipt = null;
         if (StringUtils.hasText(criteria.getTicketNumber())) {
             ticketReceipt = repository.findTicketReceiptByTicketNumber(criteria);
         }
 
-        if (ticketReceipt != null && ticketReceipt.getPnr() != null) {
+        if (ticketReceipt != null && StringUtils.hasText(ticketReceipt.getPnr())) {
             PassengerDetail passengerDetail = repository.findCostDetailsByTicketNumber(criteria, ticketReceipt.getPassengerDetails().get(0));
             ticketReceipt.getPassengerDetails().set(0, passengerDetail);
+            ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
+        } else {
+            ticketReceiptResponse = ResponseEntity.status(HttpStatus.NO_CONTENT).body(new TicketReceipt());
         }
 
-        return ticketReceipt;
+        return ticketReceiptResponse;
     }
 
 }

@@ -2,6 +2,7 @@ package com.aa.fly.receipts.service;
 
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Created by 629874 on 5/9/2019.
@@ -14,5 +15,5 @@ public interface TicketReceiptService {
      * @param criteria - ticket search criteria
      * @return - instance of TicketReceipt
      */
-    TicketReceipt findTicketReceipt(SearchCriteria criteria);
+    ResponseEntity<TicketReceipt> findTicketReceipt(SearchCriteria criteria);
 }

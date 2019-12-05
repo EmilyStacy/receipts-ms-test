@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
@@ -33,11 +34,11 @@ public class TicketReceiptControllerTest {
     @Test
     public void findWifiReceipt() throws Exception {
         final SearchCriteria searchCriteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
-        final TicketReceipt receiptExpected = ReceiptsMSDomainTest.getTicketReceipt();
+        final ResponseEntity<TicketReceipt> receiptExpected = ResponseEntity.ok().body(ReceiptsMSDomainTest.getTicketReceipt());
 
         when(receiptService.findTicketReceipt(any())).thenReturn(receiptExpected);
 
-        TicketReceipt receiptActual = controller.getTicketReceipt(searchCriteria);
+        TicketReceipt receiptActual = controller.getTicketReceipt(searchCriteria).getBody();
 
         assertThat(receiptActual).isNotNull();
         assertThat(receiptActual.getAirlineAccountCode()).isEqualTo("001");

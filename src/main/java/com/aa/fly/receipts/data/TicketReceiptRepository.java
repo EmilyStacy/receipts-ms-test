@@ -2,6 +2,7 @@ package com.aa.fly.receipts.data;
 
 import java.text.SimpleDateFormat;
 
+import com.aa.fly.receipts.exception.ReceiptsMSException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -152,6 +153,9 @@ public class TicketReceiptRepository {
 
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber10, ticketNumber13, departureDate,
                 firstName, lastName);
+        if (!sqlRowSet.isBeforeFirst()) {
+            throw new ReceiptsMSException("Unable to load cost details!!!");
+        }
 
         return ticketReceiptMapper.mapCostDetails(sqlRowSet, passengerDetail);
     }
