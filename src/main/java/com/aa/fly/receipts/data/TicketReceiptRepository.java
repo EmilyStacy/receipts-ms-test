@@ -154,7 +154,7 @@ public class TicketReceiptRepository {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber10, ticketNumber13, departureDate,
                 firstName, lastName);
         if (!sqlRowSet.isBeforeFirst()) {
-            throw new ReceiptsMSException("Unable to load cost details!!!");
+            throw new ReceiptsMSException("No cost details records found for search criteria = " + criteria);
         }
 
         return ticketReceiptMapper.mapCostDetails(sqlRowSet, passengerDetail);
