@@ -8,15 +8,17 @@ public class FareTaxesFees {
     private String baseFareAmount;
     private String baseFareCurrencyCode;
     private String totalFareAmount;
+    private String taxFareAmount;
     private Set<Tax> taxes = new HashSet<>();
 
     public FareTaxesFees() {
     }
 
-    public FareTaxesFees(String baseFareAmount, String baseFareCurrencyCode, String totalFareAmount) {
+    public FareTaxesFees(String baseFareAmount, String baseFareCurrencyCode, String totalFareAmount, String taxFareAmount) {
         this.baseFareAmount = baseFareAmount;
         this.baseFareCurrencyCode = baseFareCurrencyCode;
         this.totalFareAmount = totalFareAmount;
+        this.taxFareAmount = taxFareAmount;
     }
 
     public String getBaseFareAmount() {
@@ -43,6 +45,14 @@ public class FareTaxesFees {
         this.totalFareAmount = totalFareAmount;
     }
 
+    public String getTaxFareAmount() {
+        return taxFareAmount;
+    }
+
+    public void setTaxFareAmount(String taxFareAmount) {
+        this.taxFareAmount = taxFareAmount;
+    }
+
     public Set<Tax> getTaxes() {
         return taxes;
     }
@@ -57,6 +67,7 @@ public class FareTaxesFees {
                 "baseFareAmount='" + baseFareAmount + '\'' +
                 ", baseFareCurrencyCode='" + baseFareCurrencyCode + '\'' +
                 ", totalFareAmount='" + totalFareAmount + '\'' +
+                ", taxFareAmount='" + taxFareAmount + '\'' +
                 ", taxes='" + taxes + '\'' +
                 '}';
     }

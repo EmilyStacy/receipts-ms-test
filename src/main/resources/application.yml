@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.teradata.jdbc.TeraDriver
-    url: '${vcap.services.mosaic-receipts.credentials.uri:jdbc:teradata://EDTDC.aa.com/database=CERT_INFLIGHT_SRVCS_VW,tmode=ANSI,charset=UTF8}'
+    url: '${vcap.services.mosaic-receipts.credentials.uri:jdbc:teradata://EDTDC.aa.com/database=CERT_INFLIGHT_SRVCS_VW,charset=UTF8}'
     username: ${vcap.services.mosaic-receipts.credentials.username:MOSTDSTEAMRECEIPTSAPP01}
     password: '${vcap.services.mosaic-receipts.credentials.password:Receipts@4Cloud}'
 

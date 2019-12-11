@@ -1,9 +1,7 @@
 package com.aa.fly.receipts.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aa.fly.receipts.config.AppConfig;
 import com.aa.fly.receipts.domain.Airport;
+import com.aa.fly.receipts.domain.Anclry;
 import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
@@ -174,16 +173,36 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("450");
         Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD2");
 
+        Mockito.when(resultSet.getString("ANCLRY_DOC_NBR")).thenReturn("654200213");
+        Mockito.when(resultSet.getString("ANCLRY_ISSUE_DT")).thenReturn("2019-11-07");
+        Mockito.when(resultSet.getString("ANCLRY_PROD_CD")).thenReturn("090");
+        Mockito.when(resultSet.getString("ANCLRY_PROD_NM")).thenReturn("MAIN CABIN EXTRA");
+        Mockito.when(resultSet.getString("SEG_DEPT_ARPRT_CD")).thenReturn("DFW");
+        Mockito.when(resultSet.getString("SEG_ARVL_ARPRT_CD")).thenReturn("BDL");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")).thenReturn("72.91");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_AMT")).thenReturn("78.38");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_CD")).thenReturn("USD");
+
+        Mockito.when(resultSet.getString("ANCLRY_FOP_ACCT_NBR_LAST4")).thenReturn("1111");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_AMT")).thenReturn("53628");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_TYPE_CD")).thenReturn("CCBA");
+
+        Anclry anclry = new Anclry("654200213", "2019-11-07", "090", "MAIN CABIN EXTRA (DFW - BDL)", "72.91", "USD", "78.38", "USD", "5.47");
+
         ticketReceiptMapper.setFopTypeMap(new AppConfig().fopTypeMap());
         passengerDetail = ticketReceiptMapper.mapCostDetails(resultSet, passengerDetail);
         List<FormOfPayment> fops = passengerDetail.getFormOfPayments();
 
-        assertThat(fops.size()).isEqualTo(1);
+        assertThat(fops.size()).isEqualTo(2);
         assertThat(fops.get(0).getFopAccountNumberLast4()).isEqualTo("0006");
         assertThat(fops.get(0).getFopIssueDate()).isEqualTo(dateFormat.parse("2019-03-14"));
         assertThat(fops.get(0).getFopAmount()).isEqualTo("2252.95");
         assertThat(fops.get(0).getFopCurrencyCode()).isEqualTo("USD");
         assertThat(fops.get(0).getFopTypeCode()).isEqualTo("CCBA");
+
+        assertThat(fops.get(0).getAncillaries().contains(anclry));
     }
 
     @Test
@@ -236,6 +255,5 @@ public class TicketReceiptMapperTest {
         airport.setStateCode(state);
         return airport;
     }
-
 
 }

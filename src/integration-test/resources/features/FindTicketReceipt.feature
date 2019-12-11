@@ -14,7 +14,7 @@ Feature: Search with ticket number should return ticket receipt
       | scenario                                        | ticketNumber   | lastName | firstName | departureDate  | originAirport | destinationAirport | pnr    | advantageNumber | loyaltyOwnerCode |
 #      | One way with over night connection              | 0012336961822  | SOUTHERN | FLAGSHIP  | 2019-05-20     | GRU           | LHR                | GZNJJP | 270RFY8         | AA               |
 #      | One way non-stop                                | 0012337074732  | BRAVO    | ALPHA     | 2019-06-26     | LGA           | DTW                | DNSBYR | 273RFY0         | AA               |
-      | Other airline frequent flier                    | 0012372233531  | CEN      | FEI       | 2019-11-05     | DFW           | OKC                | KRFGEE | WM072           | 7C               |
+#      | Other airline frequent flier                    | 0012372233531  | CEN      | FEI       | 2019-11-05     | DFW           | OKC                | KRFGEE | WM072           | 7C               |
 
 
   Scenario Outline: Ticket receipt details for different types of itineraries
@@ -40,12 +40,13 @@ Feature: Search with ticket number should return ticket receipt
     Given I want to retrieve payment details for scenario "<scenario>"
     When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
     Then I get a successful response with fopIssueDate "<fopIssueDate>", fopTypeCode "<fopTypeCode>",  fopTypeDescription "<fopTypeDescription>",  fopAccountNumberLastFour "<fopAccountNumberLastFour>", fopAmount "<fopAmount>", and fopCurrencyCode "<fopCurrencyCode>"
-    Then I get a successful response with baseFareAmount "<baseFareAmount>", baseFareCurrencyCode "<baseFareCurrencyCode>", and totalFareAmount "<totalFareAmount>"
+    Then I get a successful response with baseFareAmount "<baseFareAmount>", baseFareCurrencyCode "<baseFareCurrencyCode>", totalFareAmount "<totalFareAmount>", taxFareAmount "<taxFareAmount>"
 
     Examples:
-      | scenario                                        | ticketNumber   | lastName | firstName | departureDate  | fopIssueDate  | fopTypeCode  | fopTypeDescription | fopAccountNumberLastFour | fopAmount | fopCurrencyCode | baseFareAmount | baseFareCurrencyCode | totalFareAmount |
-      | CreditCard Visa                                 | 0012372186607  | TUCSON   | FLAGSHIP  | 2020-01-15     | 2019-10-30    | CCBA         | Visa               | 0006                     | 2252.95   | USD             | 1929.00        | USD                  | 2252.95         |
-      | Fare paid in USD & originated from US           | 0012372303346  | martin   | adam      | 2019-11-08     | 2019-11-07    | CCBA         | Visa               | 0006                     | 849.30    | USD             | 776.74         | USD                  | 849.30          |
+      | scenario                                        | ticketNumber   | lastName | firstName | departureDate  | fopIssueDate  | fopTypeCode  | fopTypeDescription | fopAccountNumberLastFour | fopAmount | fopCurrencyCode | baseFareAmount | baseFareCurrencyCode | totalFareAmount | taxFareAmount |
+      | CreditCard Visa                                 | 0012372186607  | TUCSON   | FLAGSHIP  | 2020-01-15     | 2019-10-30    | CCBA         | Visa               | 0006                     | 2252.95   | USD             | 1929.00        | USD                  | 2252.95         | 323.95        |
+      | Fare paid in USD & originated from US           | 0012372303346  | martin   | adam      | 2019-11-08     | 2019-11-07    | CCBA         | Visa               | 0006                     | 849.30    | USD             | 776.74         | USD                  | 849.30          | 72.56         |
+
 
   Scenario Outline: Verify Taxes
 
@@ -56,3 +57,18 @@ Feature: Search with ticket number should return ticket receipt
     Examples:
       | scenario                                        | ticketNumber   | lastName | firstName | departureDate  |  baseFareAmount | baseFareCurrencyCode | totalFareAmount | taxesString |
       | Taxes - base fare currency CAD, XF USD          | 0012372187652  | CANADA   | MONTREAL  | 2020-04-29     | 385.99          | CAD                  | 536.28          | 1,XG8, description,19.90,CAD; 2,XG9,description,1.50,CAD; 3,SQ,description,30.00,CAD;4,XQ4,description,2.99,CAD;5,CA4,description,12.10,CAD; 6,US2,description,48.60,CAD; 7,AY,description,7.32,CAD; 8,YC,description,7.69,CAD; 9,XY2,description,9.14,CAD; 10,XA,description,5.17,CAD;11,XF,description,5.88,CAD;|
+      
+      
+  Scenario Outline: Verify ancillaries, FOP amount and passenger amount
+
+    Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
+    When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
+    Then I get a successful response with ancillaries rowCount "<rowCount>", fopAmt "<fopAmt>", totalFareAmount "<totalFareAmount>", passengerTotalAmount "<passengerTotalAmount>"
+    
+    Examples:
+      | scenario                                                                              | ticketNumber   | lastName | firstName | departureDate  | rowCount | fopAmt | totalFareAmount | passengerTotalAmount |
+      | Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt             | 0012372187652  | CANADA   | MONTREAL  | 2020-04-29     | 0        | 536.28 | 536.28          | 536.28               |
+#     | Ancillaries purchased with same ticket FOP, FOP amt = ticket total amt + Ancillary amt| waiting        | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
+#     | Ancillaries purchased same date as ticket but different FOP(2 FOPs), sum of both FOP amts = passenger amt| waiting        | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
+#     | Ancillaries purchased diff date than ticket(2 FOPs), sum of both FOP amts = passenger amt| waiting        | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
+      

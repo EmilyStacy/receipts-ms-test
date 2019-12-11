@@ -188,7 +188,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('integration tests') {
             when {
                 // if it is a branch and not a PR
@@ -213,6 +213,7 @@ pipeline {
                 ]
             }
         }
+*/
         
 //        stage ('job:bff-e2e') {
 //            when {

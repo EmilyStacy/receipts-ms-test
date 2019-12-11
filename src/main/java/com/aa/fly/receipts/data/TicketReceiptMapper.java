@@ -3,6 +3,7 @@ package com.aa.fly.receipts.data;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import com.aa.fly.receipts.domain.AmountAndCurrency;
+import com.aa.fly.receipts.domain.Anclry;
 import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
@@ -28,6 +30,7 @@ public class TicketReceiptMapper {
     private AirportService airportService;
 
     private Map<String, String> fopTypeMap;
+    private Set<String> anclryDocNums = new HashSet<>();
 
     @Autowired
     public void setFopTypeMap(Map<String, String> fopTypeMap) {
@@ -97,9 +100,26 @@ public class TicketReceiptMapper {
                 fareTaxesFees.getTaxes().add(mapTax(rs));
             }
             rowCount++;
+
+            mapAnclry(rs, formOfPayments);
         }
 
-        return adjustTaxesWithOtherCurrencies(passengerDetail);
+        return adjustTaxesWithOtherCurrencies(sumFopAmounts(passengerDetail));
+    }
+
+    private PassengerDetail sumFopAmounts(PassengerDetail passengerDetail) {
+        if (passengerDetail == null)
+            return passengerDetail;
+
+        BigDecimal passengerTotalAmount = new BigDecimal("0");
+
+        for (int i = 0; i < passengerDetail.getFormOfPayments().size(); i++) {
+            passengerTotalAmount = passengerTotalAmount.add(new BigDecimal(passengerDetail.getFormOfPayments().get(i).getFopAmount())).setScale(2, RoundingMode.CEILING);
+        }
+
+        passengerDetail.setPassengerTotalAmount(passengerTotalAmount.toString());
+
+        return passengerDetail;
     }
 
     private void mapFormOfPayment(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
@@ -109,16 +129,76 @@ public class TicketReceiptMapper {
 
         String fopAmount = StringUtils.isNotBlank(rs.getString("FOP_AMT")) ? rs.getString("FOP_AMT").trim() : null;
         String fopCurrencyCode = StringUtils.isNotBlank(rs.getString("FOP_CURR_TYPE_CD")) ? rs.getString("FOP_CURR_TYPE_CD").trim() : "";
-        AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency(fopAmount, fopCurrencyCode );
+        AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency(fopAmount, fopCurrencyCode);
 
         formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
         formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
         formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString("FOP_TYPE_CD")) ? rs.getString("FOP_TYPE_CD").trim() : null);
         formOfPayment.setFopTypeDescription(fopTypeMap.get(formOfPayment.getFopTypeCode()));
+
         formOfPayments.add(formOfPayment);
     }
 
+    private FormOfPayment mapAnclryFormOfPayment(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
+        FormOfPayment formOfPayment = new FormOfPayment();
+        formOfPayment.setFopAccountNumberLast4(StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_ACCT_NBR_LAST4")) ? rs.getString("ANCLRY_FOP_ACCT_NBR_LAST4").trim() : null);
+        formOfPayment.setFopIssueDate(rs.getDate("ANCLRY_ISSUE_DT"));
+
+        String fopAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_AMT")) ? rs.getString("ANCLRY_FOP_AMT").trim() : null;
+        String fopCurrencyCode = StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_CURR_TYPE_CD")) ? rs.getString("ANCLRY_FOP_CURR_TYPE_CD").trim() : "";
+        AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency(fopAmount, fopCurrencyCode);
+
+        formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
+        formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
+
+        formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_TYPE_CD")) ? rs.getString("ANCLRY_FOP_TYPE_CD").trim() : null);
+        formOfPayment.setFopTypeDescription(fopTypeMap.get(formOfPayment.getFopTypeCode()));
+
+        return formOfPayment;
+    }
+
+    private void mapAnclry(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
+        FormOfPayment formOfPayment = null;
+        Anclry anclry = null;
+
+        String anclryDocNbr = rs.getString("ANCLRY_DOC_NBR");
+
+        if (StringUtils.isNotBlank(anclryDocNbr) && !this.anclryDocNums.contains(anclryDocNbr)) {
+            formOfPayment = mapAnclryFormOfPayment(rs, formOfPayments);
+
+            anclry = new Anclry();
+            anclry.setAnclryDocNbr(anclryDocNbr);
+            anclry.setAnclryIssueDate(StringUtils.isNotBlank(rs.getString("ANCLRY_ISSUE_DT")) ? rs.getString("ANCLRY_ISSUE_DT").trim() : null);
+            anclry.setAnclryProdCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_CD")) ? rs.getString("ANCLRY_PROD_CD").trim() : null);
+            String anclryProdName = StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_NM")) ? rs.getString("ANCLRY_PROD_NM").trim() : "???";
+            String segDeptArprtCd = StringUtils.isNotBlank(rs.getString("SEG_DEPT_ARPRT_CD")) ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : null;
+            String segArvlArprtCd = StringUtils.isNotBlank(rs.getString("SEG_ARVL_ARPRT_CD")) ? rs.getString("SEG_ARVL_ARPRT_CD").trim() : null;
+
+            if (anclryProdName != null) {
+                anclry.setAnclryProdName(anclryProdName + " (" + segDeptArprtCd + " - " + segArvlArprtCd + ")");
+            }
+
+            String anclryPriceCurrencyAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT").trim() : null;
+            anclry.setAnclryPriceCurrencyAmount(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT").trim() : null);
+
+            anclry.setAnclryPriceCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD").trim() : null);
+
+            String anclrySalesCurrencyAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_SLS_CURNCY_AMT")) ? rs.getString("ANCLRY_SLS_CURNCY_AMT").trim() : null;
+            anclry.setAnclrySalesCurrencyAmount(anclrySalesCurrencyAmount);
+
+            anclry.setAnclrySalesCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_SLS_CURNCY_CD")) ? rs.getString("ANCLRY_SLS_CURNCY_CD").trim() : null);
+
+            BigDecimal anclryTaxCurrencyAmount = new BigDecimal(anclrySalesCurrencyAmount).subtract(new BigDecimal(anclryPriceCurrencyAmount)).setScale(2, RoundingMode.CEILING);
+
+            anclry.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
+
+            this.anclryDocNums.add(anclryDocNbr);
+
+            formOfPayment.getAncillaries().add(anclry);
+            formOfPayments.add(formOfPayment);
+        }
+    }
 
     private FareTaxesFees mapFareTaxAndFees(SqlRowSet rs) {
 
@@ -146,7 +226,6 @@ public class TicketReceiptMapper {
         fareTaxesFees.setTotalFareAmount(totalFareAmountAndCurrency.getAmount());
         fareTaxesFees.getTaxes().add(mapTax(rs));
         return fareTaxesFees;
-
     }
 
     private Tax mapTax(SqlRowSet rs) {
@@ -159,25 +238,29 @@ public class TicketReceiptMapper {
         return tax;
     }
 
-
     public PassengerDetail adjustTaxesWithOtherCurrencies(PassengerDetail passengerDetail) {
-        if(passengerDetail == null || passengerDetail.getFareTaxesFees() == null) return passengerDetail;
+        if (passengerDetail == null || passengerDetail.getFareTaxesFees() == null)
+            return passengerDetail;
 
         FareTaxesFees fareTaxesFees = passengerDetail.getFareTaxesFees();
         String baseFareCurrencyCode = fareTaxesFees.getBaseFareCurrencyCode();
         BigDecimal totalFareAmount = new BigDecimal(fareTaxesFees.getTotalFareAmount());
         BigDecimal baseFareAmount = new BigDecimal(fareTaxesFees.getBaseFareAmount());
         BigDecimal totalTaxAmount = totalFareAmount.subtract(baseFareAmount);
+        fareTaxesFees.setTaxFareAmount(totalTaxAmount.toString());
 
         Set<Tax> taxes = passengerDetail.getFareTaxesFees().getTaxes();
 
         long count = taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).count();
 
-        if(count > 0) {
+        if (count > 0) {
             double baseFareCurencyTaxAmoutDouble = taxes.stream().filter(t -> baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).mapToDouble(t -> Double.valueOf(t.getTaxAmount())).sum();
             BigDecimal baseFareCurrencyTax = BigDecimal.valueOf(baseFareCurencyTaxAmoutDouble);
             String taxAmount = (totalTaxAmount.subtract(baseFareCurrencyTax)).divide(new BigDecimal(count)).setScale(2, RoundingMode.CEILING).toString();
-            taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).forEach(t -> {t.setTaxAmount(taxAmount); t.setTaxCurrencyCode(baseFareCurrencyCode);});
+            taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).forEach(t -> {
+                t.setTaxAmount(taxAmount);
+                t.setTaxCurrencyCode(baseFareCurrencyCode);
+            });
         }
 
         return passengerDetail;

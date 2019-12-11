@@ -2,6 +2,8 @@ package com.aa.fly.receipts.domain;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -9,24 +11,19 @@ public class FormOfPayment {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date fopIssueDate;
-
     private String fopTypeCode;
-
     private String fopTypeDescription;
-
     private String fopAccountNumberLast4;
-
     private String fopAmount;
-
     private String fopCurrencyCode;
-
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private Set<Anclry> ancillaries = new HashSet<>();
 
     public FormOfPayment() {
 
     }
 
-    public FormOfPayment(Date fopIssueDate, String fopTypeCode,String fopAccountNumberLast4,  String fopAmount, String fopCurrencyCode) {
+    public FormOfPayment(Date fopIssueDate, String fopTypeCode, String fopAccountNumberLast4, String fopAmount, String fopCurrencyCode) {
         this.fopIssueDate = fopIssueDate;
         this.fopTypeCode = fopTypeCode;
         this.fopAccountNumberLast4 = fopAccountNumberLast4;
@@ -82,7 +79,16 @@ public class FormOfPayment {
         this.fopCurrencyCode = fopCurrencyCode;
     }
 
-    @Override public String toString() {
+    public Set<Anclry> getAncillaries() {
+        return ancillaries;
+    }
+
+    public void setAncillaries(Set<Anclry> ancillaries) {
+        this.ancillaries = ancillaries;
+    }
+
+    @Override
+    public String toString() {
         return "FormOfPayment{" +
                 "fopIssueDate=" + dateFormat.format(fopIssueDate) +
                 ", fopTypeCode='" + fopTypeCode + '\'' +
@@ -90,6 +96,7 @@ public class FormOfPayment {
                 ", fopAccountNumberLast4='" + fopAccountNumberLast4 + '\'' +
                 ", fopAmount='" + fopAmount + '\'' +
                 ", fopCurrencyCode='" + fopCurrencyCode + '\'' +
+                ", ancillaries='" + ancillaries + '\'' +
                 '}';
     }
 }

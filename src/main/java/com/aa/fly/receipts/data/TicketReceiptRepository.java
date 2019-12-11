@@ -2,7 +2,6 @@ package com.aa.fly.receipts.data;
 
 import java.text.SimpleDateFormat;
 
-import com.aa.fly.receipts.exception.ReceiptsMSException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,11 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.exception.ReceiptsMSException;
 
 @Repository
 public class TicketReceiptRepository {
 
-    public static final String JOIN = "JOIN  ";
+    public static final String JOIN = "JOIN ";
+    public static final String LEFT_JOIN = "LEFT JOIN ";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -128,27 +129,51 @@ public class TicketReceiptRepository {
                 .append("    , rcpttax.TAX_AMT \n")
                 .append("    , rcpttax.TAX_CURR_TYPE_CD \n")
 
+                .append("    , anclry.ANCLRY_SLS_DOC_NBR AS ANCLRY_DOC_NBR \n")
+                .append("    , anclry.ANCLRY_SLS_ISSUE_DT AS ANCLRY_ISSUE_DT \n")
+                .append("    , anclry.ANCLRY_PROD_CD \n")
+                .append("    , anclname.ANCLRY_PROD_COMERCL_NM AS ANCLRY_PROD_NM \n")
+                .append("    , anclry.ANCLRY_PRD_PRICE_LCL_CRNCY_AMT AS ANCLRY_PRICE_LCL_CURNCY_AMT \n")
+                .append("    , anclry.ANCLRY_PRD_PRICE_LCL_CRNCY_CD AS ANCLRY_PRICE_LCL_CURNCY_CD \n")
+                .append("    , anclry.ANCLRY_PROD_SLS_AMT AS ANCLRY_SLS_CURNCY_AMT \n")
+                .append("    , anclry.ANCLRY_PROD_SLS_CURNCY_CD AS ANCLRY_SLS_CURNCY_CD \n")
+                .append("    , odtktcpn.SEG_DEP_AIRPRT_IATA_CD AS SEG_DEPT_ARPRT_CD \n")
+                .append("    , odtktcpn.SEG_ARVL_AIRPRT_IATA_CD AS SEG_ARVL_ARPRT_CD \n")
+                .append("    , anclryfop.FOP_TYPE_CD AS ANCLRY_FOP_TYPE_CD \n")
+                .append("    , anclryfop.FOP_AMT AS ANCLRY_FOP_AMT \n")
+                .append("    , Right(anclryfop.FOP_ACCT_NBR, 4) AS ANCLRY_FOP_ACCT_NBR_LAST4 \n")
+                .append("    , anclryfop.FOP_CURR_TYPE_CD AS ANCLRY_FOP_CURR_TYPE_CD \n")
+
                 .append("FROM \n")
                 .append("      ").append(ticketSchemaName).append(".OD_TICKET odtkt \n")
-                .append(commaSpace).append(ticketSchemaName).append(".TICKET_CUSTOMER tcust \n")
-                .append(commaSpace).append(ticketSchemaName).append(".TCN_RECEIPT_FOP rcptfop \n")
-                .append(commaSpace).append(ticketSchemaName).append(".TCN_RECEIPT_FARE rcptfare \n")
-                .append(commaSpace).append(ticketSchemaName).append(".TCN_RECEIPT_TAX rcpttax \n")
+                .append(JOIN).append(ticketSchemaName).append(".TICKET_CUSTOMER tcust \n")
+                .append("ON odtkt.OD_TICKET_NBR = tcust.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = tcust.TICKET_ISSUE_DT \n")
+                .append(JOIN).append(ticketSchemaName).append(".TCN_RECEIPT_FOP rcptfop \n")
+                .append("ON odtkt.OD_TICKET_ISSUE_DT = rcptfop.ISSUE_DT \n")
+                .append(JOIN).append(ticketSchemaName).append(".TCN_RECEIPT_FARE rcptfare \n")
+                .append("ON rcptfop.DOC_NBR = rcptfare.DOC_NBR AND rcptfop.ISSUE_DT = rcptfare.ISSUE_DT \n")
+                .append(JOIN).append(ticketSchemaName).append(".TCN_RECEIPT_TAX rcpttax \n")
+                .append("ON rcptfop.DOC_NBR = rcpttax.DOC_NBR AND rcptfop.ISSUE_DT = rcpttax.ISSUE_DT \n")
+                .append(LEFT_JOIN).append(ticketSchemaName).append(".ANCLRY_SLS_DOC_ITEM anclry \n")
+                .append("ON odtkt.OD_TICKET_NBR = anclry.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = anclry.TICKET_ISSUE_DT \n")
+                .append(LEFT_JOIN).append(ticketSchemaName).append(".ANCLRY_SLS_PROD anclname \n")
+                .append("ON anclry.ANCLRY_PROD_CD = anclname.ANCLRY_PROD_ACCT_CD \n")
+                .append(LEFT_JOIN).append(ticketSchemaName).append(".OD_TICKET_TRAVEL_COUPON odtktcpn \n")
+                .append("ON anclry.TICKET_NBR = odtktcpn.OD_TICKET_NBR AND anclry.TICKET_ISSUE_DT = odtktcpn.OD_TICKET_ISSUE_DT AND \r\n" +
+                        "anclry.TICKET_COUPON_SEQ_NBR = odtktcpn.TICKET_COUPON_SEQ_NBR AND odtktcpn.OD_TYPE_CD = 'TRUE_OD' \n")
+                .append(LEFT_JOIN).append(ticketSchemaName).append(".TCN_RECEIPT_FOP anclryfop \n")
+                .append("ON anclry.ANCLRY_SLS_AIRLN_ACCT_CD || '0' || Cast(anclry.ANCLRY_SLS_DOC_NBR AS VARCHAR(9)) = anclryfop.DOC_NBR AND \r\n" +
+                        "anclry.ANCLRY_SLS_ISSUE_DT = anclryfop.ISSUE_DT \n")
+
                 .append("WHERE \n")
-                .append("    odtkt.OD_TICKET_NBR = tcust.TICKET_NBR \n")
-                .append("    AND odtkt.OD_TICKET_ISSUE_DT = tcust.TICKET_ISSUE_DT \n")
-                .append("    AND odtkt.OD_SRC_SYS_CD = 'VCR' \n")
+                .append("    odtkt.OD_SRC_SYS_CD = 'VCR' \n")
                 .append("    AND odtkt.OD_TYPE_CD = 'TRUE_OD' \n")
-                .append("    AND odtkt.OD_TICKET_ISSUE_DT = rcptfop.ISSUE_DT \n")
-                .append("    AND rcptfop.DOC_NBR = rcptfare.DOC_NBR \n")
-                .append("    AND rcptfop.ISSUE_DT = rcptfare.ISSUE_DT \n")
-                .append("    AND rcptfop.DOC_NBR = rcpttax.DOC_NBR \n")
-                .append("    AND rcptfop.ISSUE_DT = rcpttax.ISSUE_DT \n")
                 .append("    AND odtkt.OD_TICKET_NBR = ? \n")
                 .append("    AND rcptfop.DOC_NBR = ? \n")
                 .append("    AND odtkt.OD_LOCAL_DEP_DT = to_date(? , 'YYYY-MM-DD') \n")
                 .append("    AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? \n")
                 .append("    AND UPPER(TRIM(tcust.PNR_PAX_LAST_NM)) = ? \n")
+                .append("ORDER BY rcptfop.ISSUE_DT, rcptfop.FOP_SEQ_ID, rcpttax.TAX_CD_SEQ_ID \n")
                 .toString();
 
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber10, ticketNumber13, departureDate,

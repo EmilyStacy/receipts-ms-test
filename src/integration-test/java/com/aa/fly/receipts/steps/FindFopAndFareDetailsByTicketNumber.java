@@ -16,7 +16,6 @@ import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.Tax;
 import com.aa.fly.receipts.domain.TicketReceipt;
 
-import cucumber.api.DataTable;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import gherkin.deps.com.google.gson.Gson;
@@ -49,8 +48,9 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
         Assert.assertEquals(fopCurrencyCode, fop.getFopCurrencyCode());
     }
 
-    @Then("^I get a successful response with baseFareAmount \"([^\"]*)\", baseFareCurrencyCode \"([^\"]*)\", and totalFareAmount \"([^\"]*)\"$")
-    public void i_get_a_successful_response_with_baseFareAmount_baseFareCurrencyCode_and_totalFareAmount(String baseFareAmount, String baseFareCurrencyCode, String totalFareAmount) throws Throwable {
+    @Then("^I get a successful response with baseFareAmount \"([^\"]*)\", baseFareCurrencyCode \"([^\"]*)\", totalFareAmount \"([^\"]*)\", taxFareAmount \"([^\"]*)\"$")
+    public void i_get_a_successful_response_with_baseFareAmount_baseFareCurrencyCode_and_totalFareAmount(String baseFareAmount, String baseFareCurrencyCode, String totalFareAmount,
+            String taxFareAmount) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
 
@@ -61,11 +61,12 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
         Assert.assertEquals(baseFareAmount, fareTaxesFees.getBaseFareAmount());
         Assert.assertEquals(baseFareCurrencyCode, fareTaxesFees.getBaseFareCurrencyCode());
         Assert.assertEquals(totalFareAmount, fareTaxesFees.getTotalFareAmount());
+        Assert.assertEquals(taxFareAmount, fareTaxesFees.getTaxFareAmount());
     }
 
-
     @Then("^I get a successful response with baseFareAmount \"([^\"]*)\", baseFareCurrencyCode \"([^\"]*)\", totalFareAmount \"([^\"]*)\", and taxesString \"([^\"]*)\"$")
-    public void i_get_a_successful_response_with_baseFareAmount_baseFareCurrencyCode_totalFareAmount_and_taxesString(String baseFareAmount, String baseFareCurrencyCode, String totalFareAmount, String taxesString) throws Throwable {
+    public void i_get_a_successful_response_with_baseFareAmount_baseFareCurrencyCode_totalFareAmount_and_taxesString(String baseFareAmount, String baseFareCurrencyCode, String totalFareAmount,
+            String taxesString) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
 
@@ -74,15 +75,15 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
 
         FareTaxesFees fareTaxesFees = ticketReceipt.getPassengerDetails().get(0).getFareTaxesFees();
 
-
         BigDecimal totalTaxAmount = BigDecimal.valueOf(0);
 
-        if(taxesString!= null && taxesString.trim().length() > 0) {
+        if (taxesString != null && taxesString.trim().length() > 0) {
             List<Tax> taxes = parseTaxesString(taxesString);
-            for(Tax tax : taxes) {
+            for (Tax tax : taxes) {
                 totalTaxAmount = totalTaxAmount.add(new BigDecimal(tax.getTaxAmount()));
-                long count = fareTaxesFees.getTaxes().stream().filter(t -> t.getTaxCodeSequenceId().equals(tax.getTaxCodeSequenceId()) && t.getTaxCode().equals(tax.getTaxCode()) && t.getTaxCode().equals(tax.getTaxCode()) && t.getTaxAmount().equals(tax.getTaxAmount()) && t.getTaxCurrencyCode().equals(tax.getTaxCurrencyCode())).count();
-                Assert.assertTrue( count == 1l);
+                long count = fareTaxesFees.getTaxes().stream().filter(t -> t.getTaxCodeSequenceId().equals(tax.getTaxCodeSequenceId()) && t.getTaxCode().equals(tax.getTaxCode())
+                        && t.getTaxCode().equals(tax.getTaxCode()) && t.getTaxAmount().equals(tax.getTaxAmount()) && t.getTaxCurrencyCode().equals(tax.getTaxCurrencyCode())).count();
+                Assert.assertTrue(count == 1l);
             }
         }
 
@@ -98,9 +99,9 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
         List<Tax> taxes = new ArrayList<>();
         final String[] taxStrings = taxesString.split(";");
 
-        for(String taxString : taxStrings) {
+        for (String taxString : taxStrings) {
             final String[] taxAttrs = taxString.split(",");
-            Tax tax = new Tax(taxAttrs[0].trim(), taxAttrs[1].trim(),taxAttrs[2].trim(), taxAttrs[3].trim(),taxAttrs[4].trim());
+            Tax tax = new Tax(taxAttrs[0].trim(), taxAttrs[1].trim(), taxAttrs[2].trim(), taxAttrs[3].trim(), taxAttrs[4].trim());
             taxes.add(tax);
         }
         return taxes;
