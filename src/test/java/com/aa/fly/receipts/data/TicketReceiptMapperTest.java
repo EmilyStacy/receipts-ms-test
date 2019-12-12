@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aa.fly.receipts.config.AppConfig;
 import com.aa.fly.receipts.domain.Airport;
-import com.aa.fly.receipts.domain.Anclry;
+import com.aa.fly.receipts.domain.Ancillary;
 import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
@@ -189,7 +189,7 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("ANCLRY_FOP_CURR_TYPE_CD")).thenReturn("USD2");
         Mockito.when(resultSet.getString("ANCLRY_FOP_TYPE_CD")).thenReturn("CCBA");
 
-        Anclry anclry = new Anclry("654200213", "2019-11-07", "090", "MAIN CABIN EXTRA (DFW - BDL)", "72.91", "USD", "78.38", "USD", "5.47");
+        Ancillary ancillary = new Ancillary("654200213", "2019-11-07", "090", "MAIN CABIN EXTRA (DFW - BDL)", "72.91", "USD", "78.38", "USD", "5.47");
 
         ticketReceiptMapper.setFopTypeMap(new AppConfig().fopTypeMap());
         passengerDetail = ticketReceiptMapper.mapCostDetails(resultSet, passengerDetail);
@@ -202,7 +202,7 @@ public class TicketReceiptMapperTest {
         assertThat(fops.get(0).getFopCurrencyCode()).isEqualTo("USD");
         assertThat(fops.get(0).getFopTypeCode()).isEqualTo("CCBA");
 
-        assertThat(fops.get(0).getAncillaries().contains(anclry));
+        assertThat(fops.get(0).getAncillaries().contains(ancillary));
     }
 
     @Test

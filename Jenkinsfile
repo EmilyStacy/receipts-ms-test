@@ -96,32 +96,7 @@ pipeline {
             }
 	   }
 
-	 /*
-        stage ('sonar code review') {
-            steps {
-                script {
-                SCM_REPO = "${GIT_URL}".trim().minus("https://ghe.aa.com/")
-                    SCM_REPO = "${SCM_REPO}".reverse().drop(4).reverse()
-                }
-                sh "mvn -s .settings.xml sonar:sonar " +
-                    " -Dsonar.analysis.mode=preview " +
-                    " -Dsonar.host.url=${env.SonarQubeOSS} " +
-                    " -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} " +
-                    " -Dsonar.projectName=${SONARQUBE_PROJECT_NAME} " +
-                    " -Dsonar.login=${SONARQUBE_API_KEY} " +
-                    " -Dsonar.password=" +
-                    " -Dsonar.issuesReport.console.enable=true " +
-                    " -Dsonar.verbose=true " +
-                    " -Dsonar.forceUpdate=true" +
-                    " -Dsonar.github.endpoint=https://ghe.aa.com/api/v3 " +
-                    " -Dsonar.github.pullRequest=${env.CHANGE_ID} " +
-                    " -Dsonar.github.oauth=${GITHUB_PSW} " +
-                    " -Dsonar.github.repository=${SCM_REPO} " 
-            }
-        }
-	*/
-
-        stage('coverity setup') {
+       stage('coverity setup') {
             when {
                 branch 'master'
             }
@@ -188,7 +163,7 @@ pipeline {
                 }
             }
         }
-/*
+
         stage('integration tests') {
             when {
                 // if it is a branch and not a PR
@@ -213,7 +188,7 @@ pipeline {
                 ]
             }
         }
-*/
+
         
 //        stage ('job:bff-e2e') {
 //            when {

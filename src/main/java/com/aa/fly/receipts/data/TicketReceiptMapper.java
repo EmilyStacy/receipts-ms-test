@@ -14,7 +14,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import com.aa.fly.receipts.domain.AmountAndCurrency;
-import com.aa.fly.receipts.domain.Anclry;
+import com.aa.fly.receipts.domain.Ancillary;
 import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
@@ -160,42 +160,42 @@ public class TicketReceiptMapper {
 
     private void mapAnclry(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
         FormOfPayment formOfPayment = null;
-        Anclry anclry = null;
+        Ancillary ancillary = null;
 
         String anclryDocNbr = rs.getString("ANCLRY_DOC_NBR");
 
         if (StringUtils.isNotBlank(anclryDocNbr) && !this.anclryDocNums.contains(anclryDocNbr)) {
             formOfPayment = mapAnclryFormOfPayment(rs, formOfPayments);
 
-            anclry = new Anclry();
-            anclry.setAnclryDocNbr(anclryDocNbr);
-            anclry.setAnclryIssueDate(StringUtils.isNotBlank(rs.getString("ANCLRY_ISSUE_DT")) ? rs.getString("ANCLRY_ISSUE_DT").trim() : null);
-            anclry.setAnclryProdCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_CD")) ? rs.getString("ANCLRY_PROD_CD").trim() : null);
+            ancillary = new Ancillary();
+            ancillary.setAnclryDocNbr(anclryDocNbr);
+            ancillary.setAnclryIssueDate(StringUtils.isNotBlank(rs.getString("ANCLRY_ISSUE_DT")) ? rs.getString("ANCLRY_ISSUE_DT").trim() : null);
+            ancillary.setAnclryProdCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_CD")) ? rs.getString("ANCLRY_PROD_CD").trim() : null);
             String anclryProdName = StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_NM")) ? rs.getString("ANCLRY_PROD_NM").trim() : "???";
             String segDeptArprtCd = StringUtils.isNotBlank(rs.getString("SEG_DEPT_ARPRT_CD")) ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : null;
             String segArvlArprtCd = StringUtils.isNotBlank(rs.getString("SEG_ARVL_ARPRT_CD")) ? rs.getString("SEG_ARVL_ARPRT_CD").trim() : null;
 
             if (anclryProdName != null) {
-                anclry.setAnclryProdName(anclryProdName + " (" + segDeptArprtCd + " - " + segArvlArprtCd + ")");
+                ancillary.setAnclryProdName(anclryProdName + " (" + segDeptArprtCd + " - " + segArvlArprtCd + ")");
             }
 
             String anclryPriceCurrencyAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT").trim() : null;
-            anclry.setAnclryPriceCurrencyAmount(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT").trim() : null);
+            ancillary.setAnclryPriceCurrencyAmount(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT").trim() : null);
 
-            anclry.setAnclryPriceCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD").trim() : null);
+            ancillary.setAnclryPriceCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD").trim() : null);
 
             String anclrySalesCurrencyAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_SLS_CURNCY_AMT")) ? rs.getString("ANCLRY_SLS_CURNCY_AMT").trim() : null;
-            anclry.setAnclrySalesCurrencyAmount(anclrySalesCurrencyAmount);
+            ancillary.setAnclrySalesCurrencyAmount(anclrySalesCurrencyAmount);
 
-            anclry.setAnclrySalesCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_SLS_CURNCY_CD")) ? rs.getString("ANCLRY_SLS_CURNCY_CD").trim() : null);
+            ancillary.setAnclrySalesCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_SLS_CURNCY_CD")) ? rs.getString("ANCLRY_SLS_CURNCY_CD").trim() : null);
 
             BigDecimal anclryTaxCurrencyAmount = new BigDecimal(anclrySalesCurrencyAmount).subtract(new BigDecimal(anclryPriceCurrencyAmount)).setScale(2, RoundingMode.CEILING);
 
-            anclry.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
+            ancillary.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
 
             this.anclryDocNums.add(anclryDocNbr);
 
-            formOfPayment.getAncillaries().add(anclry);
+            formOfPayment.getAncillaries().add(ancillary);
             formOfPayments.add(formOfPayment);
         }
     }

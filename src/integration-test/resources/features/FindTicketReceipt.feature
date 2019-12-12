@@ -59,16 +59,26 @@ Feature: Search with ticket number should return ticket receipt
       | Taxes - base fare currency CAD, XF USD          | 0012372187652  | CANADA   | MONTREAL  | 2020-04-29     | 385.99          | CAD                  | 536.28          | 1,XG8, description,19.90,CAD; 2,XG9,description,1.50,CAD; 3,SQ,description,30.00,CAD;4,XQ4,description,2.99,CAD;5,CA4,description,12.10,CAD; 6,US2,description,48.60,CAD; 7,AY,description,7.32,CAD; 8,YC,description,7.69,CAD; 9,XY2,description,9.14,CAD; 10,XA,description,5.17,CAD;11,XF,description,5.88,CAD;|
       
       
-  Scenario Outline: Verify ancillaries, FOP amount and passenger amount
+  Scenario Outline: Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt
 
     Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
     When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
-    Then I get a successful response with ancillaries rowCount "<rowCount>", fopAmt "<fopAmt>", totalFareAmount "<totalFareAmount>", passengerTotalAmount "<passengerTotalAmount>"
+    Then I get a successful response without ancillaries rowCount "<rowCount>", fopAmt "<fopAmt>", totalFareAmount "<totalFareAmount>", passengerTotalAmount "<passengerTotalAmount>"
     
     Examples:
-      | scenario                                                                              | ticketNumber   | lastName | firstName | departureDate  | rowCount | fopAmt | totalFareAmount | passengerTotalAmount |
-      | Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt             | 0012372187652  | CANADA   | MONTREAL  | 2020-04-29     | 0        | 536.28 | 536.28          | 536.28               |
-#     | Ancillaries purchased with same ticket FOP, FOP amt = ticket total amt + Ancillary amt| waiting        | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
-#     | Ancillaries purchased same date as ticket but different FOP(2 FOPs), sum of both FOP amts = passenger amt| waiting        | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
-#     | Ancillaries purchased diff date than ticket(2 FOPs), sum of both FOP amts = passenger amt| waiting        | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
+      | scenario                                                                                               | ticketNumber   | lastName | firstName | departureDate  | rowCount | fopAmt  | totalFareAmount | passengerTotalAmount | 
+      | Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt                              | 0012372187652  | CANADA   | MONTREAL  | 2020-04-29     | 1        | 536.28  | 536.28          | 536.28               |
+
+      
+  Scenario Outline: One ancillary bought same date as ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amt
+
+    Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
+    When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
+    Then I get a successful response with ancillaries rowCount "<rowCount>", fopAmt "<fopAmt>", totalFareAmount "<totalFareAmount>", passengerTotalAmount "<passengerTotalAmount>", anclryDocNbr "<anclryDocNbr>", anclryIssueDate "<anclryIssueDate>", anclryPriceCurrencyAmount "<anclryPriceCurrencyAmount>", anclrySalesCurrencyAmount "<anclrySalesCurrencyAmount>", anclryTaxCurrencyAmount "<anclryTaxCurrencyAmount>"
+    
+    Examples:
+      | scenario                                                                                               | ticketNumber   | lastName | firstName | departureDate  | rowCount | fopAmt  | totalFareAmount | passengerTotalAmount | anclryDocNbr | anclryIssueDate | anclryPriceCurrencyAmount | anclrySalesCurrencyAmount | anclryTaxCurrencyAmount |
+#      | One ancillary bought same date as ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amt        | 0012372186607  | tucson   | flagship  | 2020-01-15     | 2        | 2252.95 | 2252.95         | 2527.08              | 654190614    | 2019-10-31      | 255.00                    | 274.13                    | 19.13                   |
+#      | One ancillary bought different date than ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amt| waiting        | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
+#      | Two ancillaries bought with ticket (3 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts| waiting   | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
       

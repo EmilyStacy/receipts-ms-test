@@ -79,7 +79,7 @@ public class TicketReceiptRepository {
                 .append("ON tcust.PNR_ORIGNL_ID = frqtr.PNR_LOCTR_ID AND tcust.PNR_ORIGNL_CREATE_DT = frqtr.PNR_CREATE_DT ")
                 .append("AND tcust.PARTY_ID = frqtr.PARTY_ID ")
                 .append("WHERE ")
-                .append("odtkt.OD_TICKET_NBR = ? ")
+                .append("tkt.TICKET_NBR = ? ")
                 .append("AND odtkt.OD_SRC_SYS_CD = 'VCR' ")
                 .append("AND odtkt.OD_TYPE_CD = 'TRUE_OD' ")
                 .append("AND odtkt.OD_LOCAL_DEP_DT = to_date(?, 'YYYY-MM-DD') ")

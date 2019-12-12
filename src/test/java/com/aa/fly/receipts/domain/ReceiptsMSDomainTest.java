@@ -45,7 +45,7 @@ public class ReceiptsMSDomainTest {
         validateAccessors(AirportLookupObject.class);
         validateAccessors(FormOfPayment.class);
         validateAccessors(FareTaxesFees.class);
-        validateAccessors(Anclry.class);
+        validateAccessors(Ancillary.class);
     }
 
     @Test
@@ -137,8 +137,8 @@ public class ReceiptsMSDomainTest {
         List<FormOfPayment> formOfPaymentList = new ArrayList<>();
         FormOfPayment fop = new FormOfPayment(dateFormat.parse("03/14/2019"), "CCBA", "0006", "225295", "USD2");
 
-        Set<Anclry> ancillaries = new HashSet<>();
-        ancillaries.add(new Anclry("654200213", "2019-11-07", "090", "MAIN CABIN EXTRA (DFW - BDL)", "72.91", "USD", "78.38", "USD", "5.47"));
+        Set<Ancillary> ancillaries = new HashSet<>();
+        ancillaries.add(new Ancillary("654200213", "2019-11-07", "090", "MAIN CABIN EXTRA (DFW - BDL)", "72.91", "USD", "78.38", "USD", "5.47"));
         fop.setAncillaries(ancillaries);
 
         formOfPaymentList.add(fop);

@@ -2,7 +2,7 @@ package com.aa.fly.receipts.domain;
 
 import java.util.Objects;
 
-public class Anclry {
+public class Ancillary {
     private String anclryDocNbr;
     private String anclryIssueDate;
     private String anclryProdCode;
@@ -13,11 +13,11 @@ public class Anclry {
     private String anclrySalesCurrencyCode;
     private String anclryTaxCurrencyAmount;
 
-    public Anclry() {
+    public Ancillary() {
 
     }
 
-    public Anclry(String anclryDocNbr, String anclryIssueDate, String anclryProdCode, String anclryProdName,
+    public Ancillary(String anclryDocNbr, String anclryIssueDate, String anclryProdCode, String anclryProdName,
             String anclryPriceCurrencyAmount, String anclryPriceCurrencyCode, String anclrySalesCurrencyAmount,
             String anclrySalesCurrencyCode, String anclryTaxCurrencyAmount) {
         this.anclryDocNbr = anclryDocNbr;
@@ -124,8 +124,8 @@ public class Anclry {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        Anclry anclry = (Anclry) o;
-        return Objects.equals(anclryDocNbr, anclry.anclryDocNbr);
+        Ancillary ancillary = (Ancillary) o;
+        return Objects.equals(anclryDocNbr, ancillary.anclryDocNbr);
     }
 
     @Override

@@ -17,7 +17,7 @@ public class FormOfPayment {
     private String fopAmount;
     private String fopCurrencyCode;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private Set<Anclry> ancillaries = new HashSet<>();
+    private Set<Ancillary> ancillaries = new HashSet<>();
 
     public FormOfPayment() {
 
@@ -79,11 +79,11 @@ public class FormOfPayment {
         this.fopCurrencyCode = fopCurrencyCode;
     }
 
-    public Set<Anclry> getAncillaries() {
+    public Set<Ancillary> getAncillaries() {
         return ancillaries;
     }
 
-    public void setAncillaries(Set<Anclry> ancillaries) {
+    public void setAncillaries(Set<Ancillary> ancillaries) {
         this.ancillaries = ancillaries;
     }
 
