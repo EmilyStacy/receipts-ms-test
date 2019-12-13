@@ -30,7 +30,6 @@ public class TicketReceiptMapper {
     private AirportService airportService;
 
     private Map<String, String> fopTypeMap;
-    private Set<String> anclryDocNums = new HashSet<>();
 
     @Autowired
     public void setFopTypeMap(Map<String, String> fopTypeMap) {
@@ -86,6 +85,7 @@ public class TicketReceiptMapper {
 
     public PassengerDetail mapCostDetails(SqlRowSet rs, PassengerDetail passengerDetail) {
         List<FormOfPayment> formOfPayments = new ArrayList<>();
+        Set<String> anclryDocNums = new HashSet<>();
         FareTaxesFees fareTaxesFees = null;
         int rowCount = 0;
 
@@ -101,7 +101,7 @@ public class TicketReceiptMapper {
             }
             rowCount++;
 
-            mapAnclry(rs, formOfPayments);
+            mapAnclry(rs, formOfPayments, anclryDocNums);
         }
 
         return adjustTaxesWithOtherCurrencies(sumFopAmounts(passengerDetail));
@@ -158,13 +158,13 @@ public class TicketReceiptMapper {
         return formOfPayment;
     }
 
-    private void mapAnclry(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
+    private void mapAnclry(SqlRowSet rs, List<FormOfPayment> formOfPayments, Set<String> anclryDocNums) {
         FormOfPayment formOfPayment = null;
         Ancillary ancillary = null;
 
         String anclryDocNbr = rs.getString("ANCLRY_DOC_NBR");
 
-        if (StringUtils.isNotBlank(anclryDocNbr) && !this.anclryDocNums.contains(anclryDocNbr)) {
+        if (StringUtils.isNotBlank(anclryDocNbr) && !anclryDocNums.contains(anclryDocNbr)) {
             formOfPayment = mapAnclryFormOfPayment(rs, formOfPayments);
 
             ancillary = new Ancillary();
@@ -193,7 +193,7 @@ public class TicketReceiptMapper {
 
             ancillary.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
 
-            this.anclryDocNums.add(anclryDocNbr);
+            anclryDocNums.add(anclryDocNbr);
 
             formOfPayment.getAncillaries().add(ancillary);
             formOfPayments.add(formOfPayment);
