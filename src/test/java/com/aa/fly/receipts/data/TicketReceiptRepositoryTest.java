@@ -1,11 +1,12 @@
 package com.aa.fly.receipts.data;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.aa.fly.receipts.domain.AmountAndCurrency;
+import com.aa.fly.receipts.domain.FormOfPayment;
+import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
@@ -39,8 +43,10 @@ public class TicketReceiptRepositoryTest {
     @InjectMocks
     private TicketReceiptRepository receiptRepository;
 
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
     @Test
-    public void findWifiReceipt() throws ParseException {
+    public void findTicketReceiptByTicketNumber() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
         TicketReceipt ticketReceipt = ReceiptsMSDomainTest.getTicketReceipt();
         List<TicketReceipt> ticketReceiptList = new ArrayList<>();
@@ -51,5 +57,37 @@ public class TicketReceiptRepositoryTest {
                 .thenReturn(ticketReceipt);
         assertEquals("MRYMPT", receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
 
+    }
+
+    @Test
+    public void findCostDetailsByTicketNumber() throws ParseException {
+        SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
+        PassengerDetail passengerDetail = new PassengerDetail();
+
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(resultSet);
+        when(resultSet.isBeforeFirst()).thenReturn(true);
+        PassengerDetail passengerDetailExpected = getPassengerDetailWithCostDetails(passengerDetail);
+        when(ticketReceiptMapper.mapCostDetails(resultSet, passengerDetail))
+                .thenReturn(passengerDetailExpected);
+
+        PassengerDetail passengerDetailActual = receiptRepository.findCostDetailsByTicketNumber(criteria, passengerDetail);
+
+        assertTrue(passengerDetailExpected.getFormOfPayments().get(0).equals(passengerDetailActual.getFormOfPayments().get(0)));
+    }
+
+    private PassengerDetail getPassengerDetailWithCostDetails(PassengerDetail passengerDetail) throws ParseException {
+        List<FormOfPayment> formOfPayments = new ArrayList<>();
+        FormOfPayment formOfPayment = new FormOfPayment();
+        formOfPayment.setFopAccountNumberLast4("0006");
+        formOfPayment.setFopIssueDate(dateFormat.parse("10/30/2019"));
+        AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency("53628", "CAD2");
+        formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
+        formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
+        formOfPayment.setFopTypeCode("CCBA");
+        formOfPayment.setFopTypeDescription("Visa");
+        formOfPayments.add(formOfPayment);
+        passengerDetail.setFormOfPayments(formOfPayments);
+        return passengerDetail;
     }
 }

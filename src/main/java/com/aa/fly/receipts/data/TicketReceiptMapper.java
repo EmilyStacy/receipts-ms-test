@@ -32,6 +32,9 @@ public class TicketReceiptMapper {
     private Map<String, String> fopTypeMap;
 
     @Autowired
+    private CreditCardAliasRepository creditCardAliasRepository;
+
+    @Autowired
     public void setFopTypeMap(Map<String, String> fopTypeMap) {
         this.fopTypeMap = fopTypeMap;
     }
@@ -135,7 +138,7 @@ public class TicketReceiptMapper {
         formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
         formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString("FOP_TYPE_CD")) ? rs.getString("FOP_TYPE_CD").trim() : null);
-        formOfPayment.setFopTypeDescription(fopTypeMap.get(formOfPayment.getFopTypeCode()));
+        formOfPayment.setFopTypeDescription(getCreditCardDescription(formOfPayment.getFopTypeCode()));
 
         formOfPayments.add(formOfPayment);
     }
@@ -153,7 +156,7 @@ public class TicketReceiptMapper {
         formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
         formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_TYPE_CD")) ? rs.getString("ANCLRY_FOP_TYPE_CD").trim() : null);
-        formOfPayment.setFopTypeDescription(fopTypeMap.get(formOfPayment.getFopTypeCode()));
+        formOfPayment.setFopTypeDescription(getCreditCardDescription(formOfPayment.getFopTypeCode()));
 
         return formOfPayment;
     }
@@ -264,5 +267,19 @@ public class TicketReceiptMapper {
         }
 
         return passengerDetail;
+    }
+
+    private String getCreditCardDescription(String fopTypeCode) {
+        String description = fopTypeMap.get(fopTypeCode);
+
+        if(description == null) {
+            description = creditCardAliasRepository.getCreditCardAliasMap().get(fopTypeCode);
+        }
+
+        if(description == null) {
+            description = "Card";
+        }
+
+        return description;
     }
 }

@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +39,9 @@ public class TicketReceiptMapperTest {
 
     @Mock
     private AirportService airportService;
+
+    @Mock
+    private CreditCardAliasRepository creditCardAliasRepository;
 
     @InjectMocks
     private TicketReceiptMapper ticketReceiptMapper;
@@ -192,6 +197,8 @@ public class TicketReceiptMapperTest {
         Ancillary ancillary = new Ancillary("654200213", "2019-11-07", "090", "MAIN CABIN EXTRA (DFW - BDL)", "72.91", "USD", "78.38", "USD", "5.47");
 
         ticketReceiptMapper.setFopTypeMap(new AppConfig().fopTypeMap());
+        Mockito.when(creditCardAliasRepository.getCreditCardAliasMap()).thenReturn(fopTypeMap());
+
         passengerDetail = ticketReceiptMapper.mapCostDetails(resultSet, passengerDetail);
         List<FormOfPayment> fops = passengerDetail.getFormOfPayments();
 
@@ -203,6 +210,18 @@ public class TicketReceiptMapperTest {
         assertThat(fops.get(0).getFopTypeCode()).isEqualTo("CCBA");
 
         assertThat(fops.get(0).getAncillaries().contains(ancillary));
+    }
+
+    @Test
+    public void adjustTaxesWithOtherCurrenciesWhenPassengerDetailIsNull() {
+        PassengerDetail passengerDetail = null;
+        assertThat(ticketReceiptMapper.adjustTaxesWithOtherCurrencies(passengerDetail)).isNull();
+    }
+
+    @Test
+    public void adjustTaxesWithOtherCurrenciesWhenFareTaxFeesIsNull() {
+        PassengerDetail passengerDetail = new PassengerDetail();
+        assertThat(ticketReceiptMapper.adjustTaxesWithOtherCurrencies(passengerDetail)).isEqualTo(passengerDetail);
     }
 
     @Test
@@ -256,4 +275,16 @@ public class TicketReceiptMapperTest {
         return airport;
     }
 
+    public Map<String, String> fopTypeMap() {
+        Map<String, String> fopTypeMap = new HashMap<>();
+        fopTypeMap.put("CCAX", "American Express");
+        fopTypeMap.put("CCDC", "Diners Club");
+        fopTypeMap.put("CCDS", "Discover");
+        fopTypeMap.put("CCBA", "Visa");
+        fopTypeMap.put("CCVI", "Visa");
+        fopTypeMap.put("CCIK", "Mastercard");
+        fopTypeMap.put("CCMC", "Mastercard");
+        fopTypeMap.put("CCCA", "Mastercard");
+        return fopTypeMap;
+    }
 }

@@ -15,8 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
-    public static final String MASTER_CARD = "Master Card";
-    public static final String VISA = "Visa";
+
     @Autowired
     private AddHeadersInterceptor addHeadersInterceptor;
 
@@ -28,17 +27,11 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public Map<String, String> fopTypeMap() {
         Map<String, String> fopTypeMap = new HashMap<>();
-        fopTypeMap.put("CCAX", "American Express");
-        fopTypeMap.put("CCDC", "Diners Club");
-        fopTypeMap.put("CCDS", "Discover");
-        fopTypeMap.put("CCBA", VISA);
-        fopTypeMap.put("CCVI", VISA);
-        fopTypeMap.put("CCIK", MASTER_CARD);
-        fopTypeMap.put("CCMC", MASTER_CARD);
-        fopTypeMap.put("CCCA", MASTER_CARD);
         fopTypeMap.put("CCAA", "American Airlines Credit Card");
         fopTypeMap.put("CCTP", "UATP");
-        fopTypeMap.put("CCJP", "Japan Credit Card");
+        fopTypeMap.put("CCJB", "Japan Credit Card");
+        fopTypeMap.put("CCJC", "Japan Credit Card");
+
         return fopTypeMap;
     }
 }

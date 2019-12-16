@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.ResponseExtractor;
 
+import com.aa.fly.receipts.data.CreditCardAliasRepository;
 import com.aa.fly.receipts.steps.ResponseResults;
 
 @SpringBootTest(classes = ReceiptsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,6 +30,9 @@ public class SpringIntegrationSetup {
 
     @Autowired
     protected TestRestTemplate restTemplate;
+
+    @MockBean
+    private CreditCardAliasRepository creditCardAliasRepository;
 
     protected void executeGet(String url) throws IOException {
         final Map<String, String> headers = new HashMap<>();

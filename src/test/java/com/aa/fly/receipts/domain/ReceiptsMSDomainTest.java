@@ -93,7 +93,7 @@ public class ReceiptsMSDomainTest {
         SearchCriteria criteria = new SearchCriteria();
         criteria.setLastName("TEST");
         criteria.setFirstName("SIMON");
-        criteria.setTicketNumber("1234");
+        criteria.setTicketNumber("0012372187652");
         criteria.setDepartureDate(dateFormat.parse("09/30/2019"));
         return criteria;
     }
