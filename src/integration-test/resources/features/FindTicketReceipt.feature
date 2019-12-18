@@ -73,11 +73,20 @@ Feature: Search with ticket number should return ticket receipt
 
     Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
     When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
-    Then I get a successful response with ancillaries rowCount "<rowCount>", fopAmt "<fopAmt>", totalFareAmount "<totalFareAmount>", passengerTotalAmount "<passengerTotalAmount>", anclryDocNbr "<anclryDocNbr>", anclryIssueDate "<anclryIssueDate>", anclryPriceCurrencyAmount "<anclryPriceCurrencyAmount>", anclrySalesCurrencyAmount "<anclrySalesCurrencyAmount>", anclryTaxCurrencyAmount "<anclryTaxCurrencyAmount>"
-    
+    Then I get a successful response with one ancillary rowCount "<rowCount>", fopAmt "<fopAmt>", passengerTotalAmount "<passengerTotalAmount>", anclryFOPAmt1 "<anclryFOPAmt1>", anclryFOPAmt2 "<anclryFOPAmt2>", anclryFOPIssueDate "<anclryFOPIssueDate>", anclryFOPTypeCode "<anclryFOPTypeCode>", anclryFOPAccountNumberLast4 "<anclryFOPAccountNumberLast4>", anclryDocNbr "<anclryDocNbr>", anclryIssueDate "<anclryIssueDate>", anclryPriceCurrencyAmount "<anclryPriceCurrencyAmount>", anclrySalesCurrencyAmount "<anclrySalesCurrencyAmount>", anclryTaxCurrencyAmount "<anclryTaxCurrencyAmount>"
+
     Examples:
-      | scenario                                                                                               | ticketNumber   | lastName | firstName | departureDate  | rowCount | fopAmt  | totalFareAmount | passengerTotalAmount | anclryDocNbr | anclryIssueDate | anclryPriceCurrencyAmount | anclrySalesCurrencyAmount | anclryTaxCurrencyAmount |
-#      | One ancillary bought same date as ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amt        | 0012372186607  | tucson   | flagship  | 2020-01-15     | 2        | 2252.95 | 2252.95         | 2527.08              | 654190614    | 2019-10-31      | 255.00                    | 274.13                    | 19.13                   |
-#      | One ancillary bought different date than ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amt| waiting        | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
-#      | Two ancillaries bought with ticket (3 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts| waiting   | for      | test      | case           | 385.99   | CAD    | 536.28          |                      |
+      | scenario                                                                                               | ticketNumber   | lastName | firstName | departureDate  | rowCount | fopAmt  | passengerTotalAmount | anclryFOPAmt1 |anclryFOPAmt2 | anclryFOPIssueDate| anclryFOPTypeCode| anclryFOPAccountNumberLast4| anclryDocNbr | anclryIssueDate | anclryPriceCurrencyAmount | anclrySalesCurrencyAmount | anclryTaxCurrencyAmount |
+      | One ancillary bought same date as ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amt        | 0012372186607  | tucson   | flagship  | 2020-01-15     | 2        | 2252.95 | 2527.08              | anclryFOPAmt1|anclryFOPAmt2 | anclryFOPIssueDate| anclryFOPTypeCode| anclryFOPAccountNumberLast4| 654190614    | 2019-10-31      | 255.00                    | 274.13                    | 19.13                   |
+      
+      
+  Scenario Outline: Two ancillaries bought same date as ticket (3 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts
+
+    Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
+    When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
+    Then I get a successful response with two ancillaries rowCount "<rowCount>", fopAmt "<fopAmt>", passengerTotalAmount "<passengerTotalAmount>", anclryFOPAmt1 "<anclryFOPAmt1>", anclryFOPAmt2 "<anclryFOPAmt2>", anclryFOPIssueDate "<anclryFOPIssueDate>", anclryFOPTypeCode "<anclryFOPTypeCode>", anclryFOPAccountNumberLast4 "<anclryFOPAccountNumberLast4>", anclryDocNbr "<anclryDocNbr>", anclryIssueDate "<anclryIssueDate>", anclryPriceCurrencyAmount "<anclryPriceCurrencyAmount>", anclrySalesCurrencyAmount "<anclrySalesCurrencyAmount>", anclryTaxCurrencyAmount "<anclryTaxCurrencyAmount>"    
+
+    Examples:
+      | scenario                                                                                               | ticketNumber   | lastName | firstName | departureDate  | rowCount | fopAmt  | passengerTotalAmount | anclryFOPAmt1 |anclryFOPAmt2 | anclryFOPIssueDate| anclryFOPTypeCode| anclryFOPAccountNumberLast4| anclryDocNbr | anclryIssueDate | anclryPriceCurrencyAmount | anclrySalesCurrencyAmount | anclryTaxCurrencyAmount |
+      | Two ancillaries bought with ticket (3 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts             | 0012372303346  | martin   | adam      | 2019-11-08     | 3        | 849.30  |  971.78              | 78.38         | 44.10        | 2019-11-07        | CCBA             | 0006                       | 654200213    | 2019-11-07      | 72.91                     | 78.38                     | 5.47                    |
       
