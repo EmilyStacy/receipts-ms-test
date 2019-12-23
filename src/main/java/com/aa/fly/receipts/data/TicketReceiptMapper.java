@@ -17,6 +17,7 @@ import com.aa.fly.receipts.domain.AmountAndCurrency;
 import com.aa.fly.receipts.domain.Ancillary;
 import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
+import com.aa.fly.receipts.domain.FormOfPaymentKey;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.Tax;
@@ -91,17 +92,26 @@ public class TicketReceiptMapper {
         Set<String> anclryDocNums = new HashSet<>();
         FareTaxesFees fareTaxesFees = null;
         int rowCount = 0;
-
+        Set<FormOfPaymentKey> fopKeys = new HashSet<>();
         while (rs.next()) {
+            String fopSequenceId = StringUtils.isNotBlank(rs.getString("FOP_SEQ_ID")) ? rs.getString("FOP_SEQ_ID").trim() : "";
+            String fopTypeCode = StringUtils.isNotBlank(rs.getString("FOP_TYPE_CD")) ? rs.getString("FOP_TYPE_CD").trim() : null;
+            FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(fopSequenceId, fopTypeCode);
 
             if (rowCount == 0) {
                 mapFormOfPayment(rs, formOfPayments);
-                passengerDetail.setFormOfPayments(formOfPayments);
                 fareTaxesFees = mapFareTaxAndFees(rs);
                 passengerDetail.setFareTaxesFees(fareTaxesFees);
             } else {
+
+                if(!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
+                    mapFormOfPayment(rs, formOfPayments);
+                }
+
                 fareTaxesFees.getTaxes().add(mapTax(rs));
             }
+            passengerDetail.setFormOfPayments(formOfPayments);
+            fopKeys.add(formOfPaymentKey);
             rowCount++;
 
             mapAnclry(rs, formOfPayments, anclryDocNums);
@@ -138,9 +148,17 @@ public class TicketReceiptMapper {
         formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
         formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString("FOP_TYPE_CD")) ? rs.getString("FOP_TYPE_CD").trim() : null);
-        formOfPayment.setFopTypeDescription(getCreditCardDescription(formOfPayment.getFopTypeCode()));
+        formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(formOfPayment.getFopTypeCode(), formOfPayment.getFopAccountNumberLast4()));
 
         formOfPayments.add(formOfPayment);
+    }
+
+    private boolean mapFormOfPayment(String fopTypeCode) {
+        if(fopTypeCode == null) return false;
+        if(fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA")) {
+            return true;
+        }
+        return false;
     }
 
     private FormOfPayment mapAnclryFormOfPayment(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
@@ -156,7 +174,7 @@ public class TicketReceiptMapper {
         formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
         formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_TYPE_CD")) ? rs.getString("ANCLRY_FOP_TYPE_CD").trim() : null);
-        formOfPayment.setFopTypeDescription(getCreditCardDescription(formOfPayment.getFopTypeCode()));
+        formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(formOfPayment.getFopTypeCode(), formOfPayment.getFopAccountNumberLast4()));
 
         return formOfPayment;
     }
@@ -269,7 +287,7 @@ public class TicketReceiptMapper {
         return passengerDetail;
     }
 
-    private String getCreditCardDescription(String fopTypeCode) {
+    private String getFormOfPaymentDescription(String fopTypeCode, String last4) {
         String description = fopTypeMap.get(fopTypeCode);
 
         if(description == null) {
@@ -278,6 +296,14 @@ public class TicketReceiptMapper {
 
         if(description == null) {
             description = "Card";
+        }
+
+        if(fopTypeCode.startsWith("CA")) {
+            description = "Cash / Check";
+        } else if(fopTypeCode.startsWith("CC")) {
+            if(last4 != null) {
+                description = description + " ending in " + last4;
+            }
         }
 
         return description;

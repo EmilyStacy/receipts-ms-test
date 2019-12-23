@@ -115,6 +115,7 @@ public class TicketReceiptRepository {
                 .append("    , rcptfop.ISSUE_DT AS FOP_ISSUE_DT \n")
                 .append("    , rcptfop.FOP_TYPE_CD \n")
                 .append("    , rcptfop.FOP_AMT \n")
+                .append("    , rcptfop.FOP_SEQ_ID \n")
                 .append("    , right(rcptfop.FOP_ACCT_NBR, 4) AS FOP_ACCT_NBR_LAST4 \n")
                 .append("    , rcptfop.FOP_CURR_TYPE_CD \n")
                 .append("    , rcptfare.FNUM_FARE_AMT \n")
@@ -164,11 +165,12 @@ public class TicketReceiptRepository {
                 .append(LEFT_JOIN).append(ticketSchemaName).append(".TCN_RECEIPT_FOP anclryfop \n")
                 .append("ON anclry.ANCLRY_SLS_AIRLN_ACCT_CD || '0' || Cast(anclry.ANCLRY_SLS_DOC_NBR AS VARCHAR(9)) = anclryfop.DOC_NBR AND \r\n" +
                         "anclry.ANCLRY_SLS_ISSUE_DT = anclryfop.ISSUE_DT \n")
-
+                .append(JOIN).append(ticketSchemaName).append(".TICKET  tkt \n")
+                .append("ON odtkt.OD_TICKET_NBR = tkt.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = tkt.TICKET_ISSUE_DT \n")
                 .append("WHERE \n")
                 .append("    odtkt.OD_SRC_SYS_CD = 'VCR' \n")
                 .append("    AND odtkt.OD_TYPE_CD = 'TRUE_OD' \n")
-                .append("    AND odtkt.OD_TICKET_NBR = ? \n")
+                .append("    AND tkt.TICKET_NBR = ? \n")
                 .append("    AND rcptfop.DOC_NBR = ? \n")
                 .append("    AND odtkt.OD_LOCAL_DEP_DT = to_date(? , 'YYYY-MM-DD') \n")
                 .append("    AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? \n")

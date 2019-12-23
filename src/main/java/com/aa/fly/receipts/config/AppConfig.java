@@ -31,7 +31,8 @@ public class AppConfig implements WebMvcConfigurer {
         fopTypeMap.put("CCTP", "UATP");
         fopTypeMap.put("CCJB", "Japan Credit Card");
         fopTypeMap.put("CCJC", "Japan Credit Card");
-
+        fopTypeMap.put("EF", "Exchange");
+        fopTypeMap.put("EX", "Exchange");
         return fopTypeMap;
     }
 }
