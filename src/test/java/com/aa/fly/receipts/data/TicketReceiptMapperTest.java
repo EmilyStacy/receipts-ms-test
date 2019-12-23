@@ -2,6 +2,8 @@ package com.aa.fly.receipts.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -262,6 +264,31 @@ public class TicketReceiptMapperTest {
         assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("USD");
         assertThat(adjustedTax.getTaxAmount()).isEqualTo("50.00");
+    }
+
+
+    @Test
+    public void testMapFormOfPayment_retrunTrueForCreditCard() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = ticketReceiptMapper.getClass().getDeclaredMethod("mapFormOfPayment", String.class);
+        method.setAccessible(true);
+        boolean returnValue = (boolean) method.invoke(ticketReceiptMapper, "CC");
+        assertThat(returnValue).isTrue();
+    }
+
+    @Test
+    public void testMapFormOfPayment_retrunTrueForCash() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = ticketReceiptMapper.getClass().getDeclaredMethod("mapFormOfPayment", String.class);
+        method.setAccessible(true);
+        boolean returnValue = (boolean) method.invoke(ticketReceiptMapper, "CA");
+        assertThat(returnValue).isTrue();
+    }
+
+    @Test
+    public void testMapFormOfPayment_retrunFalseForExchange() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = ticketReceiptMapper.getClass().getDeclaredMethod("mapFormOfPayment", String.class);
+        method.setAccessible(true);
+        boolean returnValue = (boolean) method.invoke(ticketReceiptMapper, "EF");
+        assertThat(returnValue).isFalse();
     }
 
     public Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {

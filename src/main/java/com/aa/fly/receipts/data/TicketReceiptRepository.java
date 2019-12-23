@@ -170,7 +170,7 @@ public class TicketReceiptRepository {
                 .append("WHERE \n")
                 .append("    odtkt.OD_SRC_SYS_CD = 'VCR' \n")
                 .append("    AND odtkt.OD_TYPE_CD = 'TRUE_OD' \n")
-                .append("    AND tkt.TICKET_NBR = ? \n")
+                .append("    AND odtkt.OD_TICKET_NBR = ? \n")
                 .append("    AND rcptfop.DOC_NBR = ? \n")
                 .append("    AND odtkt.OD_LOCAL_DEP_DT = to_date(? , 'YYYY-MM-DD') \n")
                 .append("    AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? \n")
