@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,10 +107,11 @@ public class TicketReceiptMapper {
 
                 if(!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
                     mapFormOfPayment(rs, formOfPayments);
+                    formOfPayments = adjustFormOfPaymentsIfExchanged(formOfPayments);
                 }
-
                 fareTaxesFees.getTaxes().add(mapTax(rs));
             }
+
             passengerDetail.setFormOfPayments(formOfPayments);
             fopKeys.add(formOfPaymentKey);
             rowCount++;
@@ -159,6 +161,17 @@ public class TicketReceiptMapper {
             return true;
         }
         return false;
+    }
+
+
+    private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
+        boolean isExchange = formOfPayments.stream().filter(f -> "EF".equals(f.getFopTypeCode()) || "EF".equals(f.getFopTypeCode())).findFirst().isPresent();
+        if(isExchange) {
+            formOfPayments = formOfPayments.stream().filter(f -> BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0).collect(Collectors.toList());
+            formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
+        }
+
+        return formOfPayments;
     }
 
     private FormOfPayment mapAnclryFormOfPayment(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
