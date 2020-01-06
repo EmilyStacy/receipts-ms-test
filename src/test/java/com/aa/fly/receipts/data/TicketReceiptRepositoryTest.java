@@ -40,6 +40,9 @@ public class TicketReceiptRepositoryTest {
     @Mock
     private TicketReceiptMapper ticketReceiptMapper;
 
+    @Mock
+    private CostDetailsMapper costDetailsMapper;
+
     @InjectMocks
     private TicketReceiptRepository receiptRepository;
 
@@ -68,7 +71,7 @@ public class TicketReceiptRepositoryTest {
                 .thenReturn(resultSet);
         when(resultSet.isBeforeFirst()).thenReturn(true);
         PassengerDetail passengerDetailExpected = getPassengerDetailWithCostDetails(passengerDetail);
-        when(ticketReceiptMapper.mapCostDetails(resultSet, passengerDetail))
+        when(costDetailsMapper.mapCostDetails(resultSet, passengerDetail))
                 .thenReturn(passengerDetailExpected);
 
         PassengerDetail passengerDetailActual = receiptRepository.findCostDetailsByTicketNumber(criteria, passengerDetail);

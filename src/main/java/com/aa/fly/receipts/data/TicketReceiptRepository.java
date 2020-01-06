@@ -28,6 +28,9 @@ public class TicketReceiptRepository {
     @Autowired
     private TicketReceiptMapper ticketReceiptMapper;
 
+    @Autowired
+    private CostDetailsMapper costDetailsMapper;
+
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Transactional(readOnly = true)
@@ -184,6 +187,6 @@ public class TicketReceiptRepository {
             throw new ReceiptsMSException("No cost details records found for search criteria = " + criteria);
         }
 
-        return ticketReceiptMapper.mapCostDetails(sqlRowSet, passengerDetail);
+        return costDetailsMapper.mapCostDetails(sqlRowSet, passengerDetail);
     }
 }

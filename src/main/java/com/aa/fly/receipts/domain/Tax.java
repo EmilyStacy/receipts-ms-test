@@ -77,10 +77,10 @@ public class Tax {
         if (o == null || getClass() != o.getClass())
             return false;
         Tax tax = (Tax) o;
-        return Objects.equals(taxCode, tax.taxCode);
+        return Objects.equals(taxCodeSequenceId, tax.taxCodeSequenceId);
     }
 
     @Override public int hashCode() {
-        return Objects.hash(taxCode);
+        return Objects.hash(taxCodeSequenceId);
     }
 }
