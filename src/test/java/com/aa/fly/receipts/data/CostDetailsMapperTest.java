@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +174,22 @@ public class CostDetailsMapperTest {
         method.setAccessible(true);
         boolean returnValue = (boolean) method.invoke(costDetailsMapper, "EF");
         assertThat(returnValue).isFalse();
+    }
+
+
+    @Test
+    public void sumFopAmounts_evenExchange_passengerTotalAmountShouldBeEqualFareTotalAmount() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        PassengerDetail passengerDetail = new PassengerDetail();
+        passengerDetail.setFormOfPayments(new ArrayList<>());
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.setTotalFareAmount("1016.59");
+        fareTaxesFees.setTaxFareAmount("97.53");
+        fareTaxesFees.setBaseFareAmount("919.06");
+        passengerDetail.setFareTaxesFees(fareTaxesFees);
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("sumFopAmounts", PassengerDetail.class);
+        method.setAccessible(true);
+        PassengerDetail returnValue = (PassengerDetail) method.invoke(costDetailsMapper, passengerDetail);
+        assertThat(returnValue.getPassengerTotalAmount()).isEqualTo(passengerDetail.getPassengerTotalAmount());
     }
 
     public Map<String, String> fopTypeMap() {
