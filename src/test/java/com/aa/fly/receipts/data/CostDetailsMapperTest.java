@@ -176,6 +176,17 @@ public class CostDetailsMapperTest {
         assertThat(returnValue).isFalse();
     }
 
+    @Test
+    public void testMapTax_descriptionShouldContain3letterAirportCode() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class);
+        method.setAccessible(true);
+        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
+        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
+        Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
+        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet);
+        assertThat(returnValue.getTaxDescription()).endsWith("(DFW)");
+    }
 
     @Test
     public void sumFopAmounts_evenExchange_passengerTotalAmountShouldBeEqualFareTotalAmount() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {

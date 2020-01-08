@@ -217,6 +217,10 @@ public class CostDetailsMapper {
         Tax tax = new Tax();
         tax.setTaxCodeSequenceId(rs.getString("TAX_CD_SEQ_ID"));
         tax.setTaxCode(rs.getString("TAX_CD"));
+        String cityCode = rs.getString("CITY_CD") == null ? "" :  rs.getString("CITY_CD").trim();
+        cityCode = cityCode.length() == 0 ? cityCode : "(".concat(cityCode).concat(")");
+        String description = cityCode.length() == 0 ? tax.getTaxCode() : tax.getTaxCode().concat(" ").concat(cityCode);
+        tax.setTaxDescription(description);
         AmountAndCurrency amountAndCurrency = new AmountAndCurrency(rs.getString("TAX_AMT"), rs.getString("TAX_CURR_TYPE_CD"));
         tax.setTaxAmount(amountAndCurrency.getAmount());
         tax.setTaxCurrencyCode(amountAndCurrency.getCurrencyCode());
