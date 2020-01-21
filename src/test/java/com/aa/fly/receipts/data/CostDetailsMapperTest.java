@@ -1,6 +1,8 @@
 package com.aa.fly.receipts.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,6 +36,9 @@ public class CostDetailsMapperTest {
 
     @Mock
     private CreditCardAliasRepository creditCardAliasRepository;
+
+    @Mock
+    private TaxDescriptionRepository taxDescriptionRepository;
 
     @InjectMocks
     private CostDetailsMapper costDetailsMapper;
@@ -184,8 +189,23 @@ public class CostDetailsMapperTest {
         Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD");
         Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
         Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
+        Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
         Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet);
         assertThat(returnValue.getTaxDescription()).endsWith("(DFW)");
+    }
+
+    @Test
+    public void testMapTax_mapCodeToDescription() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ParseException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class);
+        method.setAccessible(true);
+        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
+        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
+        Mockito.when(resultSet.getDate("TICKET_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
+        Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
+        Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
+        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet);
+        assertThat(returnValue.getTaxDescription()).isEqualTo("SYS GEN PFC (DFW)");
     }
 
     @Test

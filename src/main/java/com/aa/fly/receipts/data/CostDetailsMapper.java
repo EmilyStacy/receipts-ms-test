@@ -31,6 +31,9 @@ public class CostDetailsMapper {
     private CreditCardAliasRepository creditCardAliasRepository;
 
     @Autowired
+    private TaxDescriptionRepository taxDescriptionRepository;
+
+    @Autowired
     public void setFopTypeMap(Map<String, String> fopTypeMap) {
         this.fopTypeMap = fopTypeMap;
     }
@@ -116,7 +119,7 @@ public class CostDetailsMapper {
 
 
     private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
-        boolean isExchange = formOfPayments.stream().filter(f -> "EF".equals(f.getFopTypeCode()) || "EF".equals(f.getFopTypeCode())).findFirst().isPresent();
+        boolean isExchange = formOfPayments.stream().filter(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode())).findFirst().isPresent();
         if(isExchange) {
             formOfPayments = formOfPayments.stream().filter(f -> BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0).collect(Collectors.toList());
             formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
@@ -216,10 +219,13 @@ public class CostDetailsMapper {
     private Tax mapTax(SqlRowSet rs) {
         Tax tax = new Tax();
         tax.setTaxCodeSequenceId(rs.getString("TAX_CD_SEQ_ID"));
-        tax.setTaxCode(rs.getString("TAX_CD"));
-        String cityCode = rs.getString("CITY_CD") == null ? "" :  rs.getString("CITY_CD").trim();
+        tax.setTaxCode(rs.getString("TAX_CD").trim());
+        String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD")) ? rs.getString("CITY_CD").trim() : ""  ;
         cityCode = cityCode.length() == 0 ? cityCode : "(".concat(cityCode).concat(")");
-        String description = cityCode.length() == 0 ? tax.getTaxCode() : tax.getTaxCode().concat(" ").concat(cityCode);
+
+        String description = taxDescriptionRepository.getDescription(tax.getTaxCode(), rs.getDate("TICKET_ISSUE_DT"));
+        description = cityCode.length() == 0 ? description : description.concat(" ").concat(cityCode);
+
         tax.setTaxDescription(description);
         AmountAndCurrency amountAndCurrency = new AmountAndCurrency(rs.getString("TAX_AMT"), rs.getString("TAX_CURR_TYPE_CD"));
         tax.setTaxAmount(amountAndCurrency.getAmount());

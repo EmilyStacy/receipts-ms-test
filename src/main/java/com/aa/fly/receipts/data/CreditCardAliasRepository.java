@@ -51,7 +51,7 @@ public class CreditCardAliasRepository {
             if (alias != null && alias.length() > 0) {
                 alias = "CC" + alias;
             }
-            String description = sqlRowSet.getString("CREDIT_CARD_TYPE_ALIAS_DESC") == null ? "UNKNOWN" : sqlRowSet.getString("CREDIT_CARD_TYPE_ALIAS_DESC");
+            String description = StringUtils.isNotBlank(sqlRowSet.getString("CREDIT_CARD_TYPE_ALIAS_DESC")) ? sqlRowSet.getString("CREDIT_CARD_TYPE_ALIAS_DESC") : "UNKNOWN" ;
             creditCardAliasMap.put(alias, toTitleCase(description));
         }
 

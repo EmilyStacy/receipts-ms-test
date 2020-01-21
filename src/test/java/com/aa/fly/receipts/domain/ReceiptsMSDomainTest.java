@@ -162,4 +162,6 @@ public class ReceiptsMSDomainTest {
         airport.setStateCode(state);
         return airport;
     }
+
+
 }

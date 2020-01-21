@@ -82,7 +82,7 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
             for (Tax tax : taxes) {
                 totalTaxAmount = totalTaxAmount.add(new BigDecimal(tax.getTaxAmount()));
                 long count = fareTaxesFees.getTaxes().stream().filter(t -> t.getTaxCodeSequenceId().equals(tax.getTaxCodeSequenceId()) && t.getTaxCode().equals(tax.getTaxCode())
-                        && t.getTaxCode().equals(tax.getTaxCode()) && t.getTaxAmount().equals(tax.getTaxAmount()) && t.getTaxCurrencyCode().equals(tax.getTaxCurrencyCode())).count();
+                        && t.getTaxCode().equals(tax.getTaxCode()) && t.getTaxDescription().contains(tax.getTaxDescription()) && t.getTaxAmount().equals(tax.getTaxAmount()) && t.getTaxCurrencyCode().equals(tax.getTaxCurrencyCode())).count();
                 Assert.assertTrue(count == 1l);
             }
         }
