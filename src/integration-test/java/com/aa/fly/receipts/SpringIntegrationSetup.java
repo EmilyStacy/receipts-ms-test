@@ -20,6 +20,7 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.ResponseExtractor;
 
 import com.aa.fly.receipts.data.CreditCardAliasRepository;
+import com.aa.fly.receipts.data.TaxDescriptionRepository;
 import com.aa.fly.receipts.steps.ResponseResults;
 
 @SpringBootTest(classes = ReceiptsApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -33,6 +34,10 @@ public class SpringIntegrationSetup {
 
     @MockBean
     private CreditCardAliasRepository creditCardAliasRepository;
+
+    @MockBean
+    private TaxDescriptionRepository taxDescriptionRepository;
+
 
     protected void executeGet(String url) throws IOException {
         final Map<String, String> headers = new HashMap<>();
