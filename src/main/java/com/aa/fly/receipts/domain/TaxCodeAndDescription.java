@@ -1,6 +1,5 @@
 package com.aa.fly.receipts.domain;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class TaxCodeAndDescription {

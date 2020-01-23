@@ -106,8 +106,6 @@ public class TicketReceiptRepository {
         String ticketNumber10 = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
         String ticketNumber13 = (ticketNumberSc.length() == 13) ? ticketNumberSc : new StringBuilder("001").append(ticketNumberSc).toString();
 
-        String commaSpace = "    , ";
-
         String sql = new StringBuilder("\nSELECT ")
                 .append(" odtkt.OD_TICKET_AIRLN_ACCT_CD AS AIRLN_ACCT_CD \n")
                 .append("    , odtkt.OD_TICKET_NBR AS TICKET_NBR \n")

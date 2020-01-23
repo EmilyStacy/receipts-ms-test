@@ -101,7 +101,7 @@ public class CostDetailsMapperTest {
         assertThat(fops.get(0).getFopCurrencyCode()).isEqualTo("USD");
         assertThat(fops.get(0).getFopTypeCode()).isEqualTo("CCBA");
 
-        assertThat(fops.get(0).getAncillaries().contains(ancillary));
+        assertThat(fops.get(1).getAncillaries()).contains(ancillary);
     }
 
     @org.junit.Test

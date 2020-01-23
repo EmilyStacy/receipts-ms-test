@@ -17,6 +17,7 @@ public class Ancillary {
 
     }
 
+    @SuppressWarnings("squid:S00107")
     public Ancillary(String anclryDocNbr, String anclryIssueDate, String anclryProdCode, String anclryProdName,
             String anclryPriceCurrencyAmount, String anclryPriceCurrencyCode, String anclrySalesCurrencyAmount,
             String anclrySalesCurrencyCode, String anclryTaxCurrencyAmount) {

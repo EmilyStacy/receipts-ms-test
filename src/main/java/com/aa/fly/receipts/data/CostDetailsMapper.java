@@ -38,6 +38,10 @@ public class CostDetailsMapper {
         this.fopTypeMap = fopTypeMap;
     }
 
+    private static final String FOP_TYPE_CD = "FOP_TYPE_CD";
+    private static final String ANCLRY_ISSUE_DT = "ANCLRY_ISSUE_DT";
+    private static final String ANCLRY_PRICE_LCL_CURNCY_AMT = "ANCLRY_PRICE_LCL_CURNCY_AMT";
+
     public PassengerDetail mapCostDetails(SqlRowSet rs, PassengerDetail passengerDetail) {
         List<FormOfPayment> formOfPayments = new ArrayList<>();
         Set<String> anclryDocNums = new HashSet<>();
@@ -46,7 +50,7 @@ public class CostDetailsMapper {
         Set<FormOfPaymentKey> fopKeys = new HashSet<>();
         while (rs.next()) {
             String fopSequenceId = StringUtils.isNotBlank(rs.getString("FOP_SEQ_ID")) ? rs.getString("FOP_SEQ_ID").trim() : "";
-            String fopTypeCode = StringUtils.isNotBlank(rs.getString("FOP_TYPE_CD")) ? rs.getString("FOP_TYPE_CD").trim() : null;
+            String fopTypeCode = StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : null;
             FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(fopSequenceId, fopTypeCode);
 
             if (rowCount == 0) {
@@ -103,7 +107,7 @@ public class CostDetailsMapper {
         formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
         formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
-        formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString("FOP_TYPE_CD")) ? rs.getString("FOP_TYPE_CD").trim() : null);
+        formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : null);
         formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(formOfPayment.getFopTypeCode(), formOfPayment.getFopAccountNumberLast4()));
 
         formOfPayments.add(formOfPayment);
@@ -111,15 +115,12 @@ public class CostDetailsMapper {
 
     private boolean mapFormOfPayment(String fopTypeCode) {
         if(fopTypeCode == null) return false;
-        if(fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA")) {
-            return true;
-        }
-        return false;
+        return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
     }
 
 
     private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
-        boolean isExchange = formOfPayments.stream().filter(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode())).findFirst().isPresent();
+        boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
         if(isExchange) {
             formOfPayments = formOfPayments.stream().filter(f -> BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0).collect(Collectors.toList());
             formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
@@ -128,10 +129,10 @@ public class CostDetailsMapper {
         return formOfPayments;
     }
 
-    private FormOfPayment mapAnclryFormOfPayment(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
+    private FormOfPayment mapAnclryFormOfPayment(SqlRowSet rs) {
         FormOfPayment formOfPayment = new FormOfPayment();
         formOfPayment.setFopAccountNumberLast4(StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_ACCT_NBR_LAST4")) ? rs.getString("ANCLRY_FOP_ACCT_NBR_LAST4").trim() : null);
-        formOfPayment.setFopIssueDate(rs.getDate("ANCLRY_ISSUE_DT"));
+        formOfPayment.setFopIssueDate(rs.getDate(ANCLRY_ISSUE_DT));
 
         String fopAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_AMT")) ? rs.getString("ANCLRY_FOP_AMT").trim() : null;
         String fopCurrencyCode = StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_CURR_TYPE_CD")) ? rs.getString("ANCLRY_FOP_CURR_TYPE_CD").trim() : "";
@@ -153,11 +154,11 @@ public class CostDetailsMapper {
         String anclryDocNbr = rs.getString("ANCLRY_DOC_NBR");
 
         if (StringUtils.isNotBlank(anclryDocNbr) && !anclryDocNums.contains(anclryDocNbr)) {
-            formOfPayment = mapAnclryFormOfPayment(rs, formOfPayments);
+            formOfPayment = mapAnclryFormOfPayment(rs);
 
             ancillary = new Ancillary();
             ancillary.setAnclryDocNbr(anclryDocNbr);
-            ancillary.setAnclryIssueDate(StringUtils.isNotBlank(rs.getString("ANCLRY_ISSUE_DT")) ? rs.getString("ANCLRY_ISSUE_DT").trim() : null);
+            ancillary.setAnclryIssueDate(StringUtils.isNotBlank(rs.getString(ANCLRY_ISSUE_DT)) ? rs.getString(ANCLRY_ISSUE_DT).trim() : null);
             ancillary.setAnclryProdCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_CD")) ? rs.getString("ANCLRY_PROD_CD").trim() : null);
             String anclryProdName = StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_NM")) ? rs.getString("ANCLRY_PROD_NM").trim() : "???";
             String segDeptArprtCd = StringUtils.isNotBlank(rs.getString("SEG_DEPT_ARPRT_CD")) ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : null;
@@ -167,8 +168,8 @@ public class CostDetailsMapper {
                 ancillary.setAnclryProdName(anclryProdName + " (" + segDeptArprtCd + " - " + segArvlArprtCd + ")");
             }
 
-            String anclryPriceCurrencyAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT").trim() : null;
-            ancillary.setAnclryPriceCurrencyAmount(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_AMT").trim() : null);
+            String anclryPriceCurrencyAmount = StringUtils.isNotBlank(rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT)) ? rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT).trim() : null;
+            ancillary.setAnclryPriceCurrencyAmount(StringUtils.isNotBlank(rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT)) ? rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT).trim() : null);
 
             ancillary.setAnclryPriceCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD").trim() : null);
 
@@ -274,10 +275,8 @@ public class CostDetailsMapper {
 
         if(fopTypeCode.startsWith("CA")) {
             description = "Cash / Check";
-        } else if(fopTypeCode.startsWith("CC")) {
-            if(last4 != null) {
-                description = description + " ending in " + last4;
-            }
+        } else if(fopTypeCode.startsWith("CC") && last4 != null) {
+            description = description + " ending in " + last4;
         }
 
         return description;

@@ -1,27 +1,12 @@
 package com.aa.fly.receipts.data;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
-import com.aa.fly.receipts.domain.AmountAndCurrency;
-import com.aa.fly.receipts.domain.Ancillary;
-import com.aa.fly.receipts.domain.FareTaxesFees;
-import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.FormOfPaymentKey;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
-import com.aa.fly.receipts.domain.Tax;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.AirportService;
 
