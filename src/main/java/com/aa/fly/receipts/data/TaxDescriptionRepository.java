@@ -73,7 +73,7 @@ public class TaxDescriptionRepository {
     public String getDescription(String taxCode, Date ticketIssueDate) {
         List<TaxCodeAndDescription> taxCodeAndDescriptions = taxCodeAndDescriptionMap.get(taxCode);
 
-        String description = "";
+        String description = taxCode;
         if(taxCodeAndDescriptions!= null) {
             if(taxCodeAndDescriptions.size() == 1) {
                 description = taxCodeAndDescriptions.get(0).getTaxCodeDescription();
