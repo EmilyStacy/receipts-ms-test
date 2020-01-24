@@ -2,7 +2,7 @@ applications:
 - buildpack: java_buildpack_offline-4_14
   memory: 1G
   timeout: 180
-  instances: 1
+  instances: 3
   maximum_health_check_timeout: 300
   env:
     SPRING_PROFILES_ACTIVE: prod
