@@ -1,6 +1,7 @@
 package com.aa.fly.receipts.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -104,6 +105,7 @@ public class CostDetailsMapperTest {
         assertThat(fops.get(1).getAncillaries()).contains(ancillary);
     }
 
+
     @org.junit.Test
     public void adjustTaxesWithOtherCurrenciesWhenPassengerDetailIsNull() {
         PassengerDetail passengerDetail = null;
@@ -154,6 +156,19 @@ public class CostDetailsMapperTest {
         assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("USD");
         assertThat(adjustedTax.getTaxAmount()).isEqualTo("50.00");
+    }
+    @Test
+    public void testMapTaxDescription() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class,String.class);
+        method.setAccessible(true);
+//        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
+        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
+        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
+        Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
+        Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
+        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet, "USD");
+        assertThat(returnValue.getTaxDescription()).isEqualTo("SYS GEN PFC");
     }
 
 
@@ -222,6 +237,8 @@ public class CostDetailsMapperTest {
         PassengerDetail returnValue = (PassengerDetail) method.invoke(costDetailsMapper, passengerDetail);
         assertThat(returnValue.getPassengerTotalAmount()).isEqualTo(passengerDetail.getPassengerTotalAmount());
     }
+
+
 
     public Map<String, String> fopTypeMap() {
         Map<String, String> fopTypeMap = new HashMap<>();

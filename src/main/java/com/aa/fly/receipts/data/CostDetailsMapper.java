@@ -63,7 +63,7 @@ public class CostDetailsMapper {
                     mapFormOfPayment(rs, formOfPayments);
                     formOfPayments = adjustFormOfPaymentsIfExchanged(formOfPayments);
                 }
-                fareTaxesFees.getTaxes().add(mapTax(rs));
+                fareTaxesFees.getTaxes().add(mapTax(rs, fareTaxesFees.getBaseFareCurrencyCode()));
             }
 
             passengerDetail.setFormOfPayments(formOfPayments);
@@ -213,20 +213,21 @@ public class CostDetailsMapper {
         fareTaxesFees.setBaseFareCurrencyCode(baseFareAmountAndCurrency.getCurrencyCode());
         fareTaxesFees.setBaseFareAmount(baseFareAmountAndCurrency.getAmount());
         fareTaxesFees.setTotalFareAmount(totalFareAmountAndCurrency.getAmount());
-        fareTaxesFees.getTaxes().add(mapTax(rs));
+        fareTaxesFees.getTaxes().add(mapTax(rs, baseFareCurrencyCode));
         return fareTaxesFees;
     }
 
-    private Tax mapTax(SqlRowSet rs) {
+    private Tax mapTax(SqlRowSet rs, String baseFareCurrencyCode) {
+
         Tax tax = new Tax();
         tax.setTaxCodeSequenceId(rs.getString("TAX_CD_SEQ_ID"));
         tax.setTaxCode(rs.getString("TAX_CD").trim());
-        String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD")) ? rs.getString("CITY_CD").trim() : ""  ;
-        cityCode = cityCode.length() == 0 ? cityCode : "(".concat(cityCode).concat(")");
-
         String description = taxDescriptionRepository.getDescription(tax.getTaxCode(), rs.getDate("TICKET_ISSUE_DT"));
-        description = cityCode.length() == 0 ? description : description.concat(" ").concat(cityCode);
+        if( "USD".equals(baseFareCurrencyCode)) {
+            String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD"))?rs.getString("CITY_CD").trim() : ""  ;
+            cityCode = cityCode.length()==0?description : description.concat(" ").concat(cityCode);
 
+        }
         tax.setTaxDescription(description);
         AmountAndCurrency amountAndCurrency = new AmountAndCurrency(rs.getString("TAX_AMT"), rs.getString("TAX_CURR_TYPE_CD"));
         tax.setTaxAmount(amountAndCurrency.getAmount());
