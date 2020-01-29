@@ -59,7 +59,7 @@ public class CostDetailsMapper {
                 passengerDetail.setFareTaxesFees(fareTaxesFees);
             } else {
 
-                if(!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
+                if (!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
                     mapFormOfPayment(rs, formOfPayments);
                     formOfPayments = adjustFormOfPaymentsIfExchanged(formOfPayments);
                 }
@@ -87,7 +87,7 @@ public class CostDetailsMapper {
         }
 
         //in case of even exchange, return totalFareAmount as passengerTotalAmount
-        if(passengerTotalAmount.compareTo(BigDecimal.ZERO) == 0) {
+        if (passengerTotalAmount.compareTo(BigDecimal.ZERO) == 0) {
             passengerTotalAmount = BigDecimal.valueOf(Double.valueOf(passengerDetail.getFareTaxesFees().getTotalFareAmount())).setScale(2, RoundingMode.CEILING);
         }
         passengerDetail.setPassengerTotalAmount(passengerTotalAmount.toString());
@@ -114,14 +114,14 @@ public class CostDetailsMapper {
     }
 
     private boolean mapFormOfPayment(String fopTypeCode) {
-        if(fopTypeCode == null) return false;
+        if (fopTypeCode == null) return false;
         return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
     }
 
 
     private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
         boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
-        if(isExchange) {
+        if (isExchange) {
             formOfPayments = formOfPayments.stream().filter(f -> BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0).collect(Collectors.toList());
             formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
         }
@@ -223,8 +223,8 @@ public class CostDetailsMapper {
         tax.setTaxCodeSequenceId(rs.getString("TAX_CD_SEQ_ID"));
         tax.setTaxCode(rs.getString("TAX_CD").trim());
         String description = taxDescriptionRepository.getDescription(tax.getTaxCode(), rs.getDate("TICKET_ISSUE_DT"));
-        if( "USD".equals(baseFareCurrencyCode)) {
-            String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD")) ? rs.getString("CITY_CD").trim() : ""  ;
+        if ("USD".equals(baseFareCurrencyCode)) {
+            String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD")) ? rs.getString("CITY_CD").trim() : "";
             cityCode = cityCode.length() == 0 ? cityCode : "(".concat(cityCode).concat(")");
             description = cityCode.length() == 0 ? description : description.concat(" ").concat(cityCode);
 
@@ -252,37 +252,32 @@ public class CostDetailsMapper {
         long count = taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode()) && "XF".equalsIgnoreCase(t.getTaxCode())).count();
 
         if (count > 0) {
-            {
-                Tax mergedXF = taxes.stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().get();
-                taxes.removeIf(t -> "XF".equals(t.getTaxCode()));
-                taxes.add(mergedXF);
-            }
             double baseFareCurencyTaxAmoutDouble = taxes.stream().filter(t -> baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).mapToDouble(t -> Double.valueOf(t.getTaxAmount())).sum();
             BigDecimal baseFareCurrencyTax = BigDecimal.valueOf(baseFareCurencyTaxAmoutDouble);
-            String taxAmount = (totalTaxAmount.subtract(baseFareCurrencyTax)).divide(new BigDecimal(count)).setScale(2, RoundingMode.CEILING).toString();
-            taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).forEach(t -> {
-                t.setTaxAmount(taxAmount);
-                t.setTaxCurrencyCode(baseFareCurrencyCode);
-            });
+            String taxAmount = (totalTaxAmount.subtract(baseFareCurrencyTax)).setScale(2, RoundingMode.CEILING).toString();
+            Tax mergedXF = taxes.stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().get();
+            taxes.removeIf(t -> "XF".equals(t.getTaxCode()));
+            mergedXF.setTaxAmount(taxAmount);
+            mergedXF.setTaxCurrencyCode(baseFareCurrencyCode);
+            taxes.add(mergedXF);
         }
-
         return passengerDetail;
     }
 
     private String getFormOfPaymentDescription(String fopTypeCode, String last4) {
         String description = fopTypeMap.get(fopTypeCode);
 
-        if(description == null) {
+        if (description == null) {
             description = creditCardAliasRepository.getCreditCardAliasMap().get(fopTypeCode);
         }
 
-        if(description == null) {
+        if (description == null) {
             description = "Card";
         }
 
-        if(fopTypeCode.startsWith("CA")) {
+        if (fopTypeCode.startsWith("CA")) {
             description = "Cash / Check";
-        } else if(fopTypeCode.startsWith("CC") && last4 != null) {
+        } else if (fopTypeCode.startsWith("CC") && last4 != null) {
             description = description + " ending in " + last4;
         }
 

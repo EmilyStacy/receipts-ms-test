@@ -160,7 +160,7 @@ public class CostDetailsMapperTest {
     }
 
     @Test
-    public void testAdjustTaxesWithOtherCurrencies_XF_deducted()  {
+    public void testAdjustTaxesWithOtherCurrencies_CAD_XF_merged()  {
         PassengerDetail passengerDetail = new PassengerDetail();
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
         fareTaxesFees.setTotalFareAmount("1039.60");
@@ -205,11 +205,11 @@ public class CostDetailsMapperTest {
         assertEquals(1,XFtax);
         assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("CAD");
-        //assertThat(adjustedTax.getTaxAmount()).isEqualTo("138.50");
+        assertThat(adjustedTax.getTaxAmount()).isEqualTo("138.50");
     }
 //do we need to worry about the total xf amount here?
     @Test
-    public void testAdjustTaxesWithOtherCurrenciesUSD()  {
+    public void testAdjustTaxesWithOtherCurrencies_USD_XF_NotMerged()  {
         PassengerDetail passengerDetail = new PassengerDetail();
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
         fareTaxesFees.setTotalFareAmount("1000.00");
@@ -254,8 +254,9 @@ public class CostDetailsMapperTest {
         assertEquals(2,XFtax);
         assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("USD");
-        //assertThat(adjustedTax.getTaxAmount()).isEqualTo("200.00");
+        assertThat(adjustedTax.getTaxAmount()).isEqualTo("100");
     }
+
 
     @Test
     public void testMapFormOfPayment_retrunTrueForCreditCard() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
