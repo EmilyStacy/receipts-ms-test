@@ -259,7 +259,7 @@ public class CostDetailsMapper {
             double baseFareCurencyTaxAmoutDouble = taxes.stream().filter(t -> baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).mapToDouble(t -> Double.valueOf(t.getTaxAmount())).sum();
             BigDecimal baseFareCurrencyTax = BigDecimal.valueOf(baseFareCurencyTaxAmoutDouble);
             String xfAmount = (totalTaxAmount.subtract(baseFareCurrencyTax)).setScale(2, RoundingMode.CEILING).toString();
-            Tax mergedXF = taxes.stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().get();
+            Tax mergedXF = taxes.stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().orElse(new Tax());
             mergedXF.setTaxAmount(xfAmount);
             mergedXF.setTaxCurrencyCode(baseFareCurrencyCode);
             taxes.removeIf(t -> "XF".equals(t.getTaxCode()));
