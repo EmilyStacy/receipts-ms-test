@@ -1,5 +1,6 @@
 package com.aa.fly.receipts.data;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -207,7 +209,7 @@ public class CostDetailsMapperTest {
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("CAD");
         assertThat(adjustedTax.getTaxAmount()).isEqualTo("138.50");
     }
-//do we need to worry about the total xf amount here?
+
     @Test
     public void testAdjustTaxesWithOtherCurrencies_USD_XF_NotMerged()  {
         PassengerDetail passengerDetail = new PassengerDetail();
@@ -250,16 +252,19 @@ public class CostDetailsMapperTest {
         costDetailsMapper.adjustTaxesWithOtherCurrencies(passengerDetail);
 
         int XFtax = (int) fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).count();
+        List<Integer> XFtotal = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).map(tax -> Integer.parseInt(tax.getTaxAmount())).collect(toList());
+        int XFtotalAmount = XFtotal.stream().reduce(0,Integer::sum);
         Tax adjustedTax = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).findAny().orElseThrow(null);
         assertEquals(2,XFtax);
         assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("USD");
         assertThat(adjustedTax.getTaxAmount()).isEqualTo("100");
+        assertEquals(XFtotalAmount, 200);
     }
 
 
     @Test
-    public void testMapFormOfPayment_retrunTrueForCreditCard() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testMapFormOfPayment_returnTrueForCreditCard() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = costDetailsMapper.getClass().getDeclaredMethod("mapFormOfPayment", String.class);
         method.setAccessible(true);
         boolean returnValue = (boolean) method.invoke(costDetailsMapper, "CC");
@@ -267,7 +272,7 @@ public class CostDetailsMapperTest {
     }
 
     @Test
-    public void testMapFormOfPayment_retrunTrueForCash() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testMapFormOfPayment_returnTrueForCash() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = costDetailsMapper.getClass().getDeclaredMethod("mapFormOfPayment", String.class);
         method.setAccessible(true);
         boolean returnValue = (boolean) method.invoke(costDetailsMapper, "CA");
@@ -275,7 +280,7 @@ public class CostDetailsMapperTest {
     }
 
     @Test
-    public void testMapFormOfPayment_retrunFalseForExchange() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void testMapFormOfPayment_returnFalseForExchange() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = costDetailsMapper.getClass().getDeclaredMethod("mapFormOfPayment", String.class);
         method.setAccessible(true);
         boolean returnValue = (boolean) method.invoke(costDetailsMapper, "EF");
