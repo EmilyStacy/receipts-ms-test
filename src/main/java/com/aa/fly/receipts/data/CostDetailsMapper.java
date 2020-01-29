@@ -224,8 +224,9 @@ public class CostDetailsMapper {
         tax.setTaxCode(rs.getString("TAX_CD").trim());
         String description = taxDescriptionRepository.getDescription(tax.getTaxCode(), rs.getDate("TICKET_ISSUE_DT"));
         if( "USD".equals(baseFareCurrencyCode)) {
-            String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD"))?rs.getString("CITY_CD").trim() : ""  ;
-            cityCode = cityCode.length()==0?description : description.concat(" ").concat(cityCode);
+            String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD")) ? rs.getString("CITY_CD").trim() : ""  ;
+            cityCode = cityCode.length() == 0 ? cityCode : "(".concat(cityCode).concat(")");
+            description = cityCode.length() == 0 ? description : description.concat(" ").concat(cityCode);
 
         }
         tax.setTaxDescription(description);

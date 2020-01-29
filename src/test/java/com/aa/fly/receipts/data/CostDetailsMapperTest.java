@@ -157,36 +157,48 @@ public class CostDetailsMapperTest {
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("USD");
         assertThat(adjustedTax.getTaxAmount()).isEqualTo("50.00");
     }
-@Test
-    public void testMapTaxDescriptionUSD() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class,String.class);
-        method.setAccessible(true);
-        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
-        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD");
-        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
-        Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
-        Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
-        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet, "USD");
-        assertThat(returnValue.getTaxDescription()).isEqualTo("SYS GEN PFC(DFW)");
-        assertThat(returnValue.getTaxCurrencyCode()).isEqualTo("USD");
-
-    }
 
     @Test
-    public void testMapTaxDescriptionCAD() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class,String.class);
-        method.setAccessible(true);
-        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
-        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("CAD");
-        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
-        Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
-        Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
-        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet, "USD");
-        assertThat(returnValue.getTaxDescription()).isEqualTo("SYS GEN PFC");
-        assertThat(returnValue.getTaxCurrencyCode()).isEqualTo("CAD");
+    public void testAdjustTaxesWithOtherCurrencies_XF_deducted()  {
+        PassengerDetail passengerDetail = new PassengerDetail();
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.setTotalFareAmount("1000.00");
+        fareTaxesFees.setBaseFareAmount("700");
+        fareTaxesFees.setBaseFareCurrencyCode("CAD");
+
+        Tax gbTax = new Tax();
+        gbTax.setTaxCode("GB");
+        gbTax.setTaxAmount("151.1");
+        gbTax.setTaxCodeSequenceId("1");
+        gbTax.setTaxCurrencyCode("CAD");
+
+        Tax xfTax = new Tax();
+        xfTax.setTaxCode("XF");
+        xfTax.setTaxAmount("75");
+        xfTax.setTaxCodeSequenceId("2");
+        xfTax.setTaxCurrencyCode("USD");
+
+        Tax xaTax = new Tax();
+        xaTax.setTaxCode("XA");
+        xaTax.setTaxAmount("50");
+        xaTax.setTaxCodeSequenceId("3");
+        xaTax.setTaxCurrencyCode("CAD");
+
+        fareTaxesFees.getTaxes().add(gbTax);
+        fareTaxesFees.getTaxes().add(xfTax);
+        fareTaxesFees.getTaxes().add(xaTax);
+
+        passengerDetail.setFareTaxesFees(fareTaxesFees);
+
+        costDetailsMapper.adjustTaxesWithOtherCurrencies(passengerDetail);
+
+        Tax adjustedTax = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().orElse(null);
+
+        assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
+        assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("CAD");
+        assertThat(adjustedTax.getTaxAmount()).isEqualTo("98.90");
 
     }
-
 
     @Test
     public void testMapFormOfPayment_retrunTrueForCreditCard() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -213,31 +225,33 @@ public class CostDetailsMapperTest {
     }
 
     @Test
-    public void testMapTax_descriptionShouldContain3letterAirportCode() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class);
+    public void testMapTaxDescriptionCAD() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class,String.class);
         method.setAccessible(true);
         Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
-        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("CAD");
         Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
         Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
         Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
-        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet);
-        assertThat(returnValue.getTaxDescription()).endsWith("(DFW)");
+        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet, "USD");
+        assertThat(returnValue.getTaxDescription()).isEqualTo("SYS GEN PFC");
+        assertThat(returnValue.getTaxCurrencyCode()).isEqualTo("CAD");
+
     }
 
     @Test
-    public void testMapTax_mapCodeToDescription() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, ParseException {
-        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class);
+    public void testMapTax_descriptionShouldContain3letterAirportCode() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class, String.class);
         method.setAccessible(true);
         Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
         Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD");
         Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
-        Mockito.when(resultSet.getDate("TICKET_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
         Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
         Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
-        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet);
-        assertThat(returnValue.getTaxDescription()).isEqualTo("SYS GEN PFC (DFW)");
+        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet, "USD");
+        assertThat(returnValue.getTaxDescription()).endsWith("(DFW)");
     }
+
 
     @Test
     public void sumFopAmounts_evenExchange_passengerTotalAmountShouldBeEqualFareTotalAmount() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -253,7 +267,6 @@ public class CostDetailsMapperTest {
         PassengerDetail returnValue = (PassengerDetail) method.invoke(costDetailsMapper, passengerDetail);
         assertThat(returnValue.getPassengerTotalAmount()).isEqualTo(passengerDetail.getPassengerTotalAmount());
     }
-
 
 
     public Map<String, String> fopTypeMap() {
