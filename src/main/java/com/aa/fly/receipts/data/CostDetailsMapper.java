@@ -249,16 +249,19 @@ public class CostDetailsMapper {
 
         Set<Tax> taxes = passengerDetail.getFareTaxesFees().getTaxes();
 
+        //XF tax amount always comes as USD, even though baseFareCurrency is not USD. If baseFareCurrencyCode is not USD, merge all XFs into one entry
+        //calculate the XF amount by adding the base fare, taxes with baseFareCurrency and subtract the amount from totalFare.
+        //We need to do this so all the line items add up to the total amount on the receipt.
         long count = taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode()) && "XF".equalsIgnoreCase(t.getTaxCode())).count();
 
         if (count > 0) {
             double baseFareCurencyTaxAmoutDouble = taxes.stream().filter(t -> baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).mapToDouble(t -> Double.valueOf(t.getTaxAmount())).sum();
             BigDecimal baseFareCurrencyTax = BigDecimal.valueOf(baseFareCurencyTaxAmoutDouble);
-            String taxAmount = (totalTaxAmount.subtract(baseFareCurrencyTax)).setScale(2, RoundingMode.CEILING).toString();
+            String xfAmount = (totalTaxAmount.subtract(baseFareCurrencyTax)).setScale(2, RoundingMode.CEILING).toString();
             Tax mergedXF = taxes.stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().get();
-            taxes.removeIf(t -> "XF".equals(t.getTaxCode()));
-            mergedXF.setTaxAmount(taxAmount);
+            mergedXF.setTaxAmount(xfAmount);
             mergedXF.setTaxCurrencyCode(baseFareCurrencyCode);
+            taxes.removeIf(t -> "XF".equals(t.getTaxCode()));
             taxes.add(mergedXF);
         }
         return passengerDetail;

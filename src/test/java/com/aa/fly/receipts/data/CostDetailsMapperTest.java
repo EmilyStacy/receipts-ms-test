@@ -162,7 +162,7 @@ public class CostDetailsMapperTest {
     }
 
     @Test
-    public void testAdjustTaxesWithOtherCurrencies_CAD_XF_merged()  {
+    public void testAdjustTaxesWithOtherCurrencies_CAD_XF_merged() {
         PassengerDetail passengerDetail = new PassengerDetail();
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
         fareTaxesFees.setTotalFareAmount("1039.60");
@@ -202,16 +202,16 @@ public class CostDetailsMapperTest {
 
         costDetailsMapper.adjustTaxesWithOtherCurrencies(passengerDetail);
 
-        int XFtax = (int) fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).count();
+        int xfTaxItems = (int) fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).count();
         Tax adjustedTax = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).findAny().orElseThrow(null);
-        assertEquals(1,XFtax);
+        assertEquals(1, xfTaxItems);
         assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("CAD");
         assertThat(adjustedTax.getTaxAmount()).isEqualTo("138.50");
     }
 
     @Test
-    public void testAdjustTaxesWithOtherCurrencies_USD_XF_NotMerged()  {
+    public void testAdjustTaxesWithOtherCurrencies_USD_XF_NotMerged() {
         PassengerDetail passengerDetail = new PassengerDetail();
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
         fareTaxesFees.setTotalFareAmount("1000.00");
@@ -251,15 +251,12 @@ public class CostDetailsMapperTest {
 
         costDetailsMapper.adjustTaxesWithOtherCurrencies(passengerDetail);
 
-        int XFtax = (int) fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).count();
-        List<Integer> XFtotal = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).map(tax -> Integer.parseInt(tax.getTaxAmount())).collect(toList());
-        int XFtotalAmount = XFtotal.stream().reduce(0,Integer::sum);
+        int xfTaxItems = (int) fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).count();
         Tax adjustedTax = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).findAny().orElseThrow(null);
-        assertEquals(2,XFtax);
+        assertEquals(2, xfTaxItems);
         assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("USD");
         assertThat(adjustedTax.getTaxAmount()).isEqualTo("100");
-        assertEquals(XFtotalAmount, 200);
     }
 
 
@@ -289,7 +286,7 @@ public class CostDetailsMapperTest {
 
     @Test
     public void testMapTaxDescriptionCAD() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class,String.class);
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class, String.class);
         method.setAccessible(true);
         Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
         Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("CAD");
