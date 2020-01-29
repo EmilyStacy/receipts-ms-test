@@ -147,6 +147,7 @@ public class CostDetailsMapper {
         return formOfPayment;
     }
 
+  @SuppressWarnings("squid:S3776")
     private void mapAnclry(SqlRowSet rs, List<FormOfPayment> formOfPayments, Set<String> anclryDocNums) {
         FormOfPayment formOfPayment = null;
         Ancillary ancillary = null;
