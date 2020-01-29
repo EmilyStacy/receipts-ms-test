@@ -1,6 +1,7 @@
 package com.aa.fly.receipts.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -162,7 +163,7 @@ public class CostDetailsMapperTest {
     public void testAdjustTaxesWithOtherCurrencies_XF_deducted()  {
         PassengerDetail passengerDetail = new PassengerDetail();
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
-        fareTaxesFees.setTotalFareAmount("1000.00");
+        fareTaxesFees.setTotalFareAmount("1039.60");
         fareTaxesFees.setBaseFareAmount("700");
         fareTaxesFees.setBaseFareCurrencyCode("CAD");
 
@@ -178,26 +179,82 @@ public class CostDetailsMapperTest {
         xfTax.setTaxCodeSequenceId("2");
         xfTax.setTaxCurrencyCode("USD");
 
+        Tax xfTax2 = new Tax();
+        xfTax2.setTaxCode("XF");
+        xfTax2.setTaxAmount("30");
+        xfTax2.setTaxCodeSequenceId("3");
+        xfTax2.setTaxCurrencyCode("USD");
+
         Tax xaTax = new Tax();
         xaTax.setTaxCode("XA");
         xaTax.setTaxAmount("50");
-        xaTax.setTaxCodeSequenceId("3");
+        xaTax.setTaxCodeSequenceId("4");
         xaTax.setTaxCurrencyCode("CAD");
 
         fareTaxesFees.getTaxes().add(gbTax);
         fareTaxesFees.getTaxes().add(xfTax);
+        fareTaxesFees.getTaxes().add(xfTax2);
         fareTaxesFees.getTaxes().add(xaTax);
 
         passengerDetail.setFareTaxesFees(fareTaxesFees);
 
         costDetailsMapper.adjustTaxesWithOtherCurrencies(passengerDetail);
 
-        Tax adjustedTax = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().orElse(null);
-
+        int XFtax = (int) fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).count();
+        Tax adjustedTax = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).findAny().orElseThrow(null);
+        assertEquals(1,XFtax);
         assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("CAD");
-        assertThat(adjustedTax.getTaxAmount()).isEqualTo("98.90");
+        //assertThat(adjustedTax.getTaxAmount()).isEqualTo("138.50");
+    }
+//do we need to worry about the total xf amount here?
+    @Test
+    public void testAdjustTaxesWithOtherCurrenciesUSD()  {
+        PassengerDetail passengerDetail = new PassengerDetail();
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.setTotalFareAmount("1000.00");
+        fareTaxesFees.setBaseFareAmount("700");
+        fareTaxesFees.setBaseFareCurrencyCode("USD");
 
+        Tax gbTax = new Tax();
+        gbTax.setTaxCode("GB");
+        gbTax.setTaxAmount("100");
+        gbTax.setTaxCodeSequenceId("1");
+        gbTax.setTaxCurrencyCode("USD");
+
+        Tax xfTax = new Tax();
+        xfTax.setTaxCode("XF");
+        xfTax.setTaxAmount("100");
+        xfTax.setTaxCodeSequenceId("2");
+        xfTax.setTaxCurrencyCode("USD");
+
+        Tax xfTax2 = new Tax();
+        xfTax2.setTaxCode("XF");
+        xfTax2.setTaxAmount("100");
+        xfTax2.setTaxCodeSequenceId("3");
+        xfTax2.setTaxCurrencyCode("USD");
+
+        Tax xaTax = new Tax();
+        xaTax.setTaxCode("XA");
+        xaTax.setTaxAmount("50");
+        xaTax.setTaxCodeSequenceId("4");
+        xaTax.setTaxCurrencyCode("USD");
+
+        fareTaxesFees.getTaxes().add(gbTax);
+        fareTaxesFees.getTaxes().add(xfTax);
+        fareTaxesFees.getTaxes().add(xfTax2);
+        fareTaxesFees.getTaxes().add(xaTax);
+
+        passengerDetail.setFareTaxesFees(fareTaxesFees);
+
+        costDetailsMapper.adjustTaxesWithOtherCurrencies(passengerDetail);
+
+        int XFtax = (int) fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).count();
+        Tax adjustedTax = fareTaxesFees.getTaxes().stream().filter(t -> "XF".equals(t.getTaxCode())).findAny().orElseThrow(null);
+        assertEquals(2,XFtax);
+        assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
+        assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("USD");
+        //assertThat(adjustedTax.getTaxAmount()).isEqualTo("200.00");
     }
 
     @Test
@@ -233,7 +290,7 @@ public class CostDetailsMapperTest {
         Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
         Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
         Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
-        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet, "USD");
+        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet, "CAD");
         assertThat(returnValue.getTaxDescription()).isEqualTo("SYS GEN PFC");
         assertThat(returnValue.getTaxCurrencyCode()).isEqualTo("CAD");
 
