@@ -157,18 +157,34 @@ public class CostDetailsMapperTest {
         assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("USD");
         assertThat(adjustedTax.getTaxAmount()).isEqualTo("50.00");
     }
-    @Test
-    public void testMapTaxDescription() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+@Test
+    public void testMapTaxDescriptionUSD() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class,String.class);
         method.setAccessible(true);
-//        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
         Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
         Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD");
         Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
         Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
         Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
         Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet, "USD");
+        assertThat(returnValue.getTaxDescription()).isEqualTo("SYS GEN PFC(DFW)");
+        assertThat(returnValue.getTaxCurrencyCode()).isEqualTo("USD");
+
+    }
+
+    @Test
+    public void testMapTaxDescriptionCAD() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapTax", SqlRowSet.class,String.class);
+        method.setAccessible(true);
+        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.20");
+        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("CAD");
+        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XF");
+        Mockito.when(resultSet.getString("CITY_CD")).thenReturn("DFW");
+        Mockito.when(taxDescriptionRepository.getDescription(eq("XF"), any())).thenReturn("SYS GEN PFC");
+        Tax returnValue = (Tax) method.invoke(costDetailsMapper, resultSet, "USD");
         assertThat(returnValue.getTaxDescription()).isEqualTo("SYS GEN PFC");
+        assertThat(returnValue.getTaxCurrencyCode()).isEqualTo("CAD");
+
     }
 
 
