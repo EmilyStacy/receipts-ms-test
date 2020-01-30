@@ -21,6 +21,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -272,6 +273,26 @@ public class CostDetailsMapperTest {
         method.setAccessible(true);
         boolean returnValue = (boolean) method.invoke(costDetailsMapper, "EF");
         assertThat(returnValue).isFalse();
+    }
+
+    @Test
+    public void adjustFormOfPayment_isEchange_setTypeDescription() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("adjustFormOfPaymentsIfExchanged", List.class);
+        method.setAccessible(true);
+
+        FormOfPayment fop1 = new FormOfPayment();
+        fop1.setFopTypeCode("EF");
+        fop1.setFopAmount("50.00");
+        fop1.setFopTypeDescription("VISA");
+
+        List<FormOfPayment> fops = new ArrayList<>();
+
+        fops.add(fop1);
+
+        List<FormOfPayment> returnList = (List<FormOfPayment>) method.invoke(costDetailsMapper, fops);
+
+        assertTrue(returnList.get(0).getFopTypeDescription().startsWith("Exchange"));
+
     }
 
     @Test
