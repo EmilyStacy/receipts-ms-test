@@ -61,8 +61,14 @@ public class CostDetailsMapper {
 
             mapAnclry(rs, formOfPayments, anclryDocNums);
         }
-
+        setShowPassengerTotal(passengerDetail);
         return adjustTaxesWithOtherCurrencies(sumFopAmounts(passengerDetail));
+    }
+
+    private void setShowPassengerTotal(PassengerDetail passengerDetail) {
+        passengerDetail.setShowPassengerTotal(true);
+        String baseFareCurrencyCode = passengerDetail.getFareTaxesFees().getBaseFareCurrencyCode();
+        passengerDetail.getFormOfPayments().forEach(formOfPayment -> formOfPayment.getAncillaries().stream().filter(ancillary -> ! baseFareCurrencyCode.equals(ancillary.getAnclryPriceCurrencyCode())).forEach(t -> passengerDetail.setShowPassengerTotal(false)));
     }
 
     private PassengerDetail sumFopAmounts(PassengerDetail passengerDetail) {

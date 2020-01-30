@@ -48,9 +48,9 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
         Assert.assertEquals(fopCurrencyCode, fop.getFopCurrencyCode());
     }
 
-    @Then("^I get a successful response with baseFareAmount \"([^\"]*)\", baseFareCurrencyCode \"([^\"]*)\", totalFareAmount \"([^\"]*)\", taxFareAmount \"([^\"]*)\"$")
+    @Then("^I get a successful response with baseFareAmount \"([^\"]*)\", baseFareCurrencyCode \"([^\"]*)\", totalFareAmount \"([^\"]*)\", taxFareAmount \"([^\"]*)\", showPassangerTotal \"([^\"]*)\"$")
     public void i_get_a_successful_response_with_baseFareAmount_baseFareCurrencyCode_and_totalFareAmount(String baseFareAmount, String baseFareCurrencyCode, String totalFareAmount,
-            String taxFareAmount) throws Throwable {
+            String taxFareAmount, boolean showPassangerTotal) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
 
@@ -62,6 +62,7 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
         Assert.assertEquals(baseFareCurrencyCode, fareTaxesFees.getBaseFareCurrencyCode());
         Assert.assertEquals(totalFareAmount, fareTaxesFees.getTotalFareAmount());
         Assert.assertEquals(taxFareAmount, fareTaxesFees.getTaxFareAmount());
+        Assert.assertEquals(showPassangerTotal, ticketReceipt.getPassengerDetails().get(0).isShowPassengerTotal());
     }
 
     @Then("^I get a successful response with baseFareAmount \"([^\"]*)\", baseFareCurrencyCode \"([^\"]*)\", totalFareAmount \"([^\"]*)\", and taxesString \"([^\"]*)\"$")
