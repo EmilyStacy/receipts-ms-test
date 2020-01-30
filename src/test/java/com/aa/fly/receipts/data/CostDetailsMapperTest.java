@@ -1,11 +1,14 @@
 package com.aa.fly.receipts.data;
 
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import com.aa.fly.receipts.config.AppConfig;
+import com.aa.fly.receipts.domain.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -15,22 +18,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.aa.fly.receipts.config.AppConfig;
-import com.aa.fly.receipts.domain.Ancillary;
-import com.aa.fly.receipts.domain.FareTaxesFees;
-import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.PassengerDetail;
-import com.aa.fly.receipts.domain.Tax;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CostDetailsMapperTest {
@@ -107,7 +99,6 @@ public class CostDetailsMapperTest {
 
         assertThat(fops.get(1).getAncillaries()).contains(ancillary);
     }
-
 
     @org.junit.Test
     public void adjustTaxesWithOtherCurrenciesWhenPassengerDetailIsNull() {
@@ -259,7 +250,6 @@ public class CostDetailsMapperTest {
         assertThat(adjustedTax.getTaxAmount()).isEqualTo("100");
     }
 
-
     @Test
     public void testMapFormOfPayment_returnTrueForCreditCard() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = costDetailsMapper.getClass().getDeclaredMethod("mapFormOfPayment", String.class);
@@ -312,7 +302,6 @@ public class CostDetailsMapperTest {
         assertThat(returnValue.getTaxDescription()).endsWith("(DFW)");
     }
 
-
     @Test
     public void sumFopAmounts_evenExchange_passengerTotalAmountShouldBeEqualFareTotalAmount() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         PassengerDetail passengerDetail = new PassengerDetail();
@@ -327,7 +316,6 @@ public class CostDetailsMapperTest {
         PassengerDetail returnValue = (PassengerDetail) method.invoke(costDetailsMapper, passengerDetail);
         assertThat(returnValue.getPassengerTotalAmount()).isEqualTo(passengerDetail.getPassengerTotalAmount());
     }
-
 
     public Map<String, String> fopTypeMap() {
         Map<String, String> fopTypeMap = new HashMap<>();

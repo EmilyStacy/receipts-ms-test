@@ -1,26 +1,15 @@
 package com.aa.fly.receipts.data;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.aa.fly.receipts.domain.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
-import com.aa.fly.receipts.domain.AmountAndCurrency;
-import com.aa.fly.receipts.domain.Ancillary;
-import com.aa.fly.receipts.domain.FareTaxesFees;
-import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.FormOfPaymentKey;
-import com.aa.fly.receipts.domain.PassengerDetail;
-import com.aa.fly.receipts.domain.Tax;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class CostDetailsMapper {
@@ -114,10 +103,10 @@ public class CostDetailsMapper {
     }
 
     private boolean mapFormOfPayment(String fopTypeCode) {
-        if (fopTypeCode == null) return false;
+        if (fopTypeCode == null)
+            return false;
         return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
     }
-
 
     private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
         boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
@@ -147,7 +136,7 @@ public class CostDetailsMapper {
         return formOfPayment;
     }
 
-  @SuppressWarnings("squid:S3776")
+    @SuppressWarnings("squid:S3776")
     private void mapAnclry(SqlRowSet rs, List<FormOfPayment> formOfPayments, Set<String> anclryDocNums) {
         FormOfPayment formOfPayment = null;
         Ancillary ancillary = null;
