@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.springframework.http.HttpStatus;
@@ -82,9 +83,17 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
             List<Tax> taxes = parseTaxesString(taxesString);
             for (Tax tax : taxes) {
                 totalTaxAmount = totalTaxAmount.add(new BigDecimal(tax.getTaxAmount()));
-                long count = fareTaxesFees.getTaxes().stream().filter(t -> t.getTaxCodeSequenceId().equals(tax.getTaxCodeSequenceId()) && t.getTaxCode().equals(tax.getTaxCode())
-                        && t.getTaxCode().equals(tax.getTaxCode()) && t.getTaxDescription().contains(tax.getTaxDescription()) && t.getTaxAmount().equals(tax.getTaxAmount()) && t.getTaxCurrencyCode().equals(tax.getTaxCurrencyCode())).count();
-                Assert.assertTrue(count == 1l);
+                List<Tax> taxList = fareTaxesFees.getTaxes().stream().filter(t -> t.getTaxCodeSequenceId().equals(tax.getTaxCodeSequenceId()) && t.getTaxCode().equals(tax.getTaxCode())
+                        && t.getTaxCode().equals(tax.getTaxCode()) && t.getTaxDescription().contains(tax.getTaxDescription()) && t.getTaxAmount().equals(tax.getTaxAmount()) && t.getTaxCurrencyCode().equals(tax.getTaxCurrencyCode())).collect(
+                        Collectors.toList());
+
+                Assert.assertTrue(taxList.size() == 1l);
+
+                if("USD".equals(baseFareCurrencyCode) && "XF".equals(tax.getTaxCode())) {
+                    Assert.assertTrue(taxList.get(0).getTaxDescription().contains(tax.getCityCode()));
+                } else {
+                    Assert.assertTrue(taxList.get(0).getTaxDescription().equals(tax.getTaxDescription()));
+                }
             }
         }
 
@@ -102,7 +111,7 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
 
         for (String taxString : taxStrings) {
             final String[] taxAttrs = taxString.split(",");
-            Tax tax = new Tax(taxAttrs[0].trim(), taxAttrs[1].trim(), taxAttrs[2].trim(), taxAttrs[3].trim(), taxAttrs[4].trim());
+            Tax tax = new Tax(taxAttrs[0].trim(), taxAttrs[1].trim(), taxAttrs[2].trim(), taxAttrs[3].trim(), taxAttrs[4].trim(), taxAttrs[5].trim());
             taxes.add(tax);
         }
         return taxes;

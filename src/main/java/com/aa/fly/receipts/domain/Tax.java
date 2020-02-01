@@ -6,6 +6,7 @@ public class Tax {
     private String taxCodeSequenceId;
     private String taxCode;
     private String taxDescription;
+    private String cityCode;
     private String taxAmount;
     private String taxCurrencyCode;
 
@@ -13,10 +14,11 @@ public class Tax {
 
     }
 
-    public Tax(String taxCodeSequenceId, String taxCode, String taxDescription, String taxAmount, String taxCurrencyCode) {
+    public Tax(String taxCodeSequenceId, String taxCode, String taxDescription, String cityCode, String taxAmount, String taxCurrencyCode) {
         this.taxCodeSequenceId = taxCodeSequenceId;
         this.taxCode = taxCode;
         this.taxDescription = taxDescription;
+        this.cityCode = cityCode;
         this.taxAmount = taxAmount;
         this.taxCurrencyCode = taxCurrencyCode;
     }
@@ -61,14 +63,12 @@ public class Tax {
         this.taxCurrencyCode = taxCurrencyCode;
     }
 
-    @Override public String toString() {
-        return "Tax{" +
-                "taxCodeSequenceId='" + taxCodeSequenceId + '\'' +
-                ", taxCode='" + taxCode + '\'' +
-                ", taxDescription='" + taxDescription + '\'' +
-                ", taxAmount='" + taxAmount + '\'' +
-                ", taxCurrencyCode='" + taxCurrencyCode + '\'' +
-                '}';
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
     }
 
     @Override public boolean equals(Object o) {
@@ -82,5 +82,16 @@ public class Tax {
 
     @Override public int hashCode() {
         return Objects.hash(taxCodeSequenceId);
+    }
+
+    @Override public String toString() {
+        return "Tax{" +
+                "taxCodeSequenceId='" + taxCodeSequenceId + '\'' +
+                ", taxCode='" + taxCode + '\'' +
+                ", taxDescription='" + taxDescription + '\'' +
+                ", cityCode='" + cityCode + '\'' +
+                ", taxAmount='" + taxAmount + '\'' +
+                ", taxCurrencyCode='" + taxCurrencyCode + '\'' +
+                '}';
     }
 }

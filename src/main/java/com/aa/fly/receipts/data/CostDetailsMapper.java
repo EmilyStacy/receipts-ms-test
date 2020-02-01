@@ -218,17 +218,22 @@ public class CostDetailsMapper {
         Tax tax = new Tax();
         tax.setTaxCodeSequenceId(rs.getString("TAX_CD_SEQ_ID"));
         tax.setTaxCode(rs.getString("TAX_CD").trim());
+
+        AmountAndCurrency amountAndCurrency = new AmountAndCurrency(rs.getString("TAX_AMT"), rs.getString("TAX_CURR_TYPE_CD"));
+        tax.setTaxAmount(amountAndCurrency.getAmount());
+        tax.setTaxCurrencyCode(amountAndCurrency.getCurrencyCode());
+
+        String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD")) ? rs.getString("CITY_CD").trim() : "";
+        tax.setCityCode(cityCode);
+
         String description = taxDescriptionRepository.getDescription(tax.getTaxCode(), rs.getDate("TICKET_ISSUE_DT"));
         if ("USD".equals(baseFareCurrencyCode)) {
-            String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD")) ? rs.getString("CITY_CD").trim() : "";
             cityCode = cityCode.length() == 0 ? cityCode : "(".concat(cityCode).concat(")");
             description = cityCode.length() == 0 ? description : description.concat(" ").concat(cityCode);
 
         }
         tax.setTaxDescription(description);
-        AmountAndCurrency amountAndCurrency = new AmountAndCurrency(rs.getString("TAX_AMT"), rs.getString("TAX_CURR_TYPE_CD"));
-        tax.setTaxAmount(amountAndCurrency.getAmount());
-        tax.setTaxCurrencyCode(amountAndCurrency.getCurrencyCode());
+
         return tax;
     }
 

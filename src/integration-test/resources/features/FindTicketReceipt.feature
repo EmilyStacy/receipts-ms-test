@@ -56,8 +56,9 @@ Feature: Search with ticket number should return ticket receipt
     Then I get a successful response with baseFareAmount "<baseFareAmount>", baseFareCurrencyCode "<baseFareCurrencyCode>", totalFareAmount "<totalFareAmount>", and taxesString "<taxesString>"
 
     Examples:
-      | scenario                                        | ticketNumber   | lastName | firstName | departureDate  |  baseFareAmount | baseFareCurrencyCode | totalFareAmount | taxesString |
-      | Taxes - base fare currency CAD, XF USD          | 0012372187652  | CANADA   | MONTREAL  | 2020-04-29     | 385.99          | CAD                  | 536.28          | 1,XG8, CANADIAN GST,19.90,CAD; 2,XG9,CANADIAN GST,1.50,CAD; 3,SQ,TORONTO AIR IMPROV FE,30.00,CAD;4,XQ4,QUEBEC SALES TAX,2.99,CAD;5,CA4,CANADIAN SECURITY FEE,12.10,CAD; 6,US2,INT'L DEPT/ARRIVAL TA,48.60,CAD; 7,AY,SECURITY SERVICE FEE,7.32,CAD; 8,YC,U.S. CUSTOMS,7.69,CAD; 9,XY2,U.S. IMMIGRATION,9.14,CAD; 10,XA,APHIS,5.17,CAD;11,XF,SYS GEN PFC,5.88,CAD;|
+      | scenario                                        | ticketNumber   | lastName   | firstName | departureDate  |  baseFareAmount | baseFareCurrencyCode | totalFareAmount | taxesString |
+      | Taxes - base fare currency CAD, XF USD          | 0012372187652  | CANADA     | MONTREAL  | 2020-04-29     | 385.99          | CAD                  | 536.28          | 1,XG8, CANADIAN GST,,19.90,CAD; 2,XG9,CANADIAN GST,,1.50,CAD; 3,SQ,TORONTO AIR IMPROV FE,,30.00,CAD;4,XQ4,QUEBEC SALES TAX,,2.99,CAD;5,CA4,CANADIAN SECURITY FEE,,12.10,CAD; 6,US2,INT'L DEPT/ARRIVAL TA,,48.60,CAD; 7,AY,SECURITY SERVICE FEE,,7.32,CAD; 8,YC,U.S. CUSTOMS,,7.69,CAD; 9,XY2,U.S. IMMIGRATION,,9.14,CAD; 10,XA,APHIS,,5.17,CAD;11,XF,SYS GEN PFC,MIA, 5.88,CAD;|
+      | Taxes - base fare currency USD, XF USD          | 0012372776302  | Washington | George    | 2020-04-19     | 1311.63         | USD                  | 1456.40         | 1,AY, SECURITY SERVICE FEE,,11.20,USD; 2,US1,TAX,,98.37,USD; 3,XF,SYS GEN PFC,MCO,4.50,USD;4,XF,SYS GEN PFC,DFW,4.50,USD;5,XF,SYS GEN PFC,PHX,4.50,USD;6,XF,SYS GEN PFC,DFW,4.50,USD; 7,ZP,U.S. SEGMENT TAX,,4.30,USD; 8,ZP,U.S. SEGMENT TAX,,4.30,USD; 9,ZP,U.S. SEGMENT TAX,,4.30,USD; 10,ZP,U.S. SEGMENT TAX,,4.30,USD;                                                     |
 
       
   Scenario Outline: Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt
