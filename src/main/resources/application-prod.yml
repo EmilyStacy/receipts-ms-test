@@ -5,8 +5,7 @@ mosaic:
       #name: PROD_INFLIGHT_SRVCS_VW
   ticket:
     schema:
-      name: CERT_TCN_RECPT_VW
-      #name: PROD_TCN_RECPT_VW
+      name: PROD_TCN_RECPT_VW
 
 logging:
   level:
