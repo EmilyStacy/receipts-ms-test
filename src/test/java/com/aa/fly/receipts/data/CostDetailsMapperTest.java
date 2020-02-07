@@ -12,12 +12,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -102,6 +100,84 @@ public class CostDetailsMapperTest {
         assertThat(fops.get(1).getAncillaries()).contains(ancillary);
     }
 
+    @Test
+    public void testMapAnclry_VerifyProdNameWhenAirCodeIsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapAnclry", SqlRowSet.class, List.class, Set.class);
+        method.setAccessible(true);
+        Set<String> anclryDocNums = new HashSet<String>();
+        Mockito.when(resultSet.getString("ANCLRY_DOC_NBR")).thenReturn("0012111822505");
+        Mockito.when(resultSet.getString("ANCLRY_PROD_NM")).thenReturn("MSR-OTHER NON TAXABLE");
+        Mockito.when(resultSet.getString("SEG_DEPT_ARPRT_CD")).thenReturn(null);
+        Mockito.when(resultSet.getString("SEG_ARVL_ARPRT_CD")).thenReturn(null);
+        Mockito.when(resultSet.getString("ANCLRY_ISSUE_DT")).thenReturn("1/26/2020");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_AMT")).thenReturn("112685");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_TYPE_CD")).thenReturn("CCAX");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_AMT")).thenReturn("35");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")).thenReturn("35");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_ACCT_NBR_LAST4")).thenReturn("3003");
+        ArrayList<FormOfPayment> fopList = new ArrayList<>();
+        costDetailsMapper.setFopTypeMap(new AppConfig().fopTypeMap());
+        method.invoke(costDetailsMapper, resultSet, fopList, anclryDocNums);
+        FormOfPayment returnFop = fopList.get(0);
+        Ancillary ancillary = returnFop.getAncillaries().stream().filter(a -> a.getAnclryProdName() != null).findAny().orElse(null);
+        assertEquals(ancillary.getAnclryProdName(),"MSR-OTHER NON TAXABLE");
+
+    }
+    @Test
+    public void testMapAnclry_VerifyProdNameWhenAirCodeIsNOTNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapAnclry", SqlRowSet.class, List.class, Set.class);
+        method.setAccessible(true);
+        Set<String> anclryDocNums = new HashSet<String>();
+        Mockito.when(resultSet.getString("ANCLRY_DOC_NBR")).thenReturn("0012111822505");
+        Mockito.when(resultSet.getString("ANCLRY_PROD_NM")).thenReturn("MSR-OTHER NON TAXABLE");
+        Mockito.when(resultSet.getString("SEG_DEPT_ARPRT_CD")).thenReturn("DFW");
+        Mockito.when(resultSet.getString("SEG_ARVL_ARPRT_CD")).thenReturn("PHX");
+        Mockito.when(resultSet.getString("ANCLRY_ISSUE_DT")).thenReturn("1/26/2020");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_AMT")).thenReturn("112685");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_TYPE_CD")).thenReturn("CCAX");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_AMT")).thenReturn("35");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")).thenReturn("35");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_ACCT_NBR_LAST4")).thenReturn("3003");
+        ArrayList<FormOfPayment> fopList = new ArrayList<>();
+        costDetailsMapper.setFopTypeMap(new AppConfig().fopTypeMap());
+        method.invoke(costDetailsMapper, resultSet, fopList, anclryDocNums);
+        FormOfPayment returnFop = fopList.get(0);
+        Ancillary ancillary = returnFop.getAncillaries().stream().filter(a -> a.getAnclryProdName() != null).findAny().orElse(null);
+        assertEquals(ancillary.getAnclryProdName(),"MSR-OTHER NON TAXABLE (DFW - PHX)");
+
+    }
+    @Test
+    public void testMapAnclry_VerifyProdNameWhenONEAirCodeIsNOTNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = costDetailsMapper.getClass().getDeclaredMethod("mapAnclry", SqlRowSet.class, List.class, Set.class);
+        method.setAccessible(true);
+        Set<String> anclryDocNums = new HashSet<String>();
+        Mockito.when(resultSet.getString("ANCLRY_DOC_NBR")).thenReturn("0012111822505");
+        Mockito.when(resultSet.getString("ANCLRY_PROD_NM")).thenReturn("MSR-OTHER NON TAXABLE");
+        Mockito.when(resultSet.getString("SEG_DEPT_ARPRT_CD")).thenReturn("DFW");
+        Mockito.when(resultSet.getString("SEG_ARVL_ARPRT_CD")).thenReturn(null);
+        Mockito.when(resultSet.getString("ANCLRY_ISSUE_DT")).thenReturn("1/26/2020");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_AMT")).thenReturn("112685");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_TYPE_CD")).thenReturn("CCAX");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_AMT")).thenReturn("35");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")).thenReturn("35");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_ACCT_NBR_LAST4")).thenReturn("3003");
+        ArrayList<FormOfPayment> fopList = new ArrayList<>();
+        costDetailsMapper.setFopTypeMap(new AppConfig().fopTypeMap());
+        method.invoke(costDetailsMapper, resultSet, fopList, anclryDocNums);
+        FormOfPayment returnFop = fopList.get(0);
+        Ancillary ancillary = returnFop.getAncillaries().stream().filter(a -> a.getAnclryProdName() != null).findAny().orElse(null);
+        assertEquals(ancillary.getAnclryProdName(),"MSR-OTHER NON TAXABLE");
+
+    }
     @Test
     public void testMapCostDetailsForDifferentCurrencyCode() throws ParseException {
         PassengerDetail passengerDetail = new PassengerDetail();

@@ -243,11 +243,12 @@ pipeline {
                         createChangeRequest(
                                 appName: "Receipts",      	        //Application name based on what is shown in Archer
                                 appVersion: "1.0.0",			    //Version number of the Application deployed to Production
-                                team: "Fly - Ancillaries Receipts",             	    //Cherwell Team Name
+                                team: "Fly - Ancillaries Receipts", //Cherwell Team Name
                                 location: "DFW",                    //Location of the Datacenter where the Production Application resides
                                 requestingEmployeeId: "00854495",   //Default Requestor and Owner of the Change Ticket
                                 finalDisposition: "Successful",     //Set to Successful if Production succeeded, or Failed if attempt failed
                                 description: "Receipts MS",
+                                cherwellInstance: "prod"
                         )
                     }
                 }

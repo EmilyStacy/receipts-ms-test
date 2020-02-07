@@ -160,7 +160,9 @@ public class CostDetailsMapper {
             String segDeptArprtCd = StringUtils.isNotBlank(rs.getString("SEG_DEPT_ARPRT_CD")) ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : null;
             String segArvlArprtCd = StringUtils.isNotBlank(rs.getString("SEG_ARVL_ARPRT_CD")) ? rs.getString("SEG_ARVL_ARPRT_CD").trim() : null;
 
-            if (anclryProdName != null) {
+            ancillary.setAnclryProdName(anclryProdName);
+
+            if (anclryProdName != null && segDeptArprtCd!=null && segArvlArprtCd!=null) {
                 ancillary.setAnclryProdName(anclryProdName + " (" + segDeptArprtCd + " - " + segArvlArprtCd + ")");
             }
 
