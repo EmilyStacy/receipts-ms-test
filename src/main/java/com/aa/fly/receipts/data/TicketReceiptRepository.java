@@ -143,7 +143,7 @@ public class TicketReceiptRepository {
                 .append("    , odtktcpn.SEG_ARVL_AIRPRT_IATA_CD AS SEG_ARVL_ARPRT_CD \n")
                 .append("    , anclryfop.FOP_TYPE_CD AS ANCLRY_FOP_TYPE_CD \n")
                 .append("    , anclryfop.FOP_AMT AS ANCLRY_FOP_AMT \n")
-                .append("    , Right(anclryfop.FOP_ACCT_NBR, 4) AS ANCLRY_FOP_ACCT_NBR_LAST4 \n")
+                .append("    , Right(trim(anclryfop.FOP_ACCT_NBR), 4) AS ANCLRY_FOP_ACCT_NBR_LAST4 \n")
                 .append("    , anclryfop.FOP_CURR_TYPE_CD AS ANCLRY_FOP_CURR_TYPE_CD \n")
 
                 .append("FROM \n")
