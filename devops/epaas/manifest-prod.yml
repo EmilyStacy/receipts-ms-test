@@ -22,5 +22,5 @@ applications:
   services:
     - mosaic-receipts
     - splunk-drains
-    - dynatrace-service-receipts
+    
     
