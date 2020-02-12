@@ -7,6 +7,7 @@ applications:
   env:
     SPRING_PROFILES_ACTIVE: dev
     TZ: America/Chicago
+    DT_TAGS: ArcherID:0142126 ComponentID:c600 
     JAVA_OPTS: >
       -XX:MaxGCPauseMillis=200
       -XX:MaxMetaspaceSize=256M
