@@ -184,23 +184,7 @@ pipeline {
                     ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-stage ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml ${PCF_GTM_DOMAIN}
                  """
             }
-            post {
-                success {
-                    script {
-                        createChangeRequest(
-                                appName: "Receipts",                //Application name based on what is shown in Archer
-                                appVersion: "1.0.0",                //Version number of the Application deployed to Production
-                                team: "Fly - Ancillaries Receipts", //Cherwell Team Name
-                                location: "DFW",                    //Location of the Datacenter where the Production Application resides
-                                requestingEmployeeId: "00854495",   //Default Requestor and Owner of the Change Ticket
-                                finalDisposition: "Successful",     //Set to Successful if Production succeeded, or Failed if attempt failed
-                                description: "Receipts MS",
-                                cherwellInstance: "stage"
-                        )
                     }
-                }
-            }
-        }
 
         stage('deploy prod') {
             when {
