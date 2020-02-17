@@ -106,7 +106,7 @@ pipeline {
                             APP_NAME: 'receipts-ms',
                             CONFIG: ['java'],
                             COV_ENV: 'prod',
-                            NOTIFYUSERS: "DL_eTDS_TeamReceipts"
+                            NOTIFYUSERS: "DL_Ticketing_Receipts"
                       )
                  }
             }
