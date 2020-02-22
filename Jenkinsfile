@@ -42,7 +42,6 @@ pipeline {
         SONARQUBE_API_KEY = credentials('RECEIPTS_SONARQUBE_API_KEY')
         SONARQUBE_PROJECT_KEY = 'tr.receipts-ms'
         SONARQUBE_PROJECT_NAME = 'tr.receipts-ms'
-	pom = readMavenPom file: 'pom.xml'
     }
     
     options {
@@ -208,7 +207,8 @@ pipeline {
             post {
                 success {
                     script {
-                    	POM_VERSION = pom.version.replace('-SNAPSHOT', '')
+	                      pom = readMavenPom file: 'pom.xml'
+                    	  POM_VERSION = pom.version.replace('-SNAPSHOT', '')
 
                         createChangeRequest(
                                 appName: "Receipts",      	        //Application name based on what is shown in Archer
@@ -234,6 +234,7 @@ pipeline {
                 script {
                     SCM_URL = "$GIT_URL".trim().minus("https://")
                     
+	                  pom = readMavenPom file: 'pom.xml'
                     APPLICATION_VERSION = pom.version.replace('SNAPSHOT', BUILD_NUMBER)
                 }
                                
