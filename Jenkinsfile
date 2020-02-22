@@ -6,14 +6,13 @@ pipeline {
         https_proxy='http://inetgw.aa.com:9093'
 
         pcfAppName='receipts-ms'
-        deployAppName="$pcfAppName" + "${BRANCH_NAME == 'master' ? '' : "-" + BRANCH_NAME.replaceAll('_','-')}" + "-dev"
+        deployDevAppName="$pcfAppName" + "${BRANCH_NAME == 'master' ? '' : "-" + BRANCH_NAME.replaceAll('_','-')}" + "-dev"
         
         PCF_DEVTEST_ID = credentials('PCF_DEVTEST_KEY')
         PCF_STAGE_PROD_ID = credentials('PCF_STAGE_PROD_KEY')
 
         PCF_DEV_TEST_URL='api.system.depaas.qcorpaa.aa.com'
         PCF_DEVTEST_DOMAIN='apps.depaas.qcorpaa.aa.com'
-        // NOTIFYUSERS="DL_eTDS_TeamReceipts@aa.com"
         PCF_PRODP_URL='api.system.ppepaas.aa.com'
         PCF_PRODC_URL='api.system.cpepaas.aa.com'
         PCF_PRODP_DOMAIN='apps.ppepaas.aa.com'
@@ -24,6 +23,7 @@ pipeline {
         PCF_PROD_SPACE='Production'
         PCF_ORG ='eTDS'
         CF_HOME="${WORKSPACE}"
+        // NOTIFYUSERS="DL_eTDS_TeamReceipts@aa.com"
         // PCF_BLUE= "Temp-FVT-API"
         // PCF_GREEN= "FVT-API"
         // SLACK_TOKEN = credentials('SlackToken')
@@ -42,6 +42,7 @@ pipeline {
         SONARQUBE_API_KEY = credentials('RECEIPTS_SONARQUBE_API_KEY')
         SONARQUBE_PROJECT_KEY = 'tr.receipts-ms'
         SONARQUBE_PROJECT_NAME = 'tr.receipts-ms'
+	pom = readMavenPom file: 'pom.xml'
     }
     
     options {
@@ -126,7 +127,7 @@ pipeline {
 
                 sh """
                     chmod u+x ./devops/epaas/deploy.sh
-                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${deployAppName} ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
+                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${deployDevAppName} ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
                   """                  
             }
         }
@@ -142,7 +143,7 @@ pipeline {
             }
             steps {
                 sh """
-                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://'${deployAppName}.${PCF_DEVTEST_DOMAIN}
+                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://'${deployDevAppName}.${PCF_DEVTEST_DOMAIN}
                   """
                   
                 publishHTML target: [
@@ -207,9 +208,11 @@ pipeline {
             post {
                 success {
                     script {
+                    	POM_VERSION = pom.version.replace('-SNAPSHOT', '')
+
                         createChangeRequest(
                                 appName: "Receipts",      	        //Application name based on what is shown in Archer
-                                appVersion: "1.0.0",			    //Version number of the Application deployed to Production
+                                appVersion: "${POM_VERSION}",       //Version number of the Application deployed to Production
                                 team: "Fly - Ancillaries Receipts", //Cherwell Team Name
                                 location: "DFW",                    //Location of the Datacenter where the Production Application resides
                                 requestingEmployeeId: "00854495",   //Default Requestor and Owner of the Change Ticket
@@ -231,12 +234,11 @@ pipeline {
                 script {
                     SCM_URL = "$GIT_URL".trim().minus("https://")
                     
-                    pom = readMavenPom file: 'pom.xml'
                     APPLICATION_VERSION = pom.version.replace('SNAPSHOT', BUILD_NUMBER)
                 }
                                
-                sh "git tag ${deployAppName}-$APPLICATION_VERSION"
-                sh "git push https://$GITHUB_USR:$GITHUB_PSW@$SCM_URL $deployAppName-$APPLICATION_VERSION"
+                sh "git tag ${pcfAppName}-$APPLICATION_VERSION"
+                sh "git push https://$GITHUB_USR:$GITHUB_PSW@$SCM_URL $pcfAppName-$APPLICATION_VERSION"
             }
         }
         
