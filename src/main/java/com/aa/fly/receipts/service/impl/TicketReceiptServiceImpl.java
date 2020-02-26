@@ -15,8 +15,6 @@ import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
 import com.aa.fly.receipts.service.TicketReceiptService;
 
-import sun.security.krb5.internal.Ticket;
-
 /**
  * Created by 629874 on 5/9/2019.
  */
@@ -42,7 +40,7 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
                 ticketReceipt.getPassengerDetails().set(0, passengerDetail);
                 ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
             }catch (NoCostDetailsFoundException e) {
-                logger.error("No cost details found for search criteria = \" + criteria", e.getClass().getName());
+                logger.error("No cost details found for search criteria = {0} ", criteria);
                 logger.error("Error details = ", e);
                 ticketReceipt.setStatusMessage("NoCostDetailsFound");
                 ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);
