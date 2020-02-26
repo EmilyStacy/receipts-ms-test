@@ -281,10 +281,12 @@ public class CostDetailsMapper {
             description = "Card";
         }
 
-        if (fopTypeCode.startsWith("CA")) {
-            description = "Cash / Check";
-        } else if (fopTypeCode.startsWith("CC") && last4 != null) {
-            description = description + " ending in " + last4;
+        if (null != fopTypeCode) {
+            if (fopTypeCode.startsWith("CA")) {
+                description = "Cash / Check";
+            } else if (fopTypeCode.startsWith("CC") && last4 != null) {
+                description = description + " ending in " + last4;
+            }
         }
 
         return description;
