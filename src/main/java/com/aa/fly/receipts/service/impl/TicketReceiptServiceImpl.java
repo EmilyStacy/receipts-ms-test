@@ -1,5 +1,7 @@
 package com.aa.fly.receipts.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,10 @@ import com.aa.fly.receipts.data.TicketReceiptRepository;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
 import com.aa.fly.receipts.service.TicketReceiptService;
+
+import sun.security.krb5.internal.Ticket;
 
 /**
  * Created by 629874 on 5/9/2019.
@@ -19,6 +24,7 @@ import com.aa.fly.receipts.service.TicketReceiptService;
 
 public class TicketReceiptServiceImpl implements TicketReceiptService {
 
+    private static final Logger logger = LoggerFactory.getLogger(TicketReceiptServiceImpl.class);
     @Autowired
     private TicketReceiptRepository repository;
 
@@ -31,9 +37,16 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
         }
 
         if (ticketReceipt != null && StringUtils.hasText(ticketReceipt.getPnr())) {
-            PassengerDetail passengerDetail = repository.findCostDetailsByTicketNumber(criteria, ticketReceipt.getPassengerDetails().get(0));
-            ticketReceipt.getPassengerDetails().set(0, passengerDetail);
-            ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
+            try {
+                PassengerDetail passengerDetail = repository.findCostDetailsByTicketNumber(criteria, ticketReceipt.getPassengerDetails().get(0));
+                ticketReceipt.getPassengerDetails().set(0, passengerDetail);
+                ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
+            }catch (NoCostDetailsFoundException e) {
+                logger.error("No cost details found for search criteria = \" + criteria", e.getClass().getName());
+                logger.error("Error details = ", e);
+                ticketReceipt.setStatusMessage("NoCostDetailsFound");
+                ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);
+            }
         } else {
             ticketReceiptResponse = ResponseEntity.status(HttpStatus.NO_CONTENT).body(new TicketReceipt());
         }

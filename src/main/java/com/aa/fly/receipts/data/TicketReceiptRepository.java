@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
-import com.aa.fly.receipts.exception.ReceiptsMSException;
+import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
 
 @Repository
 public class TicketReceiptRepository {
@@ -182,7 +182,7 @@ public class TicketReceiptRepository {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber10, ticketNumber13, departureDate,
                 firstName, lastName);
         if (!sqlRowSet.isBeforeFirst()) {
-            throw new ReceiptsMSException("No cost details records found for search criteria = " + criteria);
+            throw new NoCostDetailsFoundException("No cost details found for search criteria = " + criteria);
         }
 
         return costDetailsMapper.mapCostDetails(sqlRowSet, passengerDetail);

@@ -26,6 +26,8 @@ public class TicketReceipt {
     List<PassengerDetail> passengerDetails = new ArrayList<>();
     List<SegmentDetail> segmentDetails = new ArrayList<>();
 
+    private String statusMessage = "OK";
+
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public String getAirlineAccountCode() {
@@ -92,11 +94,20 @@ public class TicketReceipt {
         this.passengerDetails = passengerDetails;
     }
 
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
     @Override
     public String toString() {
         return "TicketSummary [airlineAccountCode=" + airlineAccountCode + ", ticketIssueDate=" + dateFormat.format(ticketIssueDate) + ", departureDate="
                 + dateFormat.format(departureDate) + ", originAirport="
                 + originAirport + ", destinationAirport=" + destinationAirport + ", pnr=" + pnr + ", dateFormat=" + dateFormat + ", passengerDetails="
-                + passengerDetails + ", segmentDetails=" + segmentDetails + "]";
+                + passengerDetails + ", segmentDetails=" + segmentDetails
+                + ", statusMessage=" + statusMessage  + "]";
     }
 }

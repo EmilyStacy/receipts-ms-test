@@ -24,6 +24,7 @@ import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
 
 /**
  * Created by 629874 on 5/17/2019.
@@ -92,5 +93,21 @@ public class TicketReceiptRepositoryTest {
         formOfPayments.add(formOfPayment);
         passengerDetail.setFormOfPayments(formOfPayments);
         return passengerDetail;
+    }
+
+    @Test(expected = NoCostDetailsFoundException.class)
+    public void findCostDetailsByTicketNumber_ShouldThrowExceptionWhenCostDetailIsNotFound() throws ParseException {
+        SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
+        PassengerDetail passengerDetail = new PassengerDetail();
+
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(resultSet);
+        when(resultSet.isBeforeFirst()).thenReturn(false);
+        PassengerDetail passengerDetailExpected = getPassengerDetailWithCostDetails(passengerDetail);
+        when(costDetailsMapper.mapCostDetails(resultSet, passengerDetail))
+                .thenReturn(passengerDetailExpected);
+
+        receiptRepository.findCostDetailsByTicketNumber(criteria, passengerDetail);
+
     }
 }
