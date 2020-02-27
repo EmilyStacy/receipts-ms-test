@@ -92,4 +92,14 @@ Feature: Search with ticket number should return ticket receipt
     Examples:
       | scenario                                                                                               | ticketNumber   | lastName | firstName | departureDate  | rowCount | fopAmt  | passengerTotalAmount | anclryFOPAmt1 |anclryFOPAmt2 | anclryFOPIssueDate| anclryFOPTypeCode| anclryFOPAccountNumberLast4| anclryDocNbr | anclryIssueDate | anclryPriceCurrencyAmount | anclrySalesCurrencyAmount | anclryTaxCurrencyAmount |
       | Two ancillaries bought with ticket (3 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts             | 0012372303346  | martin   | adam      | 2019-11-08     | 3        | 849.30  |  971.78              | 78.38         | 44.10        | 2019-11-07        | CCBA             | 0006                       | 654200213    | 2019-11-07      | 72.91                     | 78.38                     | 5.47                    |
-      
+
+
+  Scenario Outline: Verify statusMessage when cost details is not found
+
+    Given I want to retrieve ticket receipt for scenario "<scenario>"
+    When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
+    Then I get a response with no cost details found message pnr "<pnr>", statusMessage "<statusMessage>"
+
+    Examples:
+      | scenario                                                    | ticketNumber   | lastName | firstName | departureDate  |    pnr    | statusMessage       |
+      | Ticket having trip details but not cost details in mosaic   | 0012371661425  | Oneway   | Joseph    | 2020-04-19     |   EKAYXI  | NoCostDetailsFound  |
