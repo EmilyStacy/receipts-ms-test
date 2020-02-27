@@ -36,7 +36,7 @@ public class TaxDescriptionRepository {
     @Scheduled(cron = "0 0 2 * * ?")
     @EventListener(ApplicationReadyEvent.class)
     public void loadTaxDescriptions() {
-        logger.info("Loading credit card names........");
+        logger.info("Loading tax codes and descriptions........");
         String sql = new StringBuilder("\nSELECT \n\t")
                 .append("TAX_CD \n\t")
                 .append(",TAX_CD_DESC \n")
@@ -55,7 +55,7 @@ public class TaxDescriptionRepository {
             Date startDate = sqlRowSet.getDate("EFF_START_DT");
             Date endDate = sqlRowSet.getDate("EFF_END_DT");
             List<TaxCodeAndDescription> taxCodeAndDescriptions = taxCodeAndDescriptionMap.get(taxCode);
-            if(taxCodeAndDescriptions == null) {
+            if (taxCodeAndDescriptions == null) {
                 taxCodeAndDescriptions = new ArrayList<>();
             }
             taxCodeAndDescriptions.add(new TaxCodeAndDescription(taxCode, taxDescription, startDate, endDate));
@@ -65,7 +65,6 @@ public class TaxDescriptionRepository {
         if (logger.isInfoEnabled()) {
             logger.info("Loaded {} tax codes and descriptions from Mosaic", taxCodeAndDescriptionMap
                     .entrySet().size());
-            logger.info("{}",taxCodeAndDescriptionMap.values());
         }
     }
 
@@ -73,14 +72,14 @@ public class TaxDescriptionRepository {
         List<TaxCodeAndDescription> taxCodeAndDescriptions = taxCodeAndDescriptionMap.get(taxCode);
 
         String description = taxCode;
-        if(taxCodeAndDescriptions!= null) {
-            if(taxCodeAndDescriptions.size() == 1) {
+        if (taxCodeAndDescriptions != null) {
+            if (taxCodeAndDescriptions.size() == 1) {
                 description = taxCodeAndDescriptions.get(0).getTaxCodeDescription();
-            } else if(taxCodeAndDescriptions.size() > 1) {
-                for(TaxCodeAndDescription taxCodeAndDescription : taxCodeAndDescriptions) {
+            } else if (taxCodeAndDescriptions.size() > 1) {
+                for (TaxCodeAndDescription taxCodeAndDescription : taxCodeAndDescriptions) {
                     boolean isIssueDateBetweenStartAndEndDate = !(ticketIssueDate.before(taxCodeAndDescription.getStartDate()) || ticketIssueDate.after(taxCodeAndDescription.getEndDate()));
 
-                    if(isIssueDateBetweenStartAndEndDate) {
+                    if (isIssueDateBetweenStartAndEndDate) {
                         description = taxCodeAndDescription.getTaxCodeDescription();
                     }
                 }
