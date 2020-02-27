@@ -16,10 +16,12 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @SuppressWarnings("squid:S2387")
     private static final Logger logger = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleRuntimeException(Exception ex, WebRequest request) {
-        logger.error("{} occured while trying to retrieve receipt", ex.getClass().getName());
-        logger.error("Error details = ",ex);
-        return new ResponseEntity<>("Internal error occured", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        logger.error("MS internal error occured during controller processing, X-Client-ID:" +
+                request.getHeader("X-Client-ID") + ";X-Transaction-ID:" + request.getHeader("X-Transaction-ID"), ex);
+
+        return new ResponseEntity<>("MS internal error occured", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
