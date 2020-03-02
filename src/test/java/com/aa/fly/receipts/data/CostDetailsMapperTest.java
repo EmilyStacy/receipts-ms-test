@@ -123,7 +123,7 @@ public class CostDetailsMapperTest {
         method.invoke(costDetailsMapper, resultSet, fopList, anclryDocNums);
         FormOfPayment returnFop = fopList.get(0);
         Ancillary ancillary = returnFop.getAncillaries().stream().filter(a -> a.getAnclryProdName() != null).findAny().orElse(null);
-        assertEquals(ancillary.getAnclryProdName(),"MSR-OTHER NON TAXABLE");
+        assertEquals("MSR-OTHER NON TAXABLE", ancillary.getAnclryProdName());
 
     }
     @Test
@@ -149,7 +149,7 @@ public class CostDetailsMapperTest {
         method.invoke(costDetailsMapper, resultSet, fopList, anclryDocNums);
         FormOfPayment returnFop = fopList.get(0);
         Ancillary ancillary = returnFop.getAncillaries().stream().filter(a -> a.getAnclryProdName() != null).findAny().orElse(null);
-        assertEquals(ancillary.getAnclryProdName(),"MSR-OTHER NON TAXABLE (DFW - PHX)");
+        assertEquals("MSR-OTHER NON TAXABLE (DFW - PHX)", ancillary.getAnclryProdName());
 
     }
     @Test
@@ -175,7 +175,7 @@ public class CostDetailsMapperTest {
         method.invoke(costDetailsMapper, resultSet, fopList, anclryDocNums);
         FormOfPayment returnFop = fopList.get(0);
         Ancillary ancillary = returnFop.getAncillaries().stream().filter(a -> a.getAnclryProdName() != null).findAny().orElse(null);
-        assertEquals(ancillary.getAnclryProdName(),"MSR-OTHER NON TAXABLE");
+        assertEquals("MSR-OTHER NON TAXABLE", ancillary.getAnclryProdName());
 
     }
     @Test
