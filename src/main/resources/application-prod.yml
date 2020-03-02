@@ -9,5 +9,7 @@ mosaic:
 
 logging:
   level:
-    org.springframework.jdbc.core: INFO    
-      
+    org.springframework.jdbc.core: INFO
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: TRACE
+    com.teradata.jdbc: DEBUG

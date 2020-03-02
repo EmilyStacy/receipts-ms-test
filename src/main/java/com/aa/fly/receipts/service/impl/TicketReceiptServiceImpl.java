@@ -40,7 +40,6 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
                 ticketReceipt.getPassengerDetails().set(0, passengerDetail);
                 ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
             } catch (NoCostDetailsFoundException e) {
-                logger.info("No cost details found for search criteria = {0}", criteria);
                 ticketReceipt.setStatusMessage("NoCostDetailsFound");
                 ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);
             }

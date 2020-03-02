@@ -13,6 +13,7 @@ import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
 
 @Repository
+@Transactional(readOnly = true)
 public class TicketReceiptRepository {
 
     public static final String JOIN = "JOIN ";
@@ -29,7 +30,6 @@ public class TicketReceiptRepository {
     @Autowired
     private CostDetailsMapper costDetailsMapper;
 
-    @Transactional(readOnly = true)
     public TicketReceipt findTicketReceiptByTicketNumber(SearchCriteria criteria) {
         String lastName = criteria.getLastName().toUpperCase().trim();
         String firstName = criteria.getFirstName().toUpperCase().trim() + '%';

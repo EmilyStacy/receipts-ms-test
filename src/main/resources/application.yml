@@ -8,6 +8,16 @@ spring:
     username: ${vcap.services.mosaic-receipts.credentials.username:MOSTDSTEAMRECEIPTSAPP01}
     password: '${vcap.services.mosaic-receipts.credentials.password:Receipts@4Cloud}'
 
+    hikari:
+      minimumIdle: 15
+      maximumPoolSize: 20
+      idleTimeout: 0
+      connectionTimeout: 20000
+      max-lifetime: 1800000
+      health-check-properties:
+        expected99thPercentileMs: 0
+        connectivityCheckTimeoutMs: 600000
+
 mosaic:
   inflight:
     schema:
@@ -24,7 +34,11 @@ logging:
   level:
     root: ERROR
     com.aa.fly.receipts: INFO
-    org.springframework.jdbc.core: TRACE    
+    org.springframework.jdbc.core: TRACE
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: DEBUG
+    com.teradata.jdbc: DEBUG
+
   pattern:
     console: '%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger.%M - %msg%n'
     
