@@ -1,10 +1,8 @@
 package com.aa.fly.receipts.controller;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-
-import java.util.Date;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +46,7 @@ public class ReceiptControllerTest {
 
     public static SearchCriteria getSearchCriteria() {
         SearchCriteria searchCriteria = new SearchCriteria();
-        searchCriteria.setDepartureDate(new Date());
+        searchCriteria.setDepartureDate("09/30/2019");
         searchCriteria.setFirstName("first");
         searchCriteria.setLastName("last");
         searchCriteria.setTicketNumber("1234");

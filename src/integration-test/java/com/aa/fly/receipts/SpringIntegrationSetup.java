@@ -38,7 +38,6 @@ public class SpringIntegrationSetup {
     @MockBean
     private TaxDescriptionRepository taxDescriptionRepository;
 
-
     protected void executeGet(String url) throws IOException {
         final Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
@@ -64,7 +63,7 @@ public class SpringIntegrationSetup {
 
     protected void executePost(String url, Object request) {
         final HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("X-Client-ID", "Receipts-BFF");
+        httpHeaders.set("X-Client-ID", "Receipts-BFF-IT");
         httpHeaders.set("X-Transaction-ID", String.valueOf(UUID.randomUUID()));
 
         HttpEntity<Object> httpEntity = new HttpEntity<Object>(request, httpHeaders);

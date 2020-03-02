@@ -1,20 +1,21 @@
 package com.aa.fly.receipts.steps;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import org.junit.Assert;
+import org.springframework.http.HttpStatus;
+
 import com.aa.fly.receipts.SpringIntegrationSetup;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
+
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import gherkin.deps.com.google.gson.Gson;
 import gherkin.deps.com.google.gson.GsonBuilder;
-import org.junit.Assert;
-import org.springframework.http.HttpStatus;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
 
 public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringIntegrationSetup {
 
@@ -33,10 +34,8 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
         criteria.setTicketNumber(ticketNumber);
         criteria.setLastName(lastName);
         criteria.setFirstName(firstName);
-        try {
-            criteria.setDepartureDate(dateFormat.parse(departureDate));
-        } catch (ParseException e) {
-        }
+        criteria.setDepartureDate(departureDate);
+
         executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
     }
 
@@ -74,8 +73,8 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
     }
 
     private String buildSegmentString(SegmentDetail segment) {
-        //AA4063 leaving TYR to DFW on 2019-10-26 at 06:45:00 and arriving on 2019-10-26 at 07:48:00 in class OWBVZNB5
-        StringBuilder sb =  new StringBuilder(segment.getCarrierCode());
+        // AA4063 leaving TYR to DFW on 2019-10-26 at 06:45:00 and arriving on 2019-10-26 at 07:48:00 in class OWBVZNB5
+        StringBuilder sb = new StringBuilder(segment.getCarrierCode());
         sb.append(segment.getFlightNumber());
         sb.append(" leaving ");
         sb.append(segment.getDepartureAirport().getCode());

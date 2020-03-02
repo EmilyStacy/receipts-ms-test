@@ -1,7 +1,5 @@
 package com.aa.fly.receipts.data;
 
-import java.text.SimpleDateFormat;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,13 +29,11 @@ public class TicketReceiptRepository {
     @Autowired
     private CostDetailsMapper costDetailsMapper;
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
     @Transactional(readOnly = true)
     public TicketReceipt findTicketReceiptByTicketNumber(SearchCriteria criteria) {
         String lastName = criteria.getLastName().toUpperCase().trim();
         String firstName = criteria.getFirstName().toUpperCase().trim() + '%';
-        String departureDate = dateFormat.format(criteria.getDepartureDate());
+        String departureDate = criteria.getDepartureDate();
         String ticketNumberSc = criteria.getTicketNumber().trim();
         String ticketNumber = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
 
@@ -85,7 +81,7 @@ public class TicketReceiptRepository {
                 .append("tkt.TICKET_NBR = ? ")
                 .append("AND odtkt.OD_SRC_SYS_CD = 'VCR' ")
                 .append("AND odtkt.OD_TYPE_CD = 'TRUE_OD' ")
-                .append("AND odtkt.OD_LOCAL_DEP_DT = to_date(?, 'YYYY-MM-DD') ")
+                .append("AND odtkt.OD_LOCAL_DEP_DT = to_date(?, 'MM/DD/YYYY') ")
                 .append("AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? ")
                 .append("AND UPPER(TRIM(tcust.PNR_PAX_LAST_NM)) = ? ")
                 .append("AND odtktcpn.OD_TYPE_CD = 'TRUE_OD' ")
@@ -101,7 +97,7 @@ public class TicketReceiptRepository {
 
         String lastName = criteria.getLastName().toUpperCase().trim();
         String firstName = criteria.getFirstName().toUpperCase().trim() + '%';
-        String departureDate = dateFormat.format(criteria.getDepartureDate());
+        String departureDate = criteria.getDepartureDate();
         String ticketNumberSc = criteria.getTicketNumber().trim();
         String ticketNumber10 = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
         String ticketNumber13 = (ticketNumberSc.length() == 13) ? ticketNumberSc : new StringBuilder("001").append(ticketNumberSc).toString();
@@ -173,7 +169,7 @@ public class TicketReceiptRepository {
                 .append("    AND odtkt.OD_TYPE_CD = 'TRUE_OD' \n")
                 .append("    AND tcust.TICKET_NBR = ? \n")
                 .append("    AND rcptfop.DOC_NBR = ? \n")
-                .append("    AND odtkt.OD_LOCAL_DEP_DT = to_date(? , 'YYYY-MM-DD') \n")
+                .append("    AND odtkt.OD_LOCAL_DEP_DT = to_date(? , 'MM/DD/YYYY') \n")
                 .append("    AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? \n")
                 .append("    AND UPPER(TRIM(tcust.PNR_PAX_LAST_NM)) = ? \n")
                 .append("ORDER BY rcptfop.ISSUE_DT, rcptfop.FOP_SEQ_ID, rcpttax.TAX_CD_SEQ_ID \n")

@@ -1,6 +1,5 @@
 package com.aa.fly.receipts.steps;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.junit.Assert;
@@ -33,10 +32,8 @@ public class FindTicketReceiptHeaderSteps extends SpringIntegrationSetup {
         criteria.setTicketNumber(ticketNumber);
         criteria.setLastName(lastName);
         criteria.setFirstName(firstName);
-        try {
-            criteria.setDepartureDate(dateFormat.parse(departureDate));
-        } catch (ParseException e) {
-        }
+        criteria.setDepartureDate(departureDate);
+
         executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
     }
 

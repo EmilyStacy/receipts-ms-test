@@ -3,10 +3,6 @@
  */
 package com.aa.fly.receipts.domain;
 
-import java.util.Date;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 /**
  * @author Shiva.Narendrula
  */
@@ -16,8 +12,7 @@ public class SearchCriteria {
     private String pnr;
     private String lastName;
     private String firstName;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Date departureDate;
+    private String departureDate;
 
     public String getTicketNumber() {
         return ticketNumber;
@@ -43,14 +38,14 @@ public class SearchCriteria {
         this.firstName = firstName;
     }
 
-    public Date getDepartureDate() {
+    public String getDepartureDate() {
         return departureDate;
     }
 
-    public void setDepartureDate(Date departureDate) {
+    public void setDepartureDate(String departureDate) {
         this.departureDate = departureDate;
     }
-    
+
     public String getPnr() {
         return pnr;
     }

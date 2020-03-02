@@ -16,8 +16,6 @@ public class TicketReceiptMapper {
     @Autowired
     private AirportService airportService;
 
-
-
     public TicketReceipt mapTicketReceipt(SqlRowSet rs) {
 
         TicketReceipt ticketReceipt = new TicketReceipt();

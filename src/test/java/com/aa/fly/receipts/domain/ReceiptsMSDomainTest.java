@@ -94,7 +94,7 @@ public class ReceiptsMSDomainTest {
         criteria.setLastName("TEST");
         criteria.setFirstName("SIMON");
         criteria.setTicketNumber("0012372187652");
-        criteria.setDepartureDate(dateFormat.parse("09/30/2019"));
+        criteria.setDepartureDate("09/30/2019");
         return criteria;
     }
 
@@ -162,6 +162,5 @@ public class ReceiptsMSDomainTest {
         airport.setStateCode(state);
         return airport;
     }
-
 
 }

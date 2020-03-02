@@ -1,10 +1,9 @@
 package com.aa.fly.receipts.controller;
 
-import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
-import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketReceipt;
-import com.aa.fly.receipts.domain.WifiReceipt;
-import com.aa.fly.receipts.service.TicketReceiptService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,11 +11,10 @@ import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
+import com.aa.fly.receipts.domain.SearchCriteria;
+import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.service.TicketReceiptService;
 
 /**
  * Created by 629874 on 5/17/2019.
@@ -47,7 +45,7 @@ public class TicketReceiptControllerTest {
 
     public static SearchCriteria getSearchCriteria() {
         SearchCriteria searchCriteria = new SearchCriteria();
-        searchCriteria.setDepartureDate(new Date());
+        searchCriteria.setDepartureDate("09/30/2019");
         searchCriteria.setFirstName("first");
         searchCriteria.setLastName("last");
         searchCriteria.setTicketNumber("1234");
