@@ -13,11 +13,13 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 @Component
 public class AddHeadersInterceptor extends HandlerInterceptorAdapter {
 
+    private static final String X_TRANSACTION_ID = "X-Transaction-ID";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        MDC.put("XTransactionID", request.getHeader("X-Transaction-ID"));
-        response.addHeader("X-Transaction-ID", request.getHeader("X-Transaction-ID"));
+        MDC.put("XTransactionID", request.getHeader(X_TRANSACTION_ID));
+        response.addHeader(X_TRANSACTION_ID, request.getHeader(X_TRANSACTION_ID));
         return true;
     }
 }

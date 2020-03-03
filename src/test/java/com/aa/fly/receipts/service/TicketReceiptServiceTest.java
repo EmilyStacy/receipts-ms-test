@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 
 import org.junit.Test;
@@ -53,5 +55,29 @@ public class TicketReceiptServiceTest {
         assertThat(actualReceipt.getAirlineAccountCode()).isEqualTo("001");
         assertThat(actualReceipt.getPnr()).isEqualTo("MRYMPT");
         assertThat(actualReceipt.getStatusMessage()).isEqualTo("NoCostDetailsFound");
+    }
+
+    @Test
+    public void verifyTicketAirlineCode_validAirlineCode() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        SearchCriteria sc = new SearchCriteria();
+        sc.setTicketNumber("0011234567890");
+
+        Method method = ticketReceiptService.getClass().getDeclaredMethod("verifyTicketAirlineCode", SearchCriteria.class);
+        method.setAccessible(true);
+
+        method.invoke(ticketReceiptService, sc);
+        assertThat(sc.getTicketNumber()).isEqualTo("0011234567890");
+    }
+
+    @Test
+    public void verifyTicketAirlineCode_shouldPrependTicketNumberWith001() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        SearchCriteria sc = new SearchCriteria();
+        sc.setTicketNumber("0021234567890");
+
+        Method method = ticketReceiptService.getClass().getDeclaredMethod("verifyTicketAirlineCode", SearchCriteria.class);
+        method.setAccessible(true);
+
+        method.invoke(ticketReceiptService, sc);
+        assertThat(sc.getTicketNumber()).isEqualTo("0011234567890");
     }
 }

@@ -92,6 +92,7 @@ Feature: Search with ticket number should return ticket receipt
     Examples:
       | scenario                                                                                               | ticketNumber   | lastName | firstName | departureDate  | rowCount | fopAmt  | passengerTotalAmount | anclryFOPAmt1 |anclryFOPAmt2 | anclryFOPIssueDate| anclryFOPTypeCode| anclryFOPAccountNumberLast4| anclryDocNbr | anclryIssueDate | anclryPriceCurrencyAmount | anclrySalesCurrencyAmount | anclryTaxCurrencyAmount |
       | Two ancillaries bought with ticket (3 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts             | 0012372303346  | martin   | adam      | 11/08/2019     | 3        | 849.30  |  971.78              | 78.38         | 44.10        | 2019-11-07        | CCBA             | 0006                       | 654200213    | 2019-11-07      | 72.91                     | 78.38                     | 5.47                    |
+      | Invalid airline code                                                                                   | 0022372303346  | martin   | adam      | 11/08/2019     | 3        | 849.30  |  971.78              | 78.38         | 44.10        | 2019-11-07        | CCBA             | 0006                       | 654200213    | 2019-11-07      | 72.91                     | 78.38                     | 5.47                    |
 
 
   Scenario Outline: Verify statusMessage when cost details is not found

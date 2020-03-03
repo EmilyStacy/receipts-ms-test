@@ -1,7 +1,5 @@
 package com.aa.fly.receipts.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +20,20 @@ import com.aa.fly.receipts.service.TicketReceiptService;
 
 public class TicketReceiptServiceImpl implements TicketReceiptService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TicketReceiptServiceImpl.class);
     @Autowired
     private TicketReceiptRepository repository;
 
+    private static String AIRLINE_CODE = "001";
+
     @Override
     public ResponseEntity<TicketReceipt> findTicketReceipt(SearchCriteria criteria) {
+
+        verifyTicketAirlineCode(criteria);
+
         ResponseEntity<TicketReceipt> ticketReceiptResponse = null;
         TicketReceipt ticketReceipt = null;
+
+
         if (StringUtils.hasText(criteria.getTicketNumber())) {
             ticketReceipt = repository.findTicketReceiptByTicketNumber(criteria);
         }
@@ -48,6 +52,12 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
         }
 
         return ticketReceiptResponse;
+    }
+
+    private void verifyTicketAirlineCode(SearchCriteria criteria) {
+        String ticketNumberSc = criteria.getTicketNumber();
+        String ticketNumberLast10 = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
+        criteria.setTicketNumber(AIRLINE_CODE.concat(ticketNumberLast10));
     }
 
 }
