@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} %.36X{XTransactionID} - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold> <!-- default 20, means drop lower event when has 20% capacity remaining -->
+        <queueSize>512</queueSize> <!-- default 256 -->
+        <includeCallerData>false</includeCallerData><!-- default false -->
+        <neverBlock>false</neverBlock>
+        <appender-ref ref="STDOUT" />
+    </appender>
+
+    <root >
+        <appender-ref ref="ASYNC" />
+    </root>
+    <springProperty scope="context" name="app_name" source="spring.application.name" />
+
+</configuration>
