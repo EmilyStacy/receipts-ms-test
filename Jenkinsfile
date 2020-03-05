@@ -112,49 +112,49 @@ pipeline {
             }
         }
 
-        stage('deploy dev') {
-            when {
-                // if it is a branch and not a PR
-                allOf {
-                    not {
-                        changeRequest()
-                    }
-                }
-            }
-            steps {
-                sh "cf login -a $PCF_DEV_TEST_URL -u $PCF_DEVTEST_ID_USR -p $PCF_DEVTEST_ID_PSW -o $PCF_ORG -s $PCF_DEV_SPACE"
-
-                sh """
-                    chmod u+x ./devops/epaas/deploy.sh
-                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${deployDevAppName} ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
-                  """                  
-            }
-        }
-
-        stage('integration tests') {
-            when {
-                // if it is a branch and not a PR
-                allOf {
-                    not {
-                        changeRequest()
-                    }
-                }
-            }
-            steps {
-                sh """
-                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://'${deployDevAppName}.${PCF_DEVTEST_DOMAIN}
-                  """
-                  
-                publishHTML target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: 'target/cucumberReport',
-                    reportFiles: 'index.html',
-                    reportName: 'Cucumber Rpt'
-                ]
-            }
-        }
+//        stage('deploy dev') {
+//            when {
+//                // if it is a branch and not a PR
+//                allOf {
+//                    not {
+//                        changeRequest()
+//                    }
+//                }
+//            }
+//            steps {
+//                sh "cf login -a $PCF_DEV_TEST_URL -u $PCF_DEVTEST_ID_USR -p $PCF_DEVTEST_ID_PSW -o $PCF_ORG -s $PCF_DEV_SPACE"
+//
+//                sh """
+//                    chmod u+x ./devops/epaas/deploy.sh
+//                    ./devops/epaas/deploy.sh ${PCF_DEV_TEST_URL} $PCF_DEVTEST_ID_USR $PCF_DEVTEST_ID_PSW ${PCF_ORG} ${PCF_DEV_SPACE} ${PCF_DEVTEST_DOMAIN} ${deployDevAppName} ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-dev.yml
+//                  """
+//            }
+//        }
+//
+//        stage('integration tests') {
+//            when {
+//                // if it is a branch and not a PR
+//                allOf {
+//                    not {
+//                        changeRequest()
+//                    }
+//                }
+//            }
+//            steps {
+//                sh """
+//                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://'${deployDevAppName}.${PCF_DEVTEST_DOMAIN}
+//                  """
+//
+//                publishHTML target: [
+//                    allowMissing: false,
+//                    alwaysLinkToLastBuild: false,
+//                    keepAll: true,
+//                    reportDir: 'target/cucumberReport',
+//                    reportFiles: 'index.html',
+//                    reportName: 'Cucumber Rpt'
+//                ]
+//            }
+//        }
 
         
 //        stage ('job:bff-e2e') {
