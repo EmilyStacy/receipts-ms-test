@@ -21,6 +21,7 @@ public class SegmentDetail {
     private String bookingClass;
     private String fareBasis;
     private String returnTrip;
+    private String segmentStatus;
 
     public Airport getDepartureAirport() {
         return departureAirport;
@@ -110,20 +111,28 @@ public class SegmentDetail {
         this.returnTrip = returnTrip;
     }
 
-    @Override
-    public String toString() {
+    public void setSegmentStatus(String segmentStatus) {
+        this.segmentStatus = segmentStatus;
+    }
+
+    public String getSegmentStatus() {
+        return segmentStatus;
+    }
+
+    @Override public String toString() {
         return "SegmentDetail{" +
-                "departureAirport='" + departureAirport + '\'' +
-                ", arrivalAirport='" + arrivalAirport + '\'' +
+                "departureAirport=" + departureAirport +
+                ", arrivalAirport=" + arrivalAirport +
                 ", segmentDepartureDate=" + segmentDepartureDate +
-                ", segmentDepartureTime=" + segmentDepartureTime +
+                ", segmentDepartureTime='" + segmentDepartureTime + '\'' +
                 ", segmentArrivalDate=" + segmentArrivalDate +
-                ", segmentArrivalTime=" + segmentArrivalTime +
+                ", segmentArrivalTime='" + segmentArrivalTime + '\'' +
                 ", carrierCode='" + carrierCode + '\'' +
                 ", flightNumber='" + flightNumber + '\'' +
                 ", bookingClass='" + bookingClass + '\'' +
                 ", fareBasis='" + fareBasis + '\'' +
                 ", returnTrip='" + returnTrip + '\'' +
+                ", segmentStatus='" + segmentStatus + '\'' +
                 '}';
     }
 }

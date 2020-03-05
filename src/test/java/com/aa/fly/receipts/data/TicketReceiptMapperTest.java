@@ -73,7 +73,9 @@ public class TicketReceiptMapperTest {
         final String segmentDepartureTime = "8:05:00";
         Mockito.when(resultSet.getString("SEG_DEPT_TM")).thenReturn(segmentDepartureTime);
         final String segmentArrivalTime = "9:05:00";
+        final String segmentStatus = "   USED   ";
         Mockito.when(resultSet.getString("SEG_ARVL_TM")).thenReturn(segmentArrivalTime);
+        Mockito.when(resultSet.getString("SEG_COUPON_STATUS_CD")).thenReturn(segmentStatus);
         Mockito.when(resultSet.getString("FLIGHT_NBR")).thenReturn("1536");
         Mockito.when(resultSet.getString("BOOKING_CLASS")).thenReturn("B");
         Mockito.when(resultSet.getString("FARE_BASE")).thenReturn("QVAJZNB3");
@@ -112,6 +114,7 @@ public class TicketReceiptMapperTest {
 
         assertThat(segmentDetail.getSegmentDepartureTime()).isEqualTo(segmentDepartureTime);
         assertThat(segmentDetail.getSegmentArrivalTime()).isEqualTo(segmentArrivalTime);
+        assertThat(segmentDetail.getSegmentStatus()).isEqualTo("USED");
         assertThat(segmentDetail.getFlightNumber()).isEqualTo("1536");
         assertThat(segmentDetail.getCarrierCode()).isEqualTo("AA");
         assertThat(segmentDetail.getBookingClass()).isEqualTo("B");
@@ -135,14 +138,19 @@ public class TicketReceiptMapperTest {
         Mockito.when(airportService.getAirport(null)).thenReturn(null);
         Mockito.when(resultSet.getString("PNR")).thenReturn("MRYMPT");
         Mockito.when(resultSet.getString("LYLTY_OWN_CD")).thenReturn(null);
+        Mockito.when(resultSet.getString("SEG_COUPON_STATUS_CD")).thenReturn(null);
 
         TicketReceipt item = ticketReceiptMapper.mapTicketReceipt(resultSet);
+        SegmentDetail segmentDetail = new SegmentDetail();
+        segmentDetail.setSegmentStatus(null);
+        item.getSegmentDetails().add(segmentDetail);
         assertThat(item.getAirlineAccountCode()).isNull();
         assertThat(item.getTicketIssueDate()).isEqualTo(dateFormat.parse("2019-03-14"));
         assertThat(item.getDepartureDate()).isEqualTo(dateFormat.parse("2019-09-30"));
         assertThat(item.getOriginAirport()).isNull();
         assertThat(item.getDestinationAirport()).isNull();
         assertThat(item.getPnr()).isEqualTo("MRYMPT");
+        assertThat(item.getSegmentDetails().get(0).getSegmentStatus()).isEqualTo("");
     }
 
 

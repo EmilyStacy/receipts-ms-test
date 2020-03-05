@@ -1,23 +1,22 @@
 package com.aa.fly.receipts.domain;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.openpojo.reflection.impl.PojoClassFactory;
+import com.openpojo.validation.Validator;
+import com.openpojo.validation.ValidatorBuilder;
+import com.openpojo.validation.test.impl.GetterTester;
+import com.openpojo.validation.test.impl.SetterTester;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.openpojo.reflection.impl.PojoClassFactory;
-import com.openpojo.validation.Validator;
-import com.openpojo.validation.ValidatorBuilder;
-import com.openpojo.validation.test.impl.GetterTester;
-import com.openpojo.validation.test.impl.SetterTester;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @DirtiesContext
@@ -68,7 +67,7 @@ public class ReceiptsMSDomainTest {
     public void testTicketSummaryToString() throws ParseException {
         TicketReceipt ticketReceipt = getTicketReceipt();
         Assert.assertEquals(
-                "TicketSummary [airlineAccountCode=001, ticketIssueDate=2019-03-14, departureDate=2019-09-30, originAirport=Airport{code='MCO', name='Orlando International', stateCode='FL', city='Orlando', countryCode='USA', countryName='United States}, destinationAirport=Airport{code='MIA', name='Miami International', stateCode='FL', city='Miami', countryCode='USA', countryName='United States}, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, passengerDetails=[ticketNumber=2371661425, firstName=SIMON, lastName=TEST, advantageNumber=XYZ1234, passengerTotalAmount=123.45, showPassangerTotal=false, fareTaxesFees=FareTaxesFees{baseFareAmount='77674', baseFareCurrencyCode='USD2', totalFareAmount='84930', taxFareAmount='7256', taxes='[]'}, loyaltyOwnerCode=AA, formOfPayments=[FormOfPayment{fopIssueDate=2019-03-14, fopTypeCode='CCBA', fopTypeDescription='null', fopAccountNumberLast4='0006', fopAmount='225295', fopCurrencyCode='USD2', ancillaries='[Anclry{anclryDocNbr='654200213', anclryIssueDate='2019-11-07', anclryProdCode='090', anclryProdName='MAIN CABIN EXTRA (DFW - BDL)', anclryPriceCurrencyAmount='72.91', anclryPriceCurrencyCode='USD', anclrySalesCurrencyAmount='78.38', anclrySalesCurrencyCode='USD', anclryTaxCurrencyAmount='5.47'}]'}]], segmentDetails=[], statusMessage=OK]",
+                "TicketSummary [airlineAccountCode=001, ticketIssueDate=2019-03-14, departureDate=2019-09-30, originAirport=Airport{code='MCO', name='Orlando International', stateCode='FL', city='Orlando', countryCode='USA', countryName='United States}, destinationAirport=Airport{code='MIA', name='Miami International', stateCode='FL', city='Miami', countryCode='USA', countryName='United States}, pnr=MRYMPT, dateFormat=java.text.SimpleDateFormat@f67a0200, passengerDetails=[ticketNumber=2371661425, firstName=SIMON, lastName=TEST, advantageNumber=XYZ1234, passengerTotalAmount=123.45, showPassangerTotal=false, fareTaxesFees=FareTaxesFees{baseFareAmount='77674', baseFareCurrencyCode='USD2', totalFareAmount='84930', taxFareAmount='7256', taxes='[]'}, loyaltyOwnerCode=AA, formOfPayments=[FormOfPayment{fopIssueDate=2019-03-14, fopTypeCode='CCBA', fopTypeDescription='null', fopAccountNumberLast4='0006', fopAmount='225295', fopCurrencyCode='USD2', ancillaries='[Anclry{anclryDocNbr='654200213', anclryIssueDate='2019-11-07', anclryProdCode='090', anclryProdName='MAIN CABIN EXTRA (DFW - BDL)', anclryPriceCurrencyAmount='72.91', anclryPriceCurrencyCode='USD', anclrySalesCurrencyAmount='78.38', anclrySalesCurrencyCode='USD', anclryTaxCurrencyAmount='5.47'}]'}]], segmentDetails=[SegmentDetail{departureAirport=null, arrivalAirport=null, segmentDepartureDate=null, segmentDepartureTime='null', segmentArrivalDate=null, segmentArrivalTime='null', carrierCode='null', flightNumber='null', bookingClass='null', fareBasis='null', returnTrip='null', segmentStatus='USED'}], statusMessage=OK]",
                 ticketReceipt.toString());
     }
 
@@ -134,6 +133,9 @@ public class ReceiptsMSDomainTest {
         passengerDetail.setLoyaltyOwnerCode(("AA"));
         passengerDetail.setPassengerTotalAmount("123.45");
 
+        SegmentDetail segmentDetail = new SegmentDetail();
+        segmentDetail.setSegmentStatus("USED");
+
         List<FormOfPayment> formOfPaymentList = new ArrayList<>();
         FormOfPayment fop = new FormOfPayment(dateFormat.parse("03/14/2019"), "CCBA", "0006", "225295", "USD2");
 
@@ -148,6 +150,7 @@ public class ReceiptsMSDomainTest {
         passengerDetail.setFareTaxesFees(fareTaxesFees);
 
         ticketReceipt.getPassengerDetails().add(passengerDetail);
+        ticketReceipt.getSegmentDetails().add(segmentDetail);
 
         return ticketReceipt;
     }

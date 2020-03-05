@@ -54,10 +54,11 @@ public class TicketReceiptRepository {
                 .append("    odtktcpn.SEG_LOCAL_DEP_DT AS SEG_DEPT_DT, ")
                 .append("    odtktcpn.SEG_LOCAL_OUT_TM AS SEG_DEPT_TM, ")
                 .append("    odtktcpn.SEG_DEP_AIRPRT_IATA_CD AS SEG_DEPT_ARPRT_CD, ")
-
                 .append("    odtktcpn.SEG_LOCAL_ARVL_DT AS SEG_ARVL_DT, ")
                 .append("    odtktcpn.SEG_LOCAL_IN_TM AS SEG_ARVL_TM, ")
+                .append("    odtktcpn.SEG_COUPON_STATUS_CD AS SEG_COUPON_STATUS_CD, ")
                 .append("    odtktcpn.SEG_ARVL_AIRPRT_IATA_CD AS SEG_ARVL_ARPRT_CD, ")
+
 
                 .append("    tktcpn.FLOWN_OPERAT_FLIGHT_NBR AS FLIGHT_NBR, ")
                 .append("    tktcpn.ACCT_FARE_CLASS_CD AS BOOKING_CLASS, ")

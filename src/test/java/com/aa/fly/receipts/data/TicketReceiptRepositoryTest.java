@@ -1,15 +1,7 @@
 package com.aa.fly.receipts.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.aa.fly.receipts.domain.*;
+import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,13 +10,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.aa.fly.receipts.domain.AmountAndCurrency;
-import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.PassengerDetail;
-import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
-import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketReceipt;
-import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by 629874 on 5/17/2019.
@@ -60,7 +54,7 @@ public class TicketReceiptRepositoryTest {
         when(ticketReceiptMapper.mapTicketReceipt(resultSet))
                 .thenReturn(ticketReceipt);
         assertEquals("MRYMPT", receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
-
+        assertEquals("USED", receiptRepository.findTicketReceiptByTicketNumber(criteria).getSegmentDetails().get(0).getSegmentStatus());
     }
 
     @Test

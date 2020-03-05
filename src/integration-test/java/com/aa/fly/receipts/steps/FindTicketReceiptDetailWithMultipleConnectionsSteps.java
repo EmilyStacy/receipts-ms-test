@@ -1,21 +1,19 @@
 package com.aa.fly.receipts.steps;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import org.junit.Assert;
-import org.springframework.http.HttpStatus;
-
 import com.aa.fly.receipts.SpringIntegrationSetup;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
-
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import gherkin.deps.com.google.gson.Gson;
 import gherkin.deps.com.google.gson.GsonBuilder;
+import org.junit.Assert;
+import org.springframework.http.HttpStatus;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringIntegrationSetup {
 
@@ -106,6 +104,8 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
         sb.append(segment.getSegmentArrivalTime());
         sb.append(" in class ");
         sb.append(segment.getFareBasis());
+        sb.append(" and the flight status is ");
+        sb.append(segment.getSegmentStatus());
         return sb.toString();
     }
 }
