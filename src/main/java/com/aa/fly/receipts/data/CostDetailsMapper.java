@@ -77,8 +77,11 @@ public class CostDetailsMapper {
 
         BigDecimal passengerTotalAmount = new BigDecimal("0");
 
-        for (int i = 0; i < passengerDetail.getFormOfPayments().size(); i++) {
-            passengerTotalAmount = passengerTotalAmount.add(new BigDecimal(passengerDetail.getFormOfPayments().get(i).getFopAmount())).setScale(2, RoundingMode.CEILING);
+        for (int i = 0; i < passengerDetail.getFormOfPayments().size() ;  i++) {
+            final String fopAmount = passengerDetail.getFormOfPayments().get(i).getFopAmount();
+            if(fopAmount != null) {
+                passengerTotalAmount = passengerTotalAmount.add(new BigDecimal(fopAmount)).setScale(2, RoundingMode.CEILING);
+            }
         }
 
         //in case of even exchange, return totalFareAmount as passengerTotalAmount

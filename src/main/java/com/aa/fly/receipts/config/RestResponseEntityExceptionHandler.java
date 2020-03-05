@@ -19,7 +19,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleRuntimeException(Exception ex, WebRequest request) {
 
-        logger.error("MS internal error occured during controller processing, Exception: {}, caused by {}", ex.getClass().getName(), ex.getMessage(), ex);
+        logger.error("MS internal error occured during controller processing, Exception: {}, caused by {}, {}", ex.getClass().getName(), ex.getMessage(), ex);
 
         return new ResponseEntity<>("MS internal error occured", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
