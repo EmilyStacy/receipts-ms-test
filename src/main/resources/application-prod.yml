@@ -6,10 +6,3 @@ mosaic:
   ticket:
     schema:
       name: PROD_TCN_RECPT_VW
-
-logging:
-  level:
-    org.springframework.jdbc.core: INFO
-    com.zaxxer.hikari.HikariConfig: DEBUG
-    com.zaxxer.hikari: TRACE
-    com.teradata.jdbc: DEBUG
