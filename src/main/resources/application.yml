@@ -17,9 +17,6 @@ spring:
       health-check-properties:
         expected99thPercentileMs: 0
         connectivityCheckTimeoutMs: 600000
-  jdbc:
-    template:
-      query-timeout: 25
 
 mosaic:
   inflight:

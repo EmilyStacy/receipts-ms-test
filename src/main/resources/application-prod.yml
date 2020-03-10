@@ -6,3 +6,8 @@ mosaic:
   ticket:
     schema:
       name: PROD_TCN_RECPT_VW
+
+spring:
+  jdbc:
+    template:
+      query-timeout: 25
