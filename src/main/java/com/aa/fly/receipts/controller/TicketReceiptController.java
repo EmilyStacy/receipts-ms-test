@@ -3,11 +3,17 @@
  */
 package com.aa.fly.receipts.controller;
 
+import java.net.SocketTimeoutException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.UncategorizedSQLException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aa.ct.fly.logging.annotations.MSLogger;
@@ -41,6 +47,19 @@ public class TicketReceiptController {
 
     {
         return ticketReceiptService.findTicketReceipt(searchCriteria);
+    }
+
+    @ExceptionHandler({ UncategorizedSQLException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public final TicketReceipt uncategorizedSQLException(UncategorizedSQLException ex) {
+        TicketReceipt ticketReceipt = new TicketReceipt();
+        if(ex.getMessage() != null && ex.getMessage().contains("SocketTimeoutException")) {
+            ticketReceipt.setStatusMessage("QueryTimeout");
+        } else {
+            ticketReceipt.setStatusMessage("UncategorizedSQLException");
+        }
+
+        return ticketReceipt;
     }
 
 }

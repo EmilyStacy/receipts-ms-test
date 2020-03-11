@@ -10,4 +10,4 @@ mosaic:
 spring:
   jdbc:
     template:
-      query-timeout: 25
+      query-timeout: 30
