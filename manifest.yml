@@ -4,7 +4,7 @@ defaults: &defaults
   maximum_health_check_timeout: 180
   timeout: 180
   buildpacks: 
-  - java_buildpack_offline-4_14
+  - java_buildpack_offline
   memory: 1G
   instances: 1
   services:
