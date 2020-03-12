@@ -51,6 +51,14 @@ public class Tax {
         return taxAmount;
     }
 
+    public Double getTaxAmountDouble() {
+        Double tax = null;
+        if (this.taxAmount != null) {
+            tax = Double.valueOf(taxAmount);
+        }
+        return tax;
+    }
+
     public void setTaxAmount(String taxAmount) {
         this.taxAmount = taxAmount;
     }

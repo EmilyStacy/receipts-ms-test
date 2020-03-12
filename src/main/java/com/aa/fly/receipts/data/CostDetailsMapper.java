@@ -62,7 +62,24 @@ public class CostDetailsMapper {
             mapAnclry(rs, formOfPayments, anclryDocNums);
         }
         setShowPassengerTotal(passengerDetail);
+        handleZPTaxes(passengerDetail.getFareTaxesFees());
         return adjustTaxesWithOtherCurrencies(sumFopAmounts(passengerDetail));
+    }
+
+    protected void handleZPTaxes(FareTaxesFees fareTaxesFees) {
+        if (fareTaxesFees != null && fareTaxesFees.getTaxes() != null && !fareTaxesFees.getTaxes().isEmpty()){
+            Set<Tax> zpTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> "ZP".equals(tax.getTaxCode())).collect(Collectors.toSet()); //get all ZP tax line items
+            if (zpTaxes.size() > 2) {
+                Tax maxZPTaxLineItem = zpTaxes.stream().max(Comparator.comparing( Tax::getTaxAmountDouble)).get(); //get the line item with maximum tax amount
+                Double subTotal = zpTaxes.stream().filter(tax -> tax.getTaxCodeSequenceId() != maxZPTaxLineItem.getTaxCodeSequenceId()).mapToDouble(x -> x.getTaxAmountDouble()).sum(); //calculate the sum of remaining items
+                if (maxZPTaxLineItem.getTaxAmountDouble().equals(subTotal)) {
+                    //maxZPTaxLineItem is the subtotal item of all remaining ZPs. Keep the subtotal item and remove all ZP line items.
+                    Set<Tax> nonZPTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> !"ZP".equals(tax.getTaxCode())).collect(Collectors.toSet());
+                    fareTaxesFees.setTaxes(nonZPTaxes);
+                    fareTaxesFees.getTaxes().add(maxZPTaxLineItem);
+                }
+            }
+        }
     }
 
     private void setShowPassengerTotal(PassengerDetail passengerDetail) {

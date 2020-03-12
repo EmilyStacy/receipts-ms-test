@@ -235,19 +235,19 @@ public class CostDetailsMapperTest {
         assertThat(fops.get(1).getAncillaries()).contains(ancillary);
     }
 
-    @org.junit.Test
+    @Test
     public void adjustTaxesWithOtherCurrenciesWhenPassengerDetailIsNull() {
         PassengerDetail passengerDetail = null;
         assertThat(costDetailsMapper.adjustTaxesWithOtherCurrencies(passengerDetail)).isNull();
     }
 
-    @org.junit.Test
+    @Test
     public void adjustTaxesWithOtherCurrenciesWhenFareTaxFeesIsNull() {
         PassengerDetail passengerDetail = new PassengerDetail();
         assertThat(costDetailsMapper.adjustTaxesWithOtherCurrencies(passengerDetail)).isEqualTo(passengerDetail);
     }
 
-    @org.junit.Test
+    @Test
     public void testAdjustTaxesWithOtherCurrencies_oneCreditCardAsFop() {
         PassengerDetail passengerDetail = new PassengerDetail();
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
@@ -470,6 +470,46 @@ public class CostDetailsMapperTest {
         method.setAccessible(true);
         PassengerDetail returnValue = (PassengerDetail) method.invoke(costDetailsMapper, passengerDetail);
         assertThat(returnValue.getPassengerTotalAmount()).isEqualTo(passengerDetail.getPassengerTotalAmount());
+    }
+
+    @Test
+    public void handleZPTaxes_WithSubtotalItem() {
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.getTaxes().add(new Tax("1","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("2","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("3","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("4","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("5","ZP","U.S. SEGMENT TAX","","16.80","USD"));
+        costDetailsMapper.handleZPTaxes(fareTaxesFees);
+        assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void handleZPTaxes_WithoutSubtotalItem() {
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.getTaxes().add(new Tax("1","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("2","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("3","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("4","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        costDetailsMapper.handleZPTaxes(fareTaxesFees);
+        assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(4);
+    }
+
+    @Test
+    public void handleZPTaxes_WithoutOneZPItem() {
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.getTaxes().add(new Tax("1","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        costDetailsMapper.handleZPTaxes(fareTaxesFees);
+        assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void handleZPTaxes_WithoutTwoZPItems() {
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.getTaxes().add(new Tax("1","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("2","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        costDetailsMapper.handleZPTaxes(fareTaxesFees);
+        assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(2);
     }
 
     public Map<String, String> fopTypeMap() {
