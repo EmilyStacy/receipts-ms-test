@@ -60,10 +60,10 @@ public class CostDetailsMapperTest {
         Mockito.when(resultSet.getString("EQFN_FARE_CURR_TYPE_CD")).thenReturn("");
         Mockito.when(resultSet.getString("FARE_TDAM_AMT")).thenReturn("84930");
 
-        Mockito.when(resultSet.getString("TAX_CD_SEQ_ID")).thenReturn("1");
-        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XA");
-        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("450");
-        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("TAX_CD_SEQ_ID")).thenReturn("1").thenReturn("2").thenReturn("3");
+        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("ZP").thenReturn("ZP").thenReturn("ZP");
+        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("4.30").thenReturn("4.30").thenReturn("8.60");
+        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD2").thenReturn("USD2").thenReturn("USD2");
 
         Mockito.when(resultSet.getString("ANCLRY_DOC_NBR")).thenReturn("654200213");
         Mockito.when(resultSet.getString("ANCLRY_ISSUE_DT")).thenReturn("2019-11-07");
@@ -96,6 +96,8 @@ public class CostDetailsMapperTest {
         assertThat(fops.get(0).getFopAmount()).isEqualTo("2252.95");
         assertThat(fops.get(0).getFopCurrencyCode()).isEqualTo("USD");
         assertThat(fops.get(0).getFopTypeCode()).isEqualTo("CCBA");
+        assertThat(passengerDetail.getFareTaxesFees().getTaxFareAmount()).isEqualTo("72.56");
+        assertThat(passengerDetail.getFareTaxesFees().getTaxes().size()).isEqualTo(1);
 
         assertThat(fops.get(1).getAncillaries()).contains(ancillary);
     }
@@ -475,13 +477,15 @@ public class CostDetailsMapperTest {
     @Test
     public void handleZPTaxes_WithSubtotalItem() {
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        Tax subTotalZPLineItem = new Tax("5","ZP","U.S. SEGMENT TAX","","16.80","USD");
         fareTaxesFees.getTaxes().add(new Tax("1","ZP","U.S. SEGMENT TAX","","4.20","USD"));
         fareTaxesFees.getTaxes().add(new Tax("2","ZP","U.S. SEGMENT TAX","","4.20","USD"));
         fareTaxesFees.getTaxes().add(new Tax("3","ZP","U.S. SEGMENT TAX","","4.20","USD"));
         fareTaxesFees.getTaxes().add(new Tax("4","ZP","U.S. SEGMENT TAX","","4.20","USD"));
-        fareTaxesFees.getTaxes().add(new Tax("5","ZP","U.S. SEGMENT TAX","","16.80","USD"));
+        fareTaxesFees.getTaxes().add(subTotalZPLineItem);
         costDetailsMapper.handleZPTaxes(fareTaxesFees);
         assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(1);
+        assertThat(fareTaxesFees.getTaxes().contains(subTotalZPLineItem)).isTrue();
     }
 
     @Test
