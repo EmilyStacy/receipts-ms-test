@@ -1,15 +1,28 @@
 package com.aa.fly.receipts.data;
 
-import com.aa.fly.receipts.domain.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.aa.fly.receipts.domain.AmountAndCurrency;
+import com.aa.fly.receipts.domain.Ancillary;
+import com.aa.fly.receipts.domain.FareTaxesFees;
+import com.aa.fly.receipts.domain.FormOfPayment;
+import com.aa.fly.receipts.domain.FormOfPaymentKey;
+import com.aa.fly.receipts.domain.PassengerDetail;
+import com.aa.fly.receipts.domain.Tax;
+import com.aa.fly.receipts.exception.BulkTicketException;
 
 @Component
 public class CostDetailsMapper {
@@ -30,6 +43,7 @@ public class CostDetailsMapper {
     private static final String FOP_TYPE_CD = "FOP_TYPE_CD";
     private static final String ANCLRY_ISSUE_DT = "ANCLRY_ISSUE_DT";
     private static final String ANCLRY_PRICE_LCL_CURNCY_AMT = "ANCLRY_PRICE_LCL_CURNCY_AMT";
+    private static final String BULK_TICKET_CODE = "TCN_BULK_IND";
 
     public PassengerDetail mapCostDetails(SqlRowSet rs, PassengerDetail passengerDetail) {
         List<FormOfPayment> formOfPayments = new ArrayList<>();
@@ -37,9 +51,15 @@ public class CostDetailsMapper {
         FareTaxesFees fareTaxesFees = null;
         int rowCount = 0;
         Set<FormOfPaymentKey> fopKeys = new HashSet<>();
+
         while (rs.next()) {
             String fopSequenceId = StringUtils.isNotBlank(rs.getString("FOP_SEQ_ID")) ? rs.getString("FOP_SEQ_ID").trim() : "";
             String fopTypeCode = StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : null;
+
+            if (StringUtils.isNotBlank(rs.getString(BULK_TICKET_CODE))) {
+                throw new BulkTicketException("BulkTicket");
+            }
+
             FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(fopSequenceId, fopTypeCode);
 
             if (rowCount == 0) {
@@ -67,13 +87,14 @@ public class CostDetailsMapper {
     }
 
     protected void handleZPTaxes(FareTaxesFees fareTaxesFees) {
-        if (fareTaxesFees != null && fareTaxesFees.getTaxes() != null && !fareTaxesFees.getTaxes().isEmpty()){
-            Set<Tax> zpTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> "ZP".equals(tax.getTaxCode())).collect(Collectors.toSet()); //get all ZP tax line items
+        if (fareTaxesFees != null && fareTaxesFees.getTaxes() != null && !fareTaxesFees.getTaxes().isEmpty()) {
+            Set<Tax> zpTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> "ZP".equals(tax.getTaxCode())).collect(Collectors.toSet()); // get all ZP tax line items
             if (zpTaxes.size() > 2) {
-                Tax maxZPTaxLineItem = zpTaxes.stream().max(Comparator.comparing( Tax::getTaxAmountDouble)).get(); //get the line item with maximum tax amount
-                Double subTotal = zpTaxes.stream().filter(tax -> tax.getTaxCodeSequenceId() != maxZPTaxLineItem.getTaxCodeSequenceId()).mapToDouble(x -> x.getTaxAmountDouble()).sum(); //calculate the sum of remaining items
+                Tax maxZPTaxLineItem = zpTaxes.stream().max(Comparator.comparing(Tax::getTaxAmountDouble)).get(); // get the line item with maximum tax amount
+                Double subTotal = zpTaxes.stream().filter(tax -> tax.getTaxCodeSequenceId() != maxZPTaxLineItem.getTaxCodeSequenceId()).mapToDouble(x -> x.getTaxAmountDouble()).sum();
+
                 if (maxZPTaxLineItem.getTaxAmountDouble().equals(subTotal)) {
-                    //maxZPTaxLineItem is the subtotal item of all remaining ZPs. Keep the subtotal item and remove all ZP line items.
+                    // maxZPTaxLineItem is the subtotal item of all remaining ZPs. Keep the subtotal item and remove all ZP line items.
                     Set<Tax> nonZPTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> !"ZP".equals(tax.getTaxCode())).collect(Collectors.toSet());
                     fareTaxesFees.setTaxes(nonZPTaxes);
                     fareTaxesFees.getTaxes().add(maxZPTaxLineItem);
@@ -85,7 +106,8 @@ public class CostDetailsMapper {
     private void setShowPassengerTotal(PassengerDetail passengerDetail) {
         passengerDetail.setShowPassengerTotal(true);
         String baseFareCurrencyCode = passengerDetail.getFareTaxesFees().getBaseFareCurrencyCode();
-        passengerDetail.getFormOfPayments().forEach(formOfPayment -> formOfPayment.getAncillaries().stream().filter(ancillary -> ! baseFareCurrencyCode.equals(ancillary.getAnclryPriceCurrencyCode())).forEach(t -> passengerDetail.setShowPassengerTotal(false)));
+        passengerDetail.getFormOfPayments().forEach(formOfPayment -> formOfPayment.getAncillaries().stream().filter(ancillary -> !baseFareCurrencyCode.equals(ancillary.getAnclryPriceCurrencyCode()))
+                .forEach(t -> passengerDetail.setShowPassengerTotal(false)));
     }
 
     private PassengerDetail sumFopAmounts(PassengerDetail passengerDetail) {
@@ -94,14 +116,14 @@ public class CostDetailsMapper {
 
         BigDecimal passengerTotalAmount = new BigDecimal("0");
 
-        for (int i = 0; i < passengerDetail.getFormOfPayments().size() ;  i++) {
+        for (int i = 0; i < passengerDetail.getFormOfPayments().size(); i++) {
             final String fopAmount = passengerDetail.getFormOfPayments().get(i).getFopAmount();
-            if(fopAmount != null) {
+            if (fopAmount != null) {
                 passengerTotalAmount = passengerTotalAmount.add(new BigDecimal(fopAmount)).setScale(2, RoundingMode.CEILING);
             }
         }
 
-        //in case of even exchange, return totalFareAmount as passengerTotalAmount
+        // in case of even exchange, return totalFareAmount as passengerTotalAmount
         if (passengerTotalAmount.compareTo(BigDecimal.ZERO) == 0) {
             passengerTotalAmount = BigDecimal.valueOf(Double.valueOf(passengerDetail.getFareTaxesFees().getTotalFareAmount())).setScale(2, RoundingMode.CEILING);
         }
@@ -137,7 +159,8 @@ public class CostDetailsMapper {
     private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
         boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
         if (isExchange) {
-            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0).collect(Collectors.toList());
+            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
+                    .collect(Collectors.toList());
             formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
         }
 
@@ -182,7 +205,7 @@ public class CostDetailsMapper {
 
             ancillary.setAnclryProdName(anclryProdName);
 
-            if (anclryProdName != null && segDeptArprtCd!=null && segArvlArprtCd!=null) {
+            if (anclryProdName != null && segDeptArprtCd != null && segArvlArprtCd != null) {
                 ancillary.setAnclryProdName(anclryProdName + " (" + segDeptArprtCd + " - " + segArvlArprtCd + ")");
             }
 
@@ -272,9 +295,9 @@ public class CostDetailsMapper {
 
         Set<Tax> taxes = passengerDetail.getFareTaxesFees().getTaxes();
 
-        //XF tax amount always comes as USD, even though baseFareCurrency is not USD. If baseFareCurrencyCode is not USD, merge all XFs into one entry
-        //calculate the XF amount by adding the base fare, taxes with baseFareCurrency and subtract the amount from totalFare.
-        //We need to do this so all the line items add up to the total amount on the receipt.
+        // XF tax amount always comes as USD, even though baseFareCurrency is not USD. If baseFareCurrencyCode is not USD, merge all XFs into one entry
+        // calculate the XF amount by adding the base fare, taxes with baseFareCurrency and subtract the amount from totalFare.
+        // We need to do this so all the line items add up to the total amount on the receipt.
         long count = taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode()) && "XF".equalsIgnoreCase(t.getTaxCode())).count();
 
         if (count > 0) {

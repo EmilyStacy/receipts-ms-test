@@ -1,7 +1,6 @@
 package com.aa.fly.receipts.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.InvocationTargetException;
@@ -80,4 +79,6 @@ public class TicketReceiptServiceTest {
         method.invoke(ticketReceiptService, sc);
         assertThat(sc.getTicketNumber()).isEqualTo("0011234567890");
     }
+
+
 }

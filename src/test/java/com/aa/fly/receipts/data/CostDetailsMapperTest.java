@@ -2,6 +2,7 @@ package com.aa.fly.receipts.data;
 
 import com.aa.fly.receipts.config.AppConfig;
 import com.aa.fly.receipts.domain.*;
+import com.aa.fly.receipts.exception.BulkTicketException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,7 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -59,6 +59,7 @@ public class CostDetailsMapperTest {
         Mockito.when(resultSet.getString("EQFN_FARE_AMT")).thenReturn("0");
         Mockito.when(resultSet.getString("EQFN_FARE_CURR_TYPE_CD")).thenReturn("");
         Mockito.when(resultSet.getString("FARE_TDAM_AMT")).thenReturn("84930");
+        Mockito.when(resultSet.getString("rcptfare.TCN_BULK_IND")).thenReturn("    ");
 
         Mockito.when(resultSet.getString("TAX_CD_SEQ_ID")).thenReturn("1").thenReturn("2").thenReturn("3");
         Mockito.when(resultSet.getString("TAX_CD")).thenReturn("ZP").thenReturn("ZP").thenReturn("ZP");
@@ -102,6 +103,52 @@ public class CostDetailsMapperTest {
         assertThat(fops.get(1).getAncillaries()).contains(ancillary);
     }
 
+    @Test(expected = BulkTicketException.class)
+    public void findCostDetailsByTicketNumber_ShouldThrowExceptionWhenBulkTicket() throws ParseException {
+        PassengerDetail passengerDetail = new PassengerDetail();
+        Mockito.when(resultSet.next()).thenReturn(true, false);
+        Mockito.when(resultSet.getString("FOP_ACCT_NBR_LAST4")).thenReturn("0006");
+        Mockito.when(resultSet.getDate("FOP_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
+        Mockito.when(resultSet.getString("FOP_AMT")).thenReturn("225295");
+        Mockito.when(resultSet.getString("FOP_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("FOP_TYPE_CD")).thenReturn("CCBA");
+
+        Mockito.when(resultSet.getString("FNUM_FARE_AMT")).thenReturn("77674");
+        Mockito.when(resultSet.getString("FNUM_FARE_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("EQFN_FARE_AMT")).thenReturn("0");
+        Mockito.when(resultSet.getString("EQFN_FARE_CURR_TYPE_CD")).thenReturn("");
+        Mockito.when(resultSet.getString("FARE_TDAM_AMT")).thenReturn("84930");
+        Mockito.when(resultSet.getString("TCN_BULK_IND")).thenReturn(" BT ").thenReturn(" IT ").thenReturn("BT").thenReturn("IT").thenReturn("BULK");
+        Mockito.when(resultSet.getString("TAX_CD_SEQ_ID")).thenReturn("1");
+        Mockito.when(resultSet.getString("TAX_CD")).thenReturn("XA");
+        Mockito.when(resultSet.getString("TAX_AMT")).thenReturn("450");
+        Mockito.when(resultSet.getString("TAX_CURR_TYPE_CD")).thenReturn("USD2");
+
+        Mockito.when(resultSet.getString("ANCLRY_DOC_NBR")).thenReturn("654200213");
+        Mockito.when(resultSet.getString("ANCLRY_ISSUE_DT")).thenReturn("2019-11-07");
+        Mockito.when(resultSet.getString("ANCLRY_PROD_CD")).thenReturn("090");
+        Mockito.when(resultSet.getString("ANCLRY_PROD_NM")).thenReturn("MAIN CABIN EXTRA");
+        Mockito.when(resultSet.getString("SEG_DEPT_ARPRT_CD")).thenReturn("DFW");
+        Mockito.when(resultSet.getString("SEG_ARVL_ARPRT_CD")).thenReturn("BDL");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")).thenReturn("72.91");
+        Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_CD")).thenReturn("USD");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_AMT")).thenReturn("78.38");
+        Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_CD")).thenReturn("USD");
+
+        Mockito.when(resultSet.getString("ANCLRY_FOP_ACCT_NBR_LAST4")).thenReturn("1111");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_AMT")).thenReturn("53628");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_CURR_TYPE_CD")).thenReturn("USD2");
+        Mockito.when(resultSet.getString("ANCLRY_FOP_TYPE_CD")).thenReturn("CCBA");
+
+        Ancillary ancillary = new Ancillary("654200213", "2019-11-07", "090", "MAIN CABIN EXTRA (DFW - BDL)", "72.91", "USD", "78.38", "USD", "5.47");
+
+        costDetailsMapper.setFopTypeMap(new AppConfig().fopTypeMap());
+        Mockito.when(creditCardAliasRepository.getCreditCardAliasMap()).thenReturn(fopTypeMap());
+
+        costDetailsMapper.mapCostDetails(resultSet, passengerDetail);
+
+    }
+
     @Test
     public void testMapAnclry_VerifyProdNameWhenAirCodeIsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = costDetailsMapper.getClass().getDeclaredMethod("mapAnclry", SqlRowSet.class, List.class, Set.class);
@@ -120,6 +167,7 @@ public class CostDetailsMapperTest {
         Mockito.when(resultSet.getString("ANCLRY_PRICE_LCL_CURNCY_CD")).thenReturn("USD");
         Mockito.when(resultSet.getString("ANCLRY_SLS_CURNCY_CD")).thenReturn("USD");
         Mockito.when(resultSet.getString("ANCLRY_FOP_ACCT_NBR_LAST4")).thenReturn("3003");
+
         ArrayList<FormOfPayment> fopList = new ArrayList<>();
         costDetailsMapper.setFopTypeMap(new AppConfig().fopTypeMap());
         method.invoke(costDetailsMapper, resultSet, fopList, anclryDocNums);
@@ -128,6 +176,7 @@ public class CostDetailsMapperTest {
         assertEquals("MSR-OTHER NON TAXABLE", ancillary.getAnclryProdName());
 
     }
+
     @Test
     public void testMapAnclry_VerifyProdNameWhenAirCodeIsNOTNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = costDetailsMapper.getClass().getDeclaredMethod("mapAnclry", SqlRowSet.class, List.class, Set.class);
@@ -154,6 +203,7 @@ public class CostDetailsMapperTest {
         assertEquals("MSR-OTHER NON TAXABLE (DFW - PHX)", ancillary.getAnclryProdName());
 
     }
+
     @Test
     public void testMapAnclry_VerifyProdNameWhenONEAirCodeIsNOTNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Method method = costDetailsMapper.getClass().getDeclaredMethod("mapAnclry", SqlRowSet.class, List.class, Set.class);
@@ -180,6 +230,7 @@ public class CostDetailsMapperTest {
         assertEquals("MSR-OTHER NON TAXABLE", ancillary.getAnclryProdName());
 
     }
+
     @Test
     public void testMapCostDetailsForDifferentCurrencyCode() throws ParseException {
         PassengerDetail passengerDetail = new PassengerDetail();

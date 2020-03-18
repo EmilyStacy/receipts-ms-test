@@ -12,7 +12,7 @@ import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
 import com.aa.fly.receipts.service.TicketReceiptService;
-
+import com.aa.fly.receipts.exception.StatusMessage;
 /**
  * Created by 629874 on 5/9/2019.
  */
@@ -44,7 +44,7 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
                 ticketReceipt.getPassengerDetails().set(0, passengerDetail);
                 ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
             } catch (NoCostDetailsFoundException e) {
-                ticketReceipt.setStatusMessage("NoCostDetailsFound");
+                ticketReceipt.setStatusMessage(StatusMessage.NO_COST.getStatusMessage());
                 ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);
             }
         } else {

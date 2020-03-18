@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aa.ct.fly.logging.annotations.MSLogger;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.exception.BulkTicketException;
+import com.aa.fly.receipts.exception.StatusMessage;
 import com.aa.fly.receipts.service.TicketReceiptService;
-
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -45,6 +46,16 @@ public class TicketReceiptController {
 
     {
         return ticketReceiptService.findTicketReceipt(searchCriteria);
+    }
+
+    @ExceptionHandler({ BulkTicketException.class})
+    @ResponseStatus(HttpStatus.OK)
+    public final TicketReceipt throwBulkTicketException(BulkTicketException bulkTicket) {
+        TicketReceipt ticketReceipt = new TicketReceipt();
+
+        ticketReceipt.setStatusMessage(StatusMessage.BULK_TICKET.getStatusMessage());
+
+        return ticketReceipt;
     }
 
     @ExceptionHandler({ UncategorizedSQLException.class})

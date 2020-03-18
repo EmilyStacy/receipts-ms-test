@@ -104,3 +104,12 @@ Feature: Search with ticket number should return ticket receipt
     Examples:
       | scenario                                                    | ticketNumber   | lastName | firstName | departureDate  |    pnr    | statusMessage       |
       | Ticket having trip details but not cost details in mosaic   | 0012371661425  | Oneway   | Joseph    | 04/19/2020     |   EKAYXI  | NoCostDetailsFound  |
+
+#  Scenario Outline: Verify statusMessage when bulk ticket is found
+#    Given I want to retrieve a bulk ticket receipt for scenario "<scenario>"
+#    When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
+#    Then I get a response with bulk ticket found message pnr "<pnr>", statusMessage "<statusMessage>"
+#
+#    Examples:
+#      | scenario                                                    | ticketNumber   | lastName | firstName | departureDate  |    pnr    | statusMessage       |
+#      | Ticket having trip details but not cost details in mosaic   |   |    |     |      |     | BulkTicket  |

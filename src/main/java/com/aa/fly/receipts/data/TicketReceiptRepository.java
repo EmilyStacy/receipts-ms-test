@@ -121,6 +121,7 @@ public class TicketReceiptRepository {
                 .append("    , rcptfare.EQFN_FARE_AMT \n")
                 .append("    , rcptfare.EQFN_FARE_CURR_TYPE_CD \n")
                 .append("    , rcptfare.FARE_TDAM_AMT \n")
+                .append("    , rcptfare.TCN_BULK_IND \n")
 
                 .append("    , rcpttax.TAX_CD_SEQ_ID \n")
                 .append("    , rcpttax.TAX_CD \n")
