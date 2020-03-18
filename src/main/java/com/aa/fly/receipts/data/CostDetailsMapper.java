@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -90,14 +91,13 @@ public class CostDetailsMapper {
         if (fareTaxesFees != null && fareTaxesFees.getTaxes() != null && !fareTaxesFees.getTaxes().isEmpty()) {
             Set<Tax> zpTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> "ZP".equals(tax.getTaxCode())).collect(Collectors.toSet()); // get all ZP tax line items
             if (zpTaxes.size() > 2) {
-                Tax maxZPTaxLineItem = zpTaxes.stream().max(Comparator.comparing(Tax::getTaxAmountDouble)).get(); // get the line item with maximum tax amount
-                Double subTotal = zpTaxes.stream().filter(tax -> tax.getTaxCodeSequenceId() != maxZPTaxLineItem.getTaxCodeSequenceId()).mapToDouble(x -> x.getTaxAmountDouble()).sum();
-
-                if (maxZPTaxLineItem.getTaxAmountDouble().equals(subTotal)) {
-                    // maxZPTaxLineItem is the subtotal item of all remaining ZPs. Keep the subtotal item and remove all ZP line items.
+                Optional<Tax> maxZPTaxLineItem = zpTaxes.stream().max(Comparator.comparing( Tax::getTaxAmountDouble)); //get the line item with maximum tax amount
+                Double subTotal = zpTaxes.stream().filter(tax -> maxZPTaxLineItem.isPresent() && tax.getTaxCodeSequenceId() != maxZPTaxLineItem.get().getTaxCodeSequenceId()).mapToDouble(x -> x.getTaxAmountDouble()).sum(); //calculate the sum of remaining items
+                if (maxZPTaxLineItem.isPresent() && maxZPTaxLineItem.get().getTaxAmountDouble().equals(subTotal)) {
+                    //maxZPTaxLineItem is the subtotal item of all remaining ZPs. Keep the subtotal item and remove all ZP line items.
                     Set<Tax> nonZPTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> !"ZP".equals(tax.getTaxCode())).collect(Collectors.toSet());
                     fareTaxesFees.setTaxes(nonZPTaxes);
-                    fareTaxesFees.getTaxes().add(maxZPTaxLineItem);
+                    fareTaxesFees.getTaxes().add(maxZPTaxLineItem.get());
                 }
             }
         }
