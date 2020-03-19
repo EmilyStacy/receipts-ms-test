@@ -1,8 +1,22 @@
 package com.aa.fly.receipts.data;
 
-import com.aa.fly.receipts.config.AppConfig;
-import com.aa.fly.receipts.domain.*;
-import com.aa.fly.receipts.exception.BulkTicketException;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -11,17 +25,13 @@ import org.mockito.Mockito;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import com.aa.fly.receipts.config.AppConfig;
+import com.aa.fly.receipts.domain.Ancillary;
+import com.aa.fly.receipts.domain.FareTaxesFees;
+import com.aa.fly.receipts.domain.FormOfPayment;
+import com.aa.fly.receipts.domain.PassengerDetail;
+import com.aa.fly.receipts.domain.Tax;
+import com.aa.fly.receipts.exception.BulkTicketException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CostDetailsMapperTest {
@@ -528,11 +538,11 @@ public class CostDetailsMapperTest {
     @Test
     public void handleZPTaxes_WithSubtotalItem() {
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
-        Tax subTotalZPLineItem = new Tax("5","ZP","U.S. SEGMENT TAX","","16.80","USD");
-        fareTaxesFees.getTaxes().add(new Tax("1","ZP","U.S. SEGMENT TAX","","4.20","USD"));
-        fareTaxesFees.getTaxes().add(new Tax("2","ZP","U.S. SEGMENT TAX","","4.20","USD"));
-        fareTaxesFees.getTaxes().add(new Tax("3","ZP","U.S. SEGMENT TAX","","4.20","USD"));
-        fareTaxesFees.getTaxes().add(new Tax("4","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        Tax subTotalZPLineItem = new Tax("5", "ZP", "U.S. SEGMENT TAX", "", "16.80", "USD");
+        fareTaxesFees.getTaxes().add(new Tax("1", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
+        fareTaxesFees.getTaxes().add(new Tax("2", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
+        fareTaxesFees.getTaxes().add(new Tax("3", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
+        fareTaxesFees.getTaxes().add(new Tax("4", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
         fareTaxesFees.getTaxes().add(subTotalZPLineItem);
         costDetailsMapper.handleZPTaxes(fareTaxesFees);
         assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(1);
@@ -542,10 +552,10 @@ public class CostDetailsMapperTest {
     @Test
     public void handleZPTaxes_WithoutSubtotalItem() {
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
-        fareTaxesFees.getTaxes().add(new Tax("1","ZP","U.S. SEGMENT TAX","","4.20","USD"));
-        fareTaxesFees.getTaxes().add(new Tax("2","ZP","U.S. SEGMENT TAX","","4.20","USD"));
-        fareTaxesFees.getTaxes().add(new Tax("3","ZP","U.S. SEGMENT TAX","","4.20","USD"));
-        fareTaxesFees.getTaxes().add(new Tax("4","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("1", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
+        fareTaxesFees.getTaxes().add(new Tax("2", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
+        fareTaxesFees.getTaxes().add(new Tax("3", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
+        fareTaxesFees.getTaxes().add(new Tax("4", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
         costDetailsMapper.handleZPTaxes(fareTaxesFees);
         assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(4);
     }
@@ -553,7 +563,7 @@ public class CostDetailsMapperTest {
     @Test
     public void handleZPTaxes_WithoutOneZPItem() {
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
-        fareTaxesFees.getTaxes().add(new Tax("1","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("1", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
         costDetailsMapper.handleZPTaxes(fareTaxesFees);
         assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(1);
     }
@@ -561,8 +571,8 @@ public class CostDetailsMapperTest {
     @Test
     public void handleZPTaxes_WithoutTwoZPItems() {
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
-        fareTaxesFees.getTaxes().add(new Tax("1","ZP","U.S. SEGMENT TAX","","4.20","USD"));
-        fareTaxesFees.getTaxes().add(new Tax("2","ZP","U.S. SEGMENT TAX","","4.20","USD"));
+        fareTaxesFees.getTaxes().add(new Tax("1", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
+        fareTaxesFees.getTaxes().add(new Tax("2", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
         costDetailsMapper.handleZPTaxes(fareTaxesFees);
         assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(2);
     }

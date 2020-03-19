@@ -91,10 +91,11 @@ public class CostDetailsMapper {
         if (fareTaxesFees != null && fareTaxesFees.getTaxes() != null && !fareTaxesFees.getTaxes().isEmpty()) {
             Set<Tax> zpTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> "ZP".equals(tax.getTaxCode())).collect(Collectors.toSet()); // get all ZP tax line items
             if (zpTaxes.size() > 2) {
-                Optional<Tax> maxZPTaxLineItem = zpTaxes.stream().max(Comparator.comparing( Tax::getTaxAmountDouble)); //get the line item with maximum tax amount
-                Double subTotal = zpTaxes.stream().filter(tax -> maxZPTaxLineItem.isPresent() && tax.getTaxCodeSequenceId() != maxZPTaxLineItem.get().getTaxCodeSequenceId()).mapToDouble(x -> x.getTaxAmountDouble()).sum(); //calculate the sum of remaining items
+                Optional<Tax> maxZPTaxLineItem = zpTaxes.stream().max(Comparator.comparing(Tax::getTaxAmountDouble)); // get the line item with maximum tax amount
+                Double subTotal = zpTaxes.stream().filter(tax -> maxZPTaxLineItem.isPresent() && tax.getTaxCodeSequenceId() != maxZPTaxLineItem.get().getTaxCodeSequenceId())
+                        .mapToDouble(x -> x.getTaxAmountDouble()).sum(); // calculate the sum of remaining items
                 if (maxZPTaxLineItem.isPresent() && maxZPTaxLineItem.get().getTaxAmountDouble().equals(subTotal)) {
-                    //maxZPTaxLineItem is the subtotal item of all remaining ZPs. Keep the subtotal item and remove all ZP line items.
+                    // maxZPTaxLineItem is the subtotal item of all remaining ZPs. Keep the subtotal item and remove all ZP line items.
                     Set<Tax> nonZPTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> !"ZP".equals(tax.getTaxCode())).collect(Collectors.toSet());
                     fareTaxesFees.setTaxes(nonZPTaxes);
                     fareTaxesFees.getTaxes().add(maxZPTaxLineItem.get());
@@ -134,17 +135,17 @@ public class CostDetailsMapper {
 
     private void mapFormOfPayment(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
         FormOfPayment formOfPayment = new FormOfPayment();
-        formOfPayment.setFopAccountNumberLast4(StringUtils.isNotBlank(rs.getString("FOP_ACCT_NBR_LAST4")) ? rs.getString("FOP_ACCT_NBR_LAST4").trim() : null);
+        formOfPayment.setFopAccountNumberLast4(StringUtils.isNotBlank(rs.getString("FOP_ACCT_NBR_LAST4")) ? rs.getString("FOP_ACCT_NBR_LAST4").trim() : "");
         formOfPayment.setFopIssueDate(rs.getDate("FOP_ISSUE_DT"));
 
-        String fopAmount = StringUtils.isNotBlank(rs.getString("FOP_AMT")) ? rs.getString("FOP_AMT").trim() : null;
+        String fopAmount = StringUtils.isNotBlank(rs.getString("FOP_AMT")) ? rs.getString("FOP_AMT").trim() : "0";
         String fopCurrencyCode = StringUtils.isNotBlank(rs.getString("FOP_CURR_TYPE_CD")) ? rs.getString("FOP_CURR_TYPE_CD").trim() : "";
         AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency(fopAmount, fopCurrencyCode);
 
         formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
         formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
-        formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : null);
+        formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : "");
         formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(formOfPayment.getFopTypeCode(), formOfPayment.getFopAccountNumberLast4()));
 
         formOfPayments.add(formOfPayment);
@@ -169,17 +170,17 @@ public class CostDetailsMapper {
 
     private FormOfPayment mapAnclryFormOfPayment(SqlRowSet rs) {
         FormOfPayment formOfPayment = new FormOfPayment();
-        formOfPayment.setFopAccountNumberLast4(StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_ACCT_NBR_LAST4")) ? rs.getString("ANCLRY_FOP_ACCT_NBR_LAST4").trim() : null);
+        formOfPayment.setFopAccountNumberLast4(StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_ACCT_NBR_LAST4")) ? rs.getString("ANCLRY_FOP_ACCT_NBR_LAST4").trim() : "");
         formOfPayment.setFopIssueDate(rs.getDate(ANCLRY_ISSUE_DT));
 
-        String fopAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_AMT")) ? rs.getString("ANCLRY_FOP_AMT").trim() : null;
+        String fopAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_AMT")) ? rs.getString("ANCLRY_FOP_AMT").trim() : "0";
         String fopCurrencyCode = StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_CURR_TYPE_CD")) ? rs.getString("ANCLRY_FOP_CURR_TYPE_CD").trim() : "";
         AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency(fopAmount, fopCurrencyCode);
 
         formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
         formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
-        formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_TYPE_CD")) ? rs.getString("ANCLRY_FOP_TYPE_CD").trim() : null);
+        formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString("ANCLRY_FOP_TYPE_CD")) ? rs.getString("ANCLRY_FOP_TYPE_CD").trim() : "");
         formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(formOfPayment.getFopTypeCode(), formOfPayment.getFopAccountNumberLast4()));
 
         return formOfPayment;
@@ -197,27 +198,27 @@ public class CostDetailsMapper {
 
             ancillary = new Ancillary();
             ancillary.setAnclryDocNbr(anclryDocNbr);
-            ancillary.setAnclryIssueDate(StringUtils.isNotBlank(rs.getString(ANCLRY_ISSUE_DT)) ? rs.getString(ANCLRY_ISSUE_DT).trim() : null);
-            ancillary.setAnclryProdCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_CD")) ? rs.getString("ANCLRY_PROD_CD").trim() : null);
+            ancillary.setAnclryIssueDate(StringUtils.isNotBlank(rs.getString(ANCLRY_ISSUE_DT)) ? rs.getString(ANCLRY_ISSUE_DT).trim() : "");
+            ancillary.setAnclryProdCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_CD")) ? rs.getString("ANCLRY_PROD_CD").trim() : "");
             String anclryProdName = StringUtils.isNotBlank(rs.getString("ANCLRY_PROD_NM")) ? rs.getString("ANCLRY_PROD_NM").trim() : "???";
-            String segDeptArprtCd = StringUtils.isNotBlank(rs.getString("SEG_DEPT_ARPRT_CD")) ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : null;
-            String segArvlArprtCd = StringUtils.isNotBlank(rs.getString("SEG_ARVL_ARPRT_CD")) ? rs.getString("SEG_ARVL_ARPRT_CD").trim() : null;
+            String segDeptArprtCd = StringUtils.isNotBlank(rs.getString("SEG_DEPT_ARPRT_CD")) ? rs.getString("SEG_DEPT_ARPRT_CD").trim() : "";
+            String segArvlArprtCd = StringUtils.isNotBlank(rs.getString("SEG_ARVL_ARPRT_CD")) ? rs.getString("SEG_ARVL_ARPRT_CD").trim() : "";
 
             ancillary.setAnclryProdName(anclryProdName);
 
-            if (anclryProdName != null && segDeptArprtCd != null && segArvlArprtCd != null) {
+            if (StringUtils.isNotBlank(anclryProdName) && StringUtils.isNotBlank(segDeptArprtCd) && StringUtils.isNotBlank(segArvlArprtCd)) {
                 ancillary.setAnclryProdName(anclryProdName + " (" + segDeptArprtCd + " - " + segArvlArprtCd + ")");
             }
 
-            String anclryPriceCurrencyAmount = StringUtils.isNotBlank(rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT)) ? rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT).trim() : null;
-            ancillary.setAnclryPriceCurrencyAmount(StringUtils.isNotBlank(rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT)) ? rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT).trim() : null);
+            String anclryPriceCurrencyAmount = StringUtils.isNotBlank(rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT)) ? rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT).trim() : "0";
+            ancillary.setAnclryPriceCurrencyAmount(StringUtils.isNotBlank(rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT)) ? rs.getString(ANCLRY_PRICE_LCL_CURNCY_AMT).trim() : "0");
 
-            ancillary.setAnclryPriceCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD").trim() : null);
+            ancillary.setAnclryPriceCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD")) ? rs.getString("ANCLRY_PRICE_LCL_CURNCY_CD").trim() : "");
 
-            String anclrySalesCurrencyAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_SLS_CURNCY_AMT")) ? rs.getString("ANCLRY_SLS_CURNCY_AMT").trim() : null;
+            String anclrySalesCurrencyAmount = StringUtils.isNotBlank(rs.getString("ANCLRY_SLS_CURNCY_AMT")) ? rs.getString("ANCLRY_SLS_CURNCY_AMT").trim() : "0";
             ancillary.setAnclrySalesCurrencyAmount(anclrySalesCurrencyAmount);
 
-            ancillary.setAnclrySalesCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_SLS_CURNCY_CD")) ? rs.getString("ANCLRY_SLS_CURNCY_CD").trim() : null);
+            ancillary.setAnclrySalesCurrencyCode(StringUtils.isNotBlank(rs.getString("ANCLRY_SLS_CURNCY_CD")) ? rs.getString("ANCLRY_SLS_CURNCY_CD").trim() : "");
 
             BigDecimal anclryTaxCurrencyAmount = new BigDecimal(anclrySalesCurrencyAmount).subtract(new BigDecimal(anclryPriceCurrencyAmount)).setScale(2, RoundingMode.CEILING);
 
