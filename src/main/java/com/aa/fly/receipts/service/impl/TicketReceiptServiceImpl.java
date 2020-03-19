@@ -10,6 +10,7 @@ import com.aa.fly.receipts.data.TicketReceiptRepository;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.exception.BulkTicketException;
 import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
 import com.aa.fly.receipts.service.TicketReceiptService;
 import com.aa.fly.receipts.exception.StatusMessage;
@@ -45,6 +46,9 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
                 ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
             } catch (NoCostDetailsFoundException e) {
                 ticketReceipt.setStatusMessage(StatusMessage.NO_COST.getStatusMessage());
+                ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);
+            } catch( BulkTicketException e) {
+                ticketReceipt.setStatusMessage(StatusMessage.BULK_TICKET.getStatusMessage());
                 ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);
             }
         } else {

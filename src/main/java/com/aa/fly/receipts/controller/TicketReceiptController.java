@@ -48,15 +48,6 @@ public class TicketReceiptController {
         return ticketReceiptService.findTicketReceipt(searchCriteria);
     }
 
-    @ExceptionHandler({ BulkTicketException.class})
-    @ResponseStatus(HttpStatus.OK)
-    public final TicketReceipt throwBulkTicketException(BulkTicketException bulkTicket) {
-        TicketReceipt ticketReceipt = new TicketReceipt();
-
-        ticketReceipt.setStatusMessage(StatusMessage.BULK_TICKET.getStatusMessage());
-
-        return ticketReceipt;
-    }
 
     @ExceptionHandler({ UncategorizedSQLException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
