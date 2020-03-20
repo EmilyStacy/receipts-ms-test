@@ -315,24 +315,19 @@ public class CostDetailsMapper {
     }
 
     private String getFormOfPaymentDescription(String fopTypeCode, String last4) {
-        String description = fopTypeMap.get(fopTypeCode);
+        String description = "";
 
-        if (description == null) {
-            description = creditCardAliasRepository.getCreditCardAliasMap().get(fopTypeCode);
-        }
+        if (StringUtils.isNotBlank(fopTypeCode)) {
 
-        if (description == null) {
-            description = "Card";
-        }
-
-        if (null != fopTypeCode) {
-            if (fopTypeCode.startsWith("CA")) {
-                description = "Cash / Check";
-            } else if (fopTypeCode.startsWith("CC") && last4 != null) {
+            if (fopTypeCode.startsWith("CC") && StringUtils.isNotBlank(last4)) {
+                description = creditCardAliasRepository.getCreditCardAliasMap().get(fopTypeCode);
                 description = description + " ending in " + last4;
+
+            } else {
+                description = fopTypeMap.get(fopTypeCode);
             }
         }
 
-        return description;
+        return StringUtils.isBlank(description) ? "" : description;
     }
 }
