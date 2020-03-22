@@ -119,7 +119,8 @@ public class CostDetailsMapper {
 
         for (int i = 0; i < passengerDetail.getFormOfPayments().size(); i++) {
             final String fopAmount = passengerDetail.getFormOfPayments().get(i).getFopAmount();
-            if (fopAmount != null) {
+            final String fopCurrencyCode = passengerDetail.getFormOfPayments().get(i).getFopCurrencyCode();
+            if (fopAmount != null && !fopCurrencyCode.equalsIgnoreCase("X")) {
                 passengerTotalAmount = passengerTotalAmount.add(new BigDecimal(fopAmount)).setScale(2, RoundingMode.CEILING);
             }
         }
