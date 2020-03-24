@@ -561,7 +561,7 @@ public class CostDetailsMapperTest {
     }
 
     @Test
-    public void handleZPTaxes_WithoutOneZPItem() {
+    public void handleZPTaxes_WithOneZPItem() {
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
         fareTaxesFees.getTaxes().add(new Tax("1", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
         costDetailsMapper.handleZPTaxes(fareTaxesFees);
@@ -569,12 +569,12 @@ public class CostDetailsMapperTest {
     }
 
     @Test
-    public void handleZPTaxes_WithoutTwoZPItems() {
+    public void handleZPTaxes_WithTwoZPItems() {
         FareTaxesFees fareTaxesFees = new FareTaxesFees();
         fareTaxesFees.getTaxes().add(new Tax("1", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
         fareTaxesFees.getTaxes().add(new Tax("2", "ZP", "U.S. SEGMENT TAX", "", "4.20", "USD"));
         costDetailsMapper.handleZPTaxes(fareTaxesFees);
-        assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(2);
+        assertThat(fareTaxesFees.getTaxes().size()).isEqualTo(1);
     }
 
     public Map<String, String> fopTypeMap() {
