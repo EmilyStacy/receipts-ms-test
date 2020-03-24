@@ -90,7 +90,7 @@ public class CostDetailsMapper {
     protected void handleZPTaxes(FareTaxesFees fareTaxesFees) {
         if (fareTaxesFees != null && fareTaxesFees.getTaxes() != null && !fareTaxesFees.getTaxes().isEmpty()) {
             Set<Tax> zpTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> "ZP".equals(tax.getTaxCode())).collect(Collectors.toSet()); // get all ZP tax line items
-            if (zpTaxes.size() > 2) {
+            if (zpTaxes.size() > 1) {
                 Optional<Tax> maxZPTaxLineItem = zpTaxes.stream().max(Comparator.comparing(Tax::getTaxAmountDouble)); // get the line item with maximum tax amount
                 Double subTotal = zpTaxes.stream().filter(tax -> maxZPTaxLineItem.isPresent() && tax.getTaxCodeSequenceId() != maxZPTaxLineItem.get().getTaxCodeSequenceId())
                         .mapToDouble(x -> x.getTaxAmountDouble()).sum(); // calculate the sum of remaining items
