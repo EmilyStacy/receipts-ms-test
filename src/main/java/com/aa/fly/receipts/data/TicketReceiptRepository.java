@@ -59,7 +59,6 @@ public class TicketReceiptRepository {
                 .append("    odtktcpn.SEG_COUPON_STATUS_CD AS SEG_COUPON_STATUS_CD, ")
                 .append("    odtktcpn.SEG_ARVL_AIRPRT_IATA_CD AS SEG_ARVL_ARPRT_CD, ")
 
-
                 .append("    tktcpn.FLOWN_OPERAT_FLIGHT_NBR AS FLIGHT_NBR, ")
                 .append("    tktcpn.ACCT_FARE_CLASS_CD AS BOOKING_CLASS, ")
                 .append("    tktcpn.FARE_BASE_CD AS FARE_BASE, ")
@@ -86,6 +85,7 @@ public class TicketReceiptRepository {
                 .append("AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? ")
                 .append("AND UPPER(TRIM(tcust.PNR_PAX_LAST_NM)) = ? ")
                 .append("AND odtktcpn.OD_TYPE_CD = 'TRUE_OD' ")
+                .append("AND (frqtr.FREQ_TRAVLR_SEQ_NBR IS NULL OR frqtr.FREQ_TRAVLR_SEQ_NBR = 1) ") // Adding this ???
                 .append("ORDER BY odtktcpn.SEG_LOCAL_DEP_DT, odtktcpn.SEG_LOCAL_OUT_TM ")
                 .toString();
 
