@@ -44,6 +44,9 @@ public class FindZPTaxes extends SpringIntegrationSetup {
         FareTaxesFees fareTaxesFees = ticketReceipt.getPassengerDetails().get(0).getFareTaxesFees();
 
         String zpTax = fareTaxesFees.getTaxes().stream().filter(tax -> "ZP".equals(tax.getTaxCode())).collect(Collectors.toSet()).toString();
+        if (zpTax == null) {
+            zpTax = "";
+        }
 
         Assert.assertEquals(taxamount, fareTaxesFees.getTaxFareAmount());
         Assert.assertEquals(zpamount, zpTax);

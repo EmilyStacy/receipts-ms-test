@@ -63,12 +63,12 @@ Feature: Search with ticket number should return ticket receipt
   Scenario Outline: Verify Zps
     Given I want to retrieve ZP taxes details for scenario "<scenario>"
     When I search the passenger info with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
-    Then I get a successful response with the correct taxamount "<taxesamount>" and zpamount "<zpamount>"
+    Then I get a successful response with the correct taxamount "<taxesamount>" and zpamount "<zpstring>"
 
     Examples:
-      | scenario | ticketNumber  | lastName | firstName | departureDate | taxesamount | zpamount |
-      | Taxes-ZP | 0012372303346 | martin   | adam      | 11/08/2019    | 72.56       | 4.20     |
-
+      | scenario     | ticketNumber  | lastName | firstName | departureDate | taxesamount | zpstring                                                                                                                          |
+      | Taxes-one ZP | 0012372303346 | martin   | adam      | 11/08/2019    | 72.56       | Tax{taxCodeSequenceId='4', taxCode='ZP', taxDescription='U.S. SEGMENT TAX', cityCode='', taxAmount='4.20', taxCurrencyCode='USD'} |
+      | Taxes- no ZP | 0012372570843 | Southern | Flagship  | 12/09/2019    | 56.15       |                                                                                                                                   |
 
   Scenario Outline: Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt
 
