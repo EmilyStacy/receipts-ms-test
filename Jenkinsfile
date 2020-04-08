@@ -130,32 +130,6 @@ pipeline {
                   """
             }
         }
-/*
-        stage('integration tests') {
-            when {
-                // if it is a branch and not a PR
-                allOf {
-                    not {
-                        changeRequest()
-                    }
-                }
-            }
-            steps {
-                sh """
-                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://'${deployDevAppName}.${PCF_DEVTEST_DOMAIN}
-                  """
-
-                publishHTML target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: 'target/cucumberReport',
-                    reportFiles: 'index.html',
-                    reportName: 'Cucumber Rpt'
-                ]
-            }
-        }
-*/
         
 //        stage ('job:bff-e2e') {
 //            when {
@@ -184,7 +158,30 @@ pipeline {
                     ./devops/epaas/deploy.sh ${PCF_PRODP_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODP_DOMAIN} ${pcfAppName}-stage ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml ${PCF_GTM_DOMAIN}
                  """
             }
-                    }
+        }
+
+/*
+        stage('integration tests') {
+            when {
+                branch 'master'
+            }
+            
+            steps {
+                sh """
+                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://'${pcfAppName}-stage.${PCF_PRODP_DOMAIN}
+                  """
+
+                publishHTML target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'target/cucumberReport',
+                    reportFiles: 'index.html',
+                    reportName: 'Cucumber Rpt'
+                ]
+            }
+        }
+*/        
 
         stage('deploy prod') {
             when {
