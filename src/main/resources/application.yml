@@ -18,6 +18,15 @@ spring:
         expected99thPercentileMs: 0
         connectivityCheckTimeoutMs: 600000
 
+# Disabled actuator DB health check which sends [SELECT 1] to Teradata.
+management:
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+  health:
+    db:
+      enabled: false
+
 mosaic:
   inflight:
     schema:
@@ -34,10 +43,8 @@ logging:
   level:
     root: ERROR
     com.aa.fly.receipts: INFO
-    org.springframework.jdbc.core: TRACE
-    com.zaxxer.hikari.HikariConfig: DEBUG
-    com.zaxxer.hikari: DEBUG
-    com.teradata.jdbc: DEBUG
+    org.springframework.jdbc: TRACE
+    com.zaxxer.hikari: TRACE
 
   pattern:
     console: '%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger.%M %.36X{XTransactionID} - %msg%n'
