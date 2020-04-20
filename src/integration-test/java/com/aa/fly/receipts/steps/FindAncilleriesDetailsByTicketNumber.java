@@ -1,18 +1,16 @@
 package com.aa.fly.receipts.steps;
 
-import java.math.BigDecimal;
-
-import org.junit.Assert;
-import org.springframework.http.HttpStatus;
-
 import com.aa.fly.receipts.SpringIntegrationSetup;
 import com.aa.fly.receipts.domain.Ancillary;
 import com.aa.fly.receipts.domain.TicketReceipt;
-
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import gherkin.deps.com.google.gson.Gson;
 import gherkin.deps.com.google.gson.GsonBuilder;
+import org.junit.Assert;
+import org.springframework.http.HttpStatus;
+
+import java.math.BigDecimal;
 
 public class FindAncilleriesDetailsByTicketNumber extends SpringIntegrationSetup {
 
@@ -64,7 +62,7 @@ public class FindAncilleriesDetailsByTicketNumber extends SpringIntegrationSetup
         Assert.assertEquals(anclryTaxCurrencyAmount, ancillaries[0].getAnclryTaxCurrencyAmount());
     }
 
-    @Then("^I get a successful response with two ancillaries rowCount \"([^\"]*)\", fopAmt \"([^\"]*)\", passengerTotalAmount \"([^\"]*)\", anclryFOPAmt1 \"([^\"]*)\", anclryFOPAmt2 \"([^\"]*)\", anclryFOPIssueDate \"([^\"]*)\", anclryFOPTypeCode \"([^\"]*)\", anclryFOPAccountNumberLast4 \"([^\"]*)\", anclryDocNbr \"([^\"]*)\", anclryIssueDate \"([^\"]*)\", anclryPriceCurrencyAmount \"([^\"]*)\", anclrySalesCurrencyAmount \"([^\"]*)\", anclryTaxCurrencyAmount \"([^\"]*)\"$")
+    @Then("^I get a successful response with three ancillaries rowCount \"([^\"]*)\", fopAmt \"([^\"]*)\", passengerTotalAmount \"([^\"]*)\", anclryFOPAmt1 \"([^\"]*)\", anclryFOPAmt2 \"([^\"]*)\", anclryFOPIssueDate \"([^\"]*)\", anclryFOPTypeCode \"([^\"]*)\", anclryFOPAccountNumberLast4 \"([^\"]*)\", anclryDocNbr \"([^\"]*)\", anclryIssueDate \"([^\"]*)\", anclryPriceCurrencyAmount \"([^\"]*)\", anclrySalesCurrencyAmount \"([^\"]*)\", anclryTaxCurrencyAmount \"([^\"]*)\"$")
     public void i_get_a_successful_response_with_two_ancillaries_rowCount_fopAmt_totalFareAmount_passengerTotalAmount_anclryDocNbr_anclryIssueDate_anclryPriceCurrencyAmount_anclrySalesCurrencyAmount_anclryTaxCurrencyAmount(
             String rowCount, String fopAmt, String passengerTotalAmount, String anclryFOPAmt1, String anclryFOPAmt2, String anclryFOPIssueDate, String anclryFOPTypeCode,
             String anclryFOPAccountNumberLast4, String anclryDocNbr, String anclryIssueDate, String anclryPriceCurrencyAmount,
@@ -78,9 +76,13 @@ public class FindAncilleriesDetailsByTicketNumber extends SpringIntegrationSetup
         Assert.assertEquals(Integer.parseInt(rowCount), ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
         Assert.assertEquals(new BigDecimal(passengerTotalAmount), new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount())
                 .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(1).getFopAmount()))
-                .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(2).getFopAmount())));
+                .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(2).getFopAmount()))
+                .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(3).getFopAmount()))
+        );
 
         //Ancillary ancillary = new Ancillary(anclryDocNbr, "", null, "", "", "", "", "", "");
         //Assert.assertTrue(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(1).getAncillaries().contains(ancillary));
     }
+
 }
+
