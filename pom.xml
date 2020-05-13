@@ -46,7 +46,13 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
         </dependency>
-
+        
+		<dependency>
+		 <groupId>org.springframework.boot</groupId>
+		 <artifactId>spring-boot-configuration-processor</artifactId>
+		 <optional>true</optional>
+		</dependency>
+  
         <dependency>
             <groupId>com.teradata.jdbc</groupId>
             <artifactId>tdgssconfig</artifactId>
@@ -136,7 +142,12 @@
             <artifactId>logging-lib</artifactId>
             <version>${logging-lib-version}</version>
         </dependency>
-        
+
+        <dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-configuration-processor</artifactId>
+        	<optional>true</optional>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

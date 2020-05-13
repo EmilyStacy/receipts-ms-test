@@ -23,5 +23,6 @@ applications:
   services:
     - mosaic-receipts
     - splunk-drains
-    
+    - mosaic-receipts-wifi
+        
     

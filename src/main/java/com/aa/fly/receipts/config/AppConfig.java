@@ -3,9 +3,16 @@ package com.aa.fly.receipts.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -36,5 +43,29 @@ public class AppConfig implements WebMvcConfigurer {
         fopTypeMap.put("EF", "Exchange");
         fopTypeMap.put("EX", "Exchange");
         return fopTypeMap;
+    }
+
+    @Primary
+    @Bean(name = "ticketReceipts")
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource dataSourceTicketReceipts() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Primary
+    @Bean(name = "jdbcTemplateTicketReceipts")
+    public JdbcTemplate jdbcTemplateTicketReceipts(@Qualifier("ticketReceipts") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Bean(name = "wifi")
+    @ConfigurationProperties(prefix = "spring.datasource-wifi")
+    public DataSource dataSourceWifi() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "jdbcTemplateWifi")
+    public JdbcTemplate jdbcTemplateWifi(@Qualifier("wifi") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 }

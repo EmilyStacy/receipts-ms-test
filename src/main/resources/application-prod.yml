@@ -1,8 +1,7 @@
 mosaic:
   inflight:
     schema:
-      name: CERT_INFLIGHT_SRVCS_VW
-      #name: PROD_INFLIGHT_SRVCS_VW
+      name: PROD_INFLIGHT_SRVCS_VW
   ticket:
     schema:
       name: PROD_TCN_RECPT_VW

@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.teradata.jdbc.TeraDriver
-    url: '${vcap.services.mosaic-receipts.credentials.uri:jdbc:teradata://EDTDP.aa.com/}'
+    jdbcUrl: '${vcap.services.mosaic-receipts.credentials.uri:jdbc:teradata://EDTDP.aa.com/}'
     username: ${vcap.services.mosaic-receipts.credentials.username}
     password: '${vcap.services.mosaic-receipts.credentials.password}'
 
@@ -17,6 +17,12 @@ spring:
       health-check-properties:
         expected99thPercentileMs: 0
         connectivityCheckTimeoutMs: 600000
+
+  datasource-wifi:
+    driver-class-name: com.teradata.jdbc.TeraDriver
+    jdbcUrl: '${vcap.services.mosaic-receipts-wifi.credentials.uri:jdbc:teradata://EDTDC.aa.com/}'
+    username: ${vcap.services.mosaic-receipts-wifi.credentials.username}
+    password: '${vcap.services.mosaic-receipts-wifi.credentials.password}'
 
 # Disabled actuator DB health check which sends [SELECT 1] to Teradata.
 management:

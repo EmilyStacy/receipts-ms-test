@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,7 @@ import com.aa.fly.receipts.domain.WifiSearchCriteria;
 public class WifiReceiptRepository {
 
     @Autowired
+    @Qualifier("jdbcTemplateWifi")
     private JdbcTemplate jdbcTemplate;
 
     @Value("${mosaic.inflight.schema.name:CERT_INFLIGHT_SRVCS_VW}")
@@ -58,6 +60,7 @@ public class WifiReceiptRepository {
                 .append("UPPER(rim.CARD_HLDR_LAST_NM) = ? ")
                 .append("AND gogo.PURCHS_TMS BETWEEN To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') AND To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') ")
                 .append("AND rim.CREDIT_CARD_LAST_4_NBR = ? ")
+                .append("AND rim.AUTHRZ_APRVL_IND = 'Y' ")
                 .append("ORDER BY PURCHS_DT").toString();
 
         List<WifiLineItem> wifiLineItems = jdbcTemplate.query(sql, new WifiLineItemMapper(), lastName, fromDate,
