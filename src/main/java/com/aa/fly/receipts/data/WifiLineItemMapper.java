@@ -19,7 +19,7 @@ public class WifiLineItemMapper implements RowMapper<WifiLineItem> {
         lineItem.setLastName(
                 rs.getString("CARD_HLDR_LAST_NM") != null ? rs.getString("CARD_HLDR_LAST_NM").trim() : null);
         lineItem.setNetPrice(rs.getString("NET_PRICE"));
-        lineItem.setOrderId(rs.getString("SUBSCR_ORDER_ID"));
+        lineItem.setOrderId(rs.getString("SUBSCR_ORDER_LINE_UID"));
         lineItem.setProductName(rs.getString("PROD_NM") != null ? rs.getString("PROD_NM").trim() : null);
         lineItem.setProductPrice(rs.getString("PROD_PRICE"));
         lineItem.setPurchaseDate(rs.getDate("PURCHS_DT"));

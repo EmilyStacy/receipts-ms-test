@@ -40,7 +40,8 @@ public class WifiReceiptRepository {
 
         // New sql joins to RiM Auth to get last 4 CC
         String sql = new StringBuilder("SELECT ")
-                .append("    gogo.SUBSCR_ORDER_ID, ")
+                //.append("    gogo.SUBSCR_ORDER_ID, ")
+                .append("    gogo.SUBSCR_ORDER_LINE_UID, ")
                 .append("    CAST(gogo.PURCHS_TMS AS DATE) PURCHS_DT, ")
                 .append("    gogo.PROD_NM, ")
                 .append("    gogo.PROD_PRICE, ")

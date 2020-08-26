@@ -34,7 +34,7 @@ public class WifiLineItemMapperTest {
         Mockito.when(resultSet.getString("CURNCY_CD")).thenReturn("USD");
         Mockito.when(resultSet.getString("CARD_HLDR_LAST_NM")).thenReturn("LAST");
         Mockito.when(resultSet.getString("NET_PRICE")).thenReturn("11.00");
-        Mockito.when(resultSet.getString("SUBSCR_ORDER_ID")).thenReturn("123");
+        Mockito.when(resultSet.getString("SUBSCR_ORDER_LINE_UID")).thenReturn("123");
         Mockito.when(resultSet.getString("PROD_NM")).thenReturn("WIFI SUBSCRIPTION");
         Mockito.when(resultSet.getString("PROD_PRICE")).thenReturn("10.00");
         Mockito.when(resultSet.getDate("PURCHS_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-01-01").getTime()));
@@ -62,7 +62,7 @@ public class WifiLineItemMapperTest {
         Mockito.when(resultSet.getString("CURNCY_CD")).thenReturn(null);
         Mockito.when(resultSet.getString("CARD_HLDR_LAST_NM")).thenReturn(null);
         Mockito.when(resultSet.getString("NET_PRICE")).thenReturn("11.00");
-        Mockito.when(resultSet.getString("SUBSCR_ORDER_ID")).thenReturn("123");
+        Mockito.when(resultSet.getString("SUBSCR_ORDER_LINE_UID")).thenReturn("123");
         Mockito.when(resultSet.getString("PROD_NM")).thenReturn(null);
         Mockito.when(resultSet.getString("PROD_PRICE")).thenReturn("10.00");
         Mockito.when(resultSet.getDate("PURCHS_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-01-01").getTime()));
