@@ -20,7 +20,7 @@ spring:
 
   datasource-wifi:
     driver-class-name: com.teradata.jdbc.TeraDriver
-    jdbcUrl: '${vcap.services.mosaic-receipts-wifi.credentials.uri:jdbc:teradata://EDTDC.aa.com/}'
+    jdbcUrl: '${vcap.services.mosaic-receipts-wifi.credentials.uri:jdbc:teradata://EDTDP.aa.com/}'
     username: ${vcap.services.mosaic-receipts-wifi.credentials.username}
     password: '${vcap.services.mosaic-receipts-wifi.credentials.password}'
 
@@ -36,7 +36,7 @@ management:
 mosaic:
   inflight:
     schema:
-      name: CERT_INFLIGHT_SRVCS_VW
+      name: PROD_INFLIGHT_SRVCS_VW
   ticket:
     schema:
       name: PROD_TCN_RECPT_VW

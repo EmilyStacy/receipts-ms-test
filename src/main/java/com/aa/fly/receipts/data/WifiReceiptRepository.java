@@ -61,8 +61,9 @@ public class WifiReceiptRepository {
                 .append("AND gogo.PURCHS_TMS BETWEEN To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') AND To_Timestamp(?, 'MM/DD/YYYY HH24:MI:SS') ")
                 .append("AND rim.CREDIT_CARD_LAST_4_NBR = ? ")
                 .append("AND rim.AUTHRZ_APRVL_IND = 'Y' ")
+                .append("AND gogo.INFO_SRC_TYPE_CD = 'ASP' ")
                 .append("ORDER BY PURCHS_DT").toString();
-
+        
         List<WifiLineItem> wifiLineItems = jdbcTemplate.query(sql, new WifiLineItemMapper(), lastName, fromDate,
                 endDate, ccLastFour);
         WifiReceipt wifiReceipt = new WifiReceipt();
