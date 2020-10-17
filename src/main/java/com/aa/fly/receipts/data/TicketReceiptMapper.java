@@ -20,6 +20,8 @@ public class TicketReceiptMapper {
 
         TicketReceipt ticketReceipt = new TicketReceipt();
         int rowCount = 0;
+        String lastFlightNbr = "";
+        String currFlightNbr = null;
 
         while (rs.next()) {
             if (rowCount == 0) {
@@ -29,7 +31,7 @@ public class TicketReceiptMapper {
                 ticketReceipt.setOriginAirport(airportService.getAirport(StringUtils.isNotBlank(rs.getString("ORG_ATO_CD")) ? rs.getString("ORG_ATO_CD").trim() : null));
                 ticketReceipt.setDestinationAirport(airportService.getAirport(StringUtils.isNotBlank(rs.getString("DEST_ATO_CD")) ? rs.getString("DEST_ATO_CD").trim() : null));
                 ticketReceipt.setPnr(rs.getString("PNR"));
-
+                		
                 PassengerDetail passengerDetail = new PassengerDetail();
                 passengerDetail.setTicketNumber(rs.getString("TICKET_NBR"));
                 passengerDetail.setFirstName(rs.getString("FIRST_NM"));
@@ -40,7 +42,13 @@ public class TicketReceiptMapper {
                 ticketReceipt.getPassengerDetails().add(passengerDetail);
             }
 
-            ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));
+            currFlightNbr = StringUtils.isNotBlank(rs.getString("FLIGHT_NBR")) ? rs.getString("FLIGHT_NBR").trim() : null;
+
+            if (lastFlightNbr != null && !lastFlightNbr.equalsIgnoreCase(currFlightNbr))
+            {
+                ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));
+                lastFlightNbr = currFlightNbr;
+            }
             rowCount++;
         }
         return ticketReceipt;
