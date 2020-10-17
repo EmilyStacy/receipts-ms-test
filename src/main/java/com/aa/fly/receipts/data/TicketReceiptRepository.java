@@ -31,66 +31,81 @@ public class TicketReceiptRepository {
     private CostDetailsMapper costDetailsMapper;
 
     public TicketReceipt findTicketReceiptByTicketNumber(SearchCriteria criteria) {
+        String ticketNumberSc = criteria.getTicketNumber().trim();
+        String ticketNumber = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
         String lastName = criteria.getLastName().toUpperCase().trim();
         String firstName = criteria.getFirstName().toUpperCase().trim() + '%';
         String departureDate = criteria.getDepartureDate();
-        String ticketNumberSc = criteria.getTicketNumber().trim();
-        String ticketNumber = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
 
-        String sql = new StringBuilder("SELECT ")
+        String sql = new StringBuilder("\nSELECT ")
                 // ================= header ==============================
-                .append("    odtkt.OD_TICKET_AIRLN_ACCT_CD AS AIRLN_ACCT_CD, ")
-                .append("    odtkt.OD_TICKET_NBR AS TICKET_NBR, ")
-                .append("    odtkt.OD_TICKET_ISSUE_DT AS TICKET_ISSUE_DT, ")
-                .append("    odtkt.OD_LOCAL_DEP_DT AS DEP_DT, ")
-                .append("    tcust.PNR_PAX_FIRST_NM AS FIRST_NM, ")
-                .append("    tcust.PNR_PAX_LAST_NM AS LAST_NM, ")
-                .append("    odtkt.OD_ORIGIN_AIRPRT_IATA_CD AS ORG_ATO_CD, ")
-                .append("    odtkt.OD_DESTNTN_AIRPRT_IATA_CD AS DEST_ATO_CD, ")
-                .append("    tkt.PNR_LOCTR_ID AS PNR, ")
-                .append("    frqtr.LYLTY_ACCT_ID AS AADVANT_NBR, ")
-                .append("    frqtr.LYLTY_PGM_OWN_CD AS LYLTY_OWN_CD,")
+                .append("    AIRLN_ACCT_CD, \n")
+                .append("    TICKET_NBR, \n")
+                .append("    TICKET_ISSUE_DT, \n")
+                .append("    DEP_DT, \n")
+                .append("    FIRST_NM, \n")
+                .append("    LAST_NM, \n")
+                .append("    ORG_ATO_CD, \n")
+                .append("    DEST_ATO_CD, \n")
+                .append("    PNR, \n")
+                .append("    AADVANT_NBR, \n")
+                .append("    LYLTY_OWN_CD, \n")
                 // =================== trip details =======================
-                .append("    odtktcpn.SEG_LOCAL_DEP_DT AS SEG_DEPT_DT, ")
-                .append("    odtktcpn.SEG_LOCAL_OUT_TM AS SEG_DEPT_TM, ")
-                .append("    odtktcpn.SEG_DEP_AIRPRT_IATA_CD AS SEG_DEPT_ARPRT_CD, ")
-                .append("    odtktcpn.SEG_LOCAL_ARVL_DT AS SEG_ARVL_DT, ")
-                .append("    odtktcpn.SEG_LOCAL_IN_TM AS SEG_ARVL_TM, ")
-                .append("    odtktcpn.SEG_COUPON_STATUS_CD AS SEG_COUPON_STATUS_CD, ")
-                .append("    odtktcpn.SEG_ARVL_AIRPRT_IATA_CD AS SEG_ARVL_ARPRT_CD, ")
-
-                .append("    tktcpn.FLOWN_OPERAT_FLIGHT_NBR AS FLIGHT_NBR, ")
-                .append("    tktcpn.ACCT_FARE_CLASS_CD AS BOOKING_CLASS, ")
-                .append("    tktcpn.FARE_BASE_CD AS FARE_BASE, ")
-                .append("    odtktcpn.OD_TICKET_COUPON_SEQ_NBR AS COUPON_SEQ_NBR, ")
-                .append("    odtktcpn.OPERAT_AIRLN_IATA_CD AS SEG_OPERAT_CARRIER_CD ")
-                .append("FROM ").append(ticketSchemaName).append(".OD_TICKET odtkt ")
-                .append(JOIN).append(ticketSchemaName).append(".TICKET_CUSTOMER tcust ")
-                .append("ON odtkt.OD_TICKET_NBR = tcust.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = tcust.TICKET_ISSUE_DT ")
-                .append(JOIN).append(ticketSchemaName).append(".TICKET tkt ")
-                .append("ON odtkt.OD_TICKET_NBR = tkt.TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = tkt.TICKET_ISSUE_DT ")
-                .append(JOIN).append(ticketSchemaName).append(".OD_TICKET_TRAVEL_COUPON odtktcpn ")
-                .append("ON odtkt.OD_TICKET_NBR = odtktcpn.OD_TICKET_NBR AND odtkt.OD_TICKET_ISSUE_DT = odtktcpn.OD_TICKET_ISSUE_DT ")
-                .append(JOIN).append(ticketSchemaName).append(".TICKET_COUPON tktcpn ")
-                .append("ON odtktcpn.OD_TICKET_NBR = tktcpn.TICKET_NBR AND odtktcpn.OD_TICKET_ISSUE_DT = tktcpn.TICKET_ISSUE_DT ")
-                .append("AND odtktcpn.SEG_LOCAL_DEP_DT = tktcpn.SEG_DEP_DT AND odtktcpn.SEG_LOCAL_OUT_TM = tktcpn.SEG_DEP_TM ")
-                .append("LEFT JOIN  ").append(ticketSchemaName).append(".PNR_FREQ_TRAVLR frqtr ")
-                .append("ON tcust.PNR_ORIGNL_ID = frqtr.PNR_LOCTR_ID AND tcust.PNR_ORIGNL_CREATE_DT = frqtr.PNR_CREATE_DT ")
-                .append("AND tcust.PARTY_ID = frqtr.PARTY_ID ")
-                .append("WHERE ")
-                .append("tkt.TICKET_NBR = ? ")
-                .append("AND odtkt.OD_SRC_SYS_CD = 'VCR' ")
-                .append("AND odtkt.OD_TYPE_CD = 'TRUE_OD' ")
-                .append("AND odtkt.OD_LOCAL_DEP_DT = to_date(?, 'MM/DD/YYYY') ")
-                .append("AND UPPER(TRIM(tcust.PNR_PAX_FIRST_NM)) LIKE ? ")
-                .append("AND UPPER(TRIM(tcust.PNR_PAX_LAST_NM)) = ? ")
-                .append("AND odtktcpn.OD_TYPE_CD = 'TRUE_OD' ")
-                .append("AND (frqtr.FREQ_TRAVLR_SEQ_NBR IS NULL OR frqtr.FREQ_TRAVLR_SEQ_NBR = 1) ")
-                .append("ORDER BY odtktcpn.SEG_LOCAL_DEP_DT, odtktcpn.SEG_LOCAL_OUT_TM ")
+                .append("    SEG_DEPT_DT, \n")
+                .append("    SEG_DEPT_TM, \n")
+                .append("    SEG_DEPT_ARPRT_CD, \n")
+                .append("    SEG_ARVL_DT, \n")
+                .append("    SEG_ARVL_TM, \n")
+                .append("    SEG_ARVL_ARPRT_CD, \n")
+                .append("    SEG_COUPON_STATUS_CD, \n")
+                .append("    SEG_OPERAT_CARRIER_CD, \n")
+                .append("    FLIGHT_NBR, \n")
+                .append("    BOOKING_CLASS, \n")
+                .append("    FARE_BASE, \n")
+                .append("    COUPON_SEQ_NBR, \n")
+                // =================== cost - fop =======================
+                .append("    FOP_ISSUE_DT, \n")
+                .append("    FOP_TYPE_CD, \n")
+                .append("    FOP_AMT, \n")
+                .append("    FOP_SEQ_ID, \n")
+                .append("    FOP_ACCT_NBR_LAST4, \n")
+                .append("    FOP_CURR_TYPE_CD, \n")
+                // =================== cost - fare =======================
+                .append("    FNUM_FARE_AMT, \n")
+                .append("    FNUM_FARE_CURR_TYPE_CD, \n")
+                .append("    EQFN_FARE_AMT, \n")
+                .append("    EQFN_FARE_CURR_TYPE_CD, \n")
+                .append("    FARE_TDAM_AMT, \n")
+                .append("    TCN_BULK_IND, \n")
+                // =================== cost - tax =======================
+                .append("    TAX_CD_SEQ_ID, \n")
+                .append("    TAX_CD, \n")
+                .append("    CITY_CD, \n")
+                .append("    TAX_AMT, \n")
+                .append("    TAX_CURR_TYPE_CD, \n")
+                // =================== cost - ancillary =======================
+                .append("    ANCLRY_DOC_NBR, \n")
+                .append("    ANCLRY_ISSUE_DT, \n")
+                .append("    ANCLRY_PROD_CD, \n")
+                .append("    ANCLRY_PROD_NM, \n")
+                .append("    ANCLRY_PRICE_LCL_CURNCY_AMT, \n")
+                .append("    ANCLRY_PRICE_LCL_CURNCY_CD, \n")
+                .append("    ANCLRY_SLS_CURNCY_AMT, \n")
+                .append("    ANCLRY_SLS_CURNCY_CD, \n")
+                .append("    ANCLRY_FOP_AMT, \n")
+                .append("    ANCLRY_FOP_TYPE_CD, \n")
+                .append("    ANCLRY_FOP_ACCT_NBR_LAST4, \n")
+                .append("    ANCLRY_FOP_CURR_TYPE_CD \n")
+                .append("FROM ").append( ticketSchemaName ).append(".TCN_CUST_RCPT \n")
+                .append("WHERE \n")
+                .append("TICKET_NBR = ? \n")
+                .append("AND DEP_DT = to_date(?, 'MM/DD/YYYY') \n")
+                .append("AND UPPER(TRIM(FIRST_NM)) LIKE ? \n")
+                .append("AND UPPER(TRIM(LAST_NM)) = ? \n")
+                .append("ORDER BY SEG_DEPT_DT, SEG_DEPT_TM, FOP_SEQ_ID, TAX_CD_SEQ_ID \n")
                 .toString();
-
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate,
-                firstName, lastName);
+        
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate, firstName, lastName);
         return ticketReceiptMapper.mapTicketReceipt(sqlRowSet);
     }
 
