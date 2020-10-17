@@ -13,6 +13,8 @@ import com.aa.fly.receipts.service.AirportService;
 @Component
 public class TicketReceiptMapper {
 
+	private static final String FLIGHT_NBR = "FLIGHT_NBR";
+	
     @Autowired
     private AirportService airportService;
 
@@ -42,7 +44,7 @@ public class TicketReceiptMapper {
                 ticketReceipt.getPassengerDetails().add(passengerDetail);
             }
 
-            currFlightNbr = StringUtils.isNotBlank(rs.getString("FLIGHT_NBR")) ? rs.getString("FLIGHT_NBR").trim() : null;
+            currFlightNbr = StringUtils.isNotBlank(rs.getString(FLIGHT_NBR)) ? rs.getString(FLIGHT_NBR).trim() : null;
 
             if (lastFlightNbr != null && !lastFlightNbr.equalsIgnoreCase(currFlightNbr))
             {
@@ -64,7 +66,7 @@ public class TicketReceiptMapper {
         segmentDetail.setSegmentStatus(StringUtils.isNotBlank(rs.getString("SEG_COUPON_STATUS_CD")) ? rs.getString("SEG_COUPON_STATUS_CD").trim() : "");
         segmentDetail.setSegmentArrivalTime(rs.getString("SEG_ARVL_TM"));
         segmentDetail.setCarrierCode(StringUtils.isNotBlank(rs.getString("SEG_OPERAT_CARRIER_CD")) ? rs.getString("SEG_OPERAT_CARRIER_CD").trim() : null);
-        segmentDetail.setFlightNumber(StringUtils.isNotBlank(rs.getString("FLIGHT_NBR")) ? rs.getString("FLIGHT_NBR").trim() : null);
+        segmentDetail.setFlightNumber(StringUtils.isNotBlank(rs.getString(FLIGHT_NBR)) ? rs.getString(FLIGHT_NBR).trim() : null);
         segmentDetail.setBookingClass(StringUtils.isNotBlank(rs.getString("BOOKING_CLASS")) ? rs.getString("BOOKING_CLASS").trim() : null);
         segmentDetail.setFareBasis(StringUtils.isNotBlank(rs.getString("FARE_BASE")) ? rs.getString("FARE_BASE").trim() : null);
         segmentDetail.setReturnTrip(StringUtils.isNotBlank(rs.getString("COUPON_SEQ_NBR")) && ("1").equals(rs.getString("COUPON_SEQ_NBR")) && rowCount != 0 ? "true" : "false");
