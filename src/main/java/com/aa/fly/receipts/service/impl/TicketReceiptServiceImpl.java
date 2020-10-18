@@ -22,8 +22,6 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
     @Autowired
     private TicketReceiptRepository repository;
 
-    private static final String AIRLINE_CODE = "001";
-
     @Override
     public ResponseEntity<TicketReceipt> findTicketReceipt(SearchCriteria criteria) {
 
