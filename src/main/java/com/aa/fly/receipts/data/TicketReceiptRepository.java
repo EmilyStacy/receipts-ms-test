@@ -16,8 +16,6 @@ import com.aa.fly.receipts.domain.TicketReceipt;
 @Transactional(readOnly = true)
 public class TicketReceiptRepository {
 
-    public static final String JOIN = "JOIN ";
-    public static final String LEFT_JOIN = "LEFT JOIN ";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
