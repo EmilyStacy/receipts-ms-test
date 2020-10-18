@@ -31,8 +31,7 @@ public class TicketReceiptRepository {
     private CostDetailsMapper costDetailsMapper;
 
     public TicketReceipt findTicketReceiptByTicketNumber(SearchCriteria criteria) {
-        String ticketNumberSc = criteria.getTicketNumber().trim();
-        String ticketNumber = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
+        String ticketNumber = criteria.getTicketNumber();
         String lastName = criteria.getLastName().toUpperCase().trim();
         String firstName = criteria.getFirstName().toUpperCase().trim() + '%';
         String departureDate = criteria.getDepartureDate();

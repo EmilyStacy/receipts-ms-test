@@ -42,8 +42,6 @@ public class TicketReceiptRepositoryTest {
     public void findTicketReceiptByTicketNumber() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
         TicketReceipt ticketReceipt = ReceiptsMSDomainTest.getTicketReceipt();
-        List<TicketReceipt> ticketReceiptList = new ArrayList<>();
-        ticketReceiptList.add(ticketReceipt);
         when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(resultSet);
         when(ticketReceiptMapper.mapTicketReceipt(resultSet))
