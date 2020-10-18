@@ -24,7 +24,7 @@ public class AddHeadersInterceptorTest {
     public void preHandleAllNumeric() throws Exception {
         AddHeadersInterceptor interceptor = new AddHeadersInterceptor();
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addHeader("X-Transaction-ID", "1234-1234-1234-1234");
+        request.addHeader("X-Transaction-ID", "1234-1234-1234-1234-0000");
 
         HttpServletResponse response = new MockHttpServletResponse();
         interceptor.preHandle(request, response, null);
