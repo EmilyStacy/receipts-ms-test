@@ -56,7 +56,7 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
     private void verifyTicketAirlineCode(SearchCriteria criteria) {
         String ticketNumberSc = criteria.getTicketNumber().trim();
         String ticketNumberLast10 = (ticketNumberSc.length() == 13) ? ticketNumberSc.substring(3) : ticketNumberSc;
-        criteria.setTicketNumber(AIRLINE_CODE.concat(ticketNumberLast10));
+        criteria.setTicketNumber(ticketNumberLast10);
     }
 
 }

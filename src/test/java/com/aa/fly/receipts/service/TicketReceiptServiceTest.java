@@ -42,9 +42,9 @@ public class TicketReceiptServiceTest {
     }
 
     @Test
-    public void testCriteriaTicketNumberNull() throws ParseException {
+    public void testCriteriaTicketNumber10Chars() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
-        criteria.setTicketNumber("");
+        criteria.setTicketNumber("1234567890");
         TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria).getBody();
         assertThat(actualReceipt).isNull();
     }
@@ -58,7 +58,7 @@ public class TicketReceiptServiceTest {
         method.setAccessible(true);
 
         method.invoke(ticketReceiptService, sc);
-        assertThat(sc.getTicketNumber()).isEqualTo("0011234567890");
+        assertThat(sc.getTicketNumber()).isEqualTo("1234567890");
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TicketReceiptServiceTest {
         method.setAccessible(true);
 
         method.invoke(ticketReceiptService, sc);
-        assertThat(sc.getTicketNumber()).isEqualTo("0011234567890");
+        assertThat(sc.getTicketNumber()).isEqualTo("1234567890");
     }
 
 
