@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -48,5 +49,16 @@ public class TicketReceiptRepositoryTest {
                 .thenReturn(ticketReceipt);
         assertEquals("MRYMPT", receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
         assertEquals("USED", receiptRepository.findTicketReceiptByTicketNumber(criteria).getSegmentDetails().get(0).getSegmentStatus());
+    }
+
+    @Test
+    public void findTicketReceiptByTicketNumberDataNotFound() throws ParseException {
+        SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString()))
+                .thenReturn(resultSet);
+        when(ticketReceiptMapper.mapTicketReceipt(resultSet))
+                .thenReturn(null);
+        assertNull(receiptRepository.findTicketReceiptByTicketNumber(criteria));
+        assertNull(receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
     }
 }
