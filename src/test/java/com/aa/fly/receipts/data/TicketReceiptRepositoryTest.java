@@ -59,6 +59,5 @@ public class TicketReceiptRepositoryTest {
         when(ticketReceiptMapper.mapTicketReceipt(resultSet))
                 .thenReturn(null);
         assertNull(receiptRepository.findTicketReceiptByTicketNumber(criteria));
-        assertNull(receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
     }
 }
