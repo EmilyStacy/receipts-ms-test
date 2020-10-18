@@ -42,6 +42,14 @@ public class TicketReceiptServiceTest {
     }
 
     @Test
+    public void testCriteriaTicketNumberNull() throws ParseException {
+        SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
+        criteria.setTicketNumber("");
+        TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria).getBody();
+        assertThat(actualReceipt).isNull();
+    }
+
+    @Test
     public void verifyTicketAirlineCode_validAirlineCode() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         SearchCriteria sc = new SearchCriteria();
         sc.setTicketNumber("0011234567890");

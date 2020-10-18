@@ -108,7 +108,7 @@ public class TicketReceiptRepository {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate, firstName, lastName);
         TicketReceipt ticketReceipt = ticketReceiptMapper.mapTicketReceipt(sqlRowSet);
 
-        if (StringUtils.hasText(ticketReceipt.getPnr())) {
+        if (ticketReceipt != null && StringUtils.hasText(ticketReceipt.getPnr())) {
             sqlRowSet.beforeFirst();
             PassengerDetail passengerDetail = costDetailsMapper.mapCostDetails(sqlRowSet, ticketReceipt.getPassengerDetails().get(0));
             ticketReceipt.getPassengerDetails().set(0, passengerDetail);        	

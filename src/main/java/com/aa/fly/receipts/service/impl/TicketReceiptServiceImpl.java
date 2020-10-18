@@ -36,7 +36,7 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
             try {
                 ticketReceipt = repository.findTicketReceiptByTicketNumber(criteria);
                 
-                if (StringUtils.hasText(ticketReceipt.getPnr())) {
+                if (ticketReceipt != null && StringUtils.hasText(ticketReceipt.getPnr())) {
                     ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
                 } else {
                     ticketReceiptResponse = ResponseEntity.status(HttpStatus.NO_CONTENT).body(ticketReceipt);             	
