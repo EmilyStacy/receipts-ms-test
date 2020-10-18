@@ -153,8 +153,6 @@ public class TicketReceiptMapperTest {
         assertThat(item.getSegmentDetails().get(0).getSegmentStatus()).isEqualTo("");
     }
 
-
-
     public Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {
         Airport airport = new Airport();
         airport.setCode(code);
@@ -165,5 +163,4 @@ public class TicketReceiptMapperTest {
         airport.setStateCode(state);
         return airport;
     }
-
 }

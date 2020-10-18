@@ -45,6 +45,7 @@ public class CostDetailsMapper {
     private static final String ANCLRY_ISSUE_DT = "ANCLRY_ISSUE_DT";
     private static final String ANCLRY_PRICE_LCL_CURNCY_AMT = "ANCLRY_PRICE_LCL_CURNCY_AMT";
     private static final String BULK_TICKET_CODE = "TCN_BULK_IND";
+	private static final String FLIGHT_NBR = "FLIGHT_NBR";
 
     public PassengerDetail mapCostDetails(SqlRowSet rs, PassengerDetail passengerDetail) {
         List<FormOfPayment> formOfPayments = new ArrayList<>();
@@ -52,35 +53,47 @@ public class CostDetailsMapper {
         FareTaxesFees fareTaxesFees = null;
         int rowCount = 0;
         Set<FormOfPaymentKey> fopKeys = new HashSet<>();
+        String lastFlightNbr = null;
+        String currFlightNbr = null;
 
         while (rs.next()) {
-            String fopSequenceId = StringUtils.isNotBlank(rs.getString("FOP_SEQ_ID")) ? rs.getString("FOP_SEQ_ID").trim() : "";
-            String fopTypeCode = StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : null;
-
-            if (StringUtils.isNotBlank(rs.getString(BULK_TICKET_CODE))) {
-                throw new BulkTicketException("BulkTicket");
-            }
-
-            FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(fopSequenceId, fopTypeCode);
-
             if (rowCount == 0) {
-                mapFormOfPayment(rs, formOfPayments);
-                fareTaxesFees = mapFareTaxAndFees(rs);
-                passengerDetail.setFareTaxesFees(fareTaxesFees);
-            } else {
-
-                if (!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
-                    mapFormOfPayment(rs, formOfPayments);
-                    formOfPayments = adjustFormOfPaymentsIfExchanged(formOfPayments);
-                }
-                fareTaxesFees.getTaxes().add(mapTax(rs, fareTaxesFees.getBaseFareCurrencyCode()));
+            	lastFlightNbr = StringUtils.isNotBlank(rs.getString(FLIGHT_NBR)) ? rs.getString(FLIGHT_NBR).trim() : null;
             }
-
-            passengerDetail.setFormOfPayments(formOfPayments);
-            fopKeys.add(formOfPaymentKey);
-            rowCount++;
-
-            mapAnclry(rs, formOfPayments, anclryDocNums);
+            currFlightNbr = StringUtils.isNotBlank(rs.getString(FLIGHT_NBR)) ? rs.getString(FLIGHT_NBR).trim() : null;
+            
+            if (lastFlightNbr != null && lastFlightNbr.equalsIgnoreCase(currFlightNbr)) {
+            
+	            String fopSequenceId = StringUtils.isNotBlank(rs.getString("FOP_SEQ_ID")) ? rs.getString("FOP_SEQ_ID").trim() : "";
+	            String fopTypeCode = StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : null;
+	
+	            if (StringUtils.isNotBlank(rs.getString(BULK_TICKET_CODE))) {
+	                throw new BulkTicketException("BulkTicket");
+	            }
+	
+	            FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(fopSequenceId, fopTypeCode);
+	
+	            if (rowCount == 0) {
+	                mapFormOfPayment(rs, formOfPayments);
+	                fareTaxesFees = mapFareTaxAndFees(rs);
+	                passengerDetail.setFareTaxesFees(fareTaxesFees);
+	            } else {
+	
+	                if (!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
+	                    mapFormOfPayment(rs, formOfPayments);
+	                    formOfPayments = adjustFormOfPaymentsIfExchanged(formOfPayments);
+	                }
+	                fareTaxesFees.getTaxes().add(mapTax(rs, fareTaxesFees.getBaseFareCurrencyCode()));
+	            }
+	
+	            passengerDetail.setFormOfPayments(formOfPayments);
+	            fopKeys.add(formOfPaymentKey);
+	            rowCount++;
+	
+	            mapAnclry(rs, formOfPayments, anclryDocNums);
+            } else {
+            	break;
+            }
         }
         setShowPassengerTotal(passengerDetail);
         handleZPTaxes(passengerDetail.getFareTaxesFees());

@@ -26,6 +26,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aa.fly.receipts.config.AppConfig;
+import com.aa.fly.receipts.domain.AmountAndCurrency;
 import com.aa.fly.receipts.domain.Ancillary;
 import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
@@ -58,6 +59,7 @@ public class CostDetailsMapperTest {
         PassengerDetail passengerDetail = new PassengerDetail();
 
         Mockito.when(resultSet.next()).thenReturn(true, false);
+        Mockito.when(resultSet.getString("FLIGHT_NBR")).thenReturn("1112");
         Mockito.when(resultSet.getString("FOP_ACCT_NBR_LAST4")).thenReturn("0006");
         Mockito.when(resultSet.getDate("FOP_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
         Mockito.when(resultSet.getString("FOP_AMT")).thenReturn("225295");
@@ -113,10 +115,11 @@ public class CostDetailsMapperTest {
         assertThat(fops.get(1).getAncillaries()).contains(ancillary);
     }
 
-    @Test(expected = BulkTicketException.class)
+    @Test(expected = BulkTicketException.class) //
     public void findCostDetailsByTicketNumber_ShouldThrowExceptionWhenBulkTicket() throws ParseException {
         PassengerDetail passengerDetail = new PassengerDetail();
         Mockito.when(resultSet.next()).thenReturn(true, false);
+        Mockito.when(resultSet.getString("FLIGHT_NBR")).thenReturn("1112");
         Mockito.when(resultSet.getString("FOP_ACCT_NBR_LAST4")).thenReturn("0006");
         Mockito.when(resultSet.getDate("FOP_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
         Mockito.when(resultSet.getString("FOP_AMT")).thenReturn("225295");
@@ -156,7 +159,6 @@ public class CostDetailsMapperTest {
         Mockito.when(creditCardAliasRepository.getCreditCardAliasMap()).thenReturn(fopTypeMap());
 
         costDetailsMapper.mapCostDetails(resultSet, passengerDetail);
-
     }
 
     @Test
@@ -184,7 +186,6 @@ public class CostDetailsMapperTest {
         FormOfPayment returnFop = fopList.get(0);
         Ancillary ancillary = returnFop.getAncillaries().stream().filter(a -> a.getAnclryProdName() != null).findAny().orElse(null);
         assertEquals("MSR-OTHER NON TAXABLE", ancillary.getAnclryProdName());
-
     }
 
     @Test
@@ -246,6 +247,7 @@ public class CostDetailsMapperTest {
         PassengerDetail passengerDetail = new PassengerDetail();
 
         Mockito.when(resultSet.next()).thenReturn(true, false);
+        Mockito.when(resultSet.getString("FLIGHT_NBR")).thenReturn("1112");
         Mockito.when(resultSet.getString("FOP_ACCT_NBR_LAST4")).thenReturn("0006");
         Mockito.when(resultSet.getDate("FOP_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse("2019-03-14").getTime()));
         Mockito.when(resultSet.getString("FOP_AMT")).thenReturn("225295");
