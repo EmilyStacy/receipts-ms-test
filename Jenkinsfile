@@ -160,7 +160,6 @@ pipeline {
             }
         }
 
-/*
         stage('integration tests') {
             when {
                 branch 'master'
@@ -181,7 +180,6 @@ pipeline {
                 ]
             }
         }
-*/        
 
         stage('deploy prod') {
             when {
