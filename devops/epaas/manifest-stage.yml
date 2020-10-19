@@ -1,6 +1,5 @@
 applications:
-  buildpacks:
-  - java_buildpack_offline
+- buildpack: java_buildpack_offline
   memory: 1G
   timeout: 180
   instances: 1
