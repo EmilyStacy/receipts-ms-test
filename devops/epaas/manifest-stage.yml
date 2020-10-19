@@ -20,6 +20,11 @@ applications:
       -Dhttp.proxyPort=9093
       -Dhttps.proxyHost=inetgw.aa.com
       -Dhttps.proxyPort=9093
+      # Potential future AA proxy settings
+      #-Dhttp.proxyHost=server-inet.aa.com
+      #-Dhttp.proxyPort=9096
+      #-Dhttps.proxyHost=server-inet.aa.com
+      #-Dhttps.proxyPort=9096
   services:
     - mosaic-receipts
     - splunk-drains
