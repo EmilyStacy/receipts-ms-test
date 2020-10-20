@@ -1,5 +1,7 @@
 package com.aa.fly.receipts.interceptor;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,8 +20,15 @@ public class AddHeadersInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        MDC.put("XTransactionID", request.getHeader(X_TRANSACTION_ID));
-        response.addHeader(X_TRANSACTION_ID, request.getHeader(X_TRANSACTION_ID));
+        String xTransactionIdValue = request.getHeader(X_TRANSACTION_ID);
+
+        // Allow only alphanumeric characters and dashes
+        if (!xTransactionIdValue.matches("[a-zA-Z0-9\\-]++")) {
+            throw new IOException();
+        }
+
+        MDC.put("XTransactionID", xTransactionIdValue);
+        response.addHeader(X_TRANSACTION_ID, xTransactionIdValue);
         return true;
     }
 }
