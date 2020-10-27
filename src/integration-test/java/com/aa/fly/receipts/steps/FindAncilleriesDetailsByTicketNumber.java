@@ -109,15 +109,15 @@ public class FindAncilleriesDetailsByTicketNumber extends SpringIntegrationSetup
     }
 
 
-    @Then("^I get a successful response with ancillaries and fop details fopIssueDate \"([^\"]*)\", fopTypeCode \"([^\"]*)\",  fopTypeDescription \"([^\"]*)\",  fopAccountNumberLastFour \"([^\"]*)\", fopAmount \"([^\"]*)\", fopCurrencyCode \"([^\"]*)\" and fopsize \"([^\"]*)\"$")
+    @Then("^I get a successful response with ancillaries and fop details fopIssueDate \"([^\"]*)\", fopTypeCode \"([^\"]*)\",  fopTypeDescription \"([^\"]*)\",  fopAccountNumberLastFour \"([^\"]*)\", fopAmount \"([^\"]*)\", fopCurrencyCode \"([^\"]*)\" and fopIndex \"([^\"]*)\"$")
     public void i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(String fopIssueDate, String fopTypeCode,
-                                                                                                                                                                            String fopTypeDescription, String fopAccountNumberLastFour, String fopAmount, String fopCurrencyCode, int fopsize) throws Throwable {
+                                                                                                                                                                            String fopTypeDescription, String fopAccountNumberLastFour, String fopAmount, String fopCurrencyCode, int fopIndex) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
 
         Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
-        FormOfPayment fop = ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(fopsize);
+        FormOfPayment fop = ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(fopIndex);
         Assert.assertEquals(fopIssueDate, dateFormat.format(fop.getFopIssueDate()));
         Assert.assertEquals(fopTypeCode, fop.getFopTypeCode());
         Assert.assertEquals(fopTypeDescription, fop.getFopTypeDescription());
@@ -147,7 +147,7 @@ public class FindAncilleriesDetailsByTicketNumber extends SpringIntegrationSetup
     }
 
     @Then("^I get a successful response with invalid airline code rowCount \"([^\"]*)\"")
-    public void i_get_a_successful_response_with_invalid_airline_code(String rowCount ) throws Throwable {
+    public void i_get_a_successful_response_with_invalid_airline_code(String rowCount) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
     }
