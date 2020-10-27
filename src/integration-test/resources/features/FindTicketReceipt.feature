@@ -159,4 +159,4 @@ Feature: Search with ticket number should return ticket receipt
     Then I get a successful response with invalid airline code rowCount "<rowCount>"
     Examples:
       | scenario             | ticketNumber  | lastName | firstName | departureDate | rowCount |
-      | Invalid airline code | 0012132820896 | ADAMS    | PAUL      | 08/13/2020    | 3        |
+      | Invalid airline code | 0022132820896 | ADAMS    | PAUL      | 08/13/2020    | 3        |
