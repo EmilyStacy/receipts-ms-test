@@ -32,7 +32,7 @@ public class TicketReceiptMapper {
                 ticketReceipt.setDepartureDate(rs.getDate("DEP_DT"));
                 ticketReceipt.setOriginAirport(airportService.getAirport(StringUtils.isNotBlank(rs.getString("ORG_ATO_CD")) ? rs.getString("ORG_ATO_CD").trim() : null));
                 ticketReceipt.setDestinationAirport(airportService.getAirport(StringUtils.isNotBlank(rs.getString("DEST_ATO_CD")) ? rs.getString("DEST_ATO_CD").trim() : null));
-                ticketReceipt.setPnr(rs.getString("PNR"));
+                ticketReceipt.setPnr(rs.getString("PNR").trim());
                 		
                 PassengerDetail passengerDetail = new PassengerDetail();
                 passengerDetail.setTicketNumber(rs.getString("TICKET_NBR"));
