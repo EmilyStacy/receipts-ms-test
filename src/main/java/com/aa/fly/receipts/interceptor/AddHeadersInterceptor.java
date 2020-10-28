@@ -20,12 +20,12 @@ public class AddHeadersInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-    	String xTransactionIdValue = request.getHeader(X_TRANSACTION_ID);
-    	
-		// Allow only alphanumeric characters and dashes
-		if (!xTransactionIdValue.matches("[a-zA-Z0-9\\-]++")) {
-			throw new IOException();
-		}
+        String xTransactionIdValue = request.getHeader(X_TRANSACTION_ID);
+
+        // Allow only alphanumeric characters and dashes
+        if (!xTransactionIdValue.matches("[a-zA-Z0-9\\-]++")) {
+            throw new IOException();
+        }
 
         MDC.put("XTransactionID", xTransactionIdValue);
         response.addHeader(X_TRANSACTION_ID, xTransactionIdValue);
