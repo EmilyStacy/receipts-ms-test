@@ -13,59 +13,58 @@
    ![process flow](images/CloudMS.PNG)
   
 - ## Application configuration files
+   (Configured to always connect to Mosaic production for data retrieval)
    - **src/main/resources/application.yml**
    - **src/main/resources/application-prod.yml** 
 
 - ## Running the application locally
-  ### - Always connects to Mosaic production for data retrieval
   ### - VPN is needed
-  ### - Plug prodFunctonalId and prodFunctonalIdPassword into application.yml temporarily at below locations. Ask other developers for the values.
+  ### - Plug actual values for prodFunctonalId and prodFunctonalIdPassword below into application.yml temporarily. Ask other developers for the values.
   - spring.datasource.username: prodFunctonalId
   - spring.datasource.password: prodFunctonalIdPassword
 	    
-  ##### Open - src\main\java\com\aa\etds\receiptsmailer\ReceiptsMailerApplication.java and run ReceiptsMailerApplication class in appropriate mode (run/debug)
+  ### Navigate to src\main\java\com\aa\fly\receipts and start ReceiptsApplication class in appropriate mode (run/debug).
+  #### (Observing the IDE console for any unexpected error(s))
 
-  - #### Important notes while running application locally:-
-    - ###### While running application locally, we dont want to update PNR, send email to actual customer and send to error queue. Following steps are needed to achieve this,
-      1) pnrUpdateManager.updatePNR and errorQueueClient.queuePlace function call should be commented in
-         **src\main\java\com\aa\etds\receiptsmailer\service\impl\ReceiptMailerServiceImpl.java**.
-         
-      2) Set your email in **src\main\java\com\aa\etds\receiptsmailer\mapper\ReprintMapper.java** file. For example -
-         reprint.setEmailAddress("sandesh.neupane@aa.com"), so that your will get email for validation and testing.
-         
-      3) Install and Open RabbitMQ in web browser (url:- http://localhost:15672/)  and use username and password as follows:-
-         username- "guest"
-         password- "guest"
-         - GoTo Queues tab
-         - Click on local-reprint-listener queue (If this queue is not available, re-run ReceiptsMailerMS application and try again.)
-         - Add payload in payload section and hit publish message button.
+- ## Submit requests to local running app
+  - Once the app runs correctly locally it will be listening on localhost:8093 (unless server.port changed in application.yaml) 
+  - Use any local tool capable of sending requests to a restful end point. Sample took like Postman or ReadyAPI should all work with below request,
+  	#### - End point: localhost:8093
+  	#### - Method: POST
+  	#### - Header: X-Transaction-Id=0123456789
+  	#### - Body (raw):
+			{
+			    "ticketNumber": "0012398358969",
+			    "firstName": "ANTHONY",
+			    "lastName": "CARINGI",
+			    "departureDate": "02/10/2020"
+			}  	
+     
+- ## Automated Testing - can run within IDE or command prompt. For command prompt,
+  ### How to run the unit test suite
+  
+    - **mvn test**
+    - Local test results can be checked by opening index.html with browser at 
+      project foler/target/site/jacoco/index.html
 
-- ## Debugging points
-  - **src\main\java\com\aa\etds\receiptsmailer\service\impl\ReceiptMailerServiceImpl.java** will be starting point to debug this application.
+  ### How to run integration test
+    - **mvn verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url="http://localhost:8094"**
+      
+      (Be sure to start the app locally first)
+      (-Dcucumber.options='--tags @TicketAndFees' allows only running features and/or scenarios with the tag, all scenarios will run when omitted the argument)
+      
+    - Local test results can be checked by opening index.html with browser at 
+      project foler/target/cucumberReport/index.html
 
-- ## Automated Testing
-
-  - #### How to run the unit test suite
-    - **mvn test** - command can be used to run unit tests
-
-  - #### How to validate results
-    - **mvn validate** - command can be used to, validate the project is correct and all necessary information is available
-
-  - #### How to run integration test
-    - We are working to automate integration test. Currently, integration test can be run through CucumberIT class.
-      - path: **src\test\java\com\aa\etds\receiptsmailer\integration\test\CucumberIT.java**
-
-- ## Sonarqube
-  - Code quality, warnings and test coverage for each files can be found in Sonarqube.
-     - link:- https://sonarqube.aa.com/dashboard?id=TR.receipts-mailer-ms
+- ## SonarQube
+  - Code quality, warnings and test coverage for each files can be found in SonarQube.
+     - link:- https://sonarqube.aa.com/dashboard?id=tr.receipts-ms
+     - Best practice is to also install SonarLint plugin for IDE so violations can be detected prior to committing the code.
      
 - ## Coverity
   - Code quality and security. 
-     - link:- https://coverity.aa.com/reports.htm#v10164/p11158
+     - link:- https://coverity.aa.com/reports.htm#v10164/p10524
+     - Best practice is to also configure IDE the ability to do Coverity local scan so violations can be detected prior to committing the code.
 
 - ## Javadoc
-  #### Open apidocs/index.html with Web Browser
-
-  ###### To re-generate Javadoc, 
-  - run **'mvn javadoc:javadoc'** locally from project root. Then copy **targer/site/apidocs** to **root/apidocs**,
-  - commit all changes in root/apidocs.
+  #### TBC
