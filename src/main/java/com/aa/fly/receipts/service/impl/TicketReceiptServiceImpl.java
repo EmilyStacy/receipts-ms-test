@@ -41,11 +41,10 @@ public class TicketReceiptServiceImpl implements TicketReceiptService {
                 }
             } 
             catch( BulkTicketException e) {
-            	if (ticketReceipt == null) {
-            		ticketReceipt = new TicketReceipt();
+            	if (ticketReceipt != null) {
+                    ticketReceipt.setStatusMessage(StatusMessage.BULK_TICKET.getStatusMessage());
+                    ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);            		
             	}
-                ticketReceipt.setStatusMessage(StatusMessage.BULK_TICKET.getStatusMessage());
-                ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);        		
             }
         }
 
