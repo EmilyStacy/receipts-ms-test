@@ -162,7 +162,7 @@ public class CostDetailsMapper {
         formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : "");
         formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(formOfPayment.getFopTypeCode(), formOfPayment.getFopAccountNumberLast4()));
 
-        formOfPayments.add(formOfPayment);
+        formOfPayments.add(0, formOfPayment);
     }
 
     private boolean mapFormOfPayment(String fopTypeCode) {
