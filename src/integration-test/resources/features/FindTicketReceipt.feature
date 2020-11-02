@@ -1,4 +1,4 @@
-#@TicketAndFees
+@TicketAndFees
 Feature: Search with ticket number should return ticket receipt
   As a user
   I want to search with ticket number
@@ -25,7 +25,6 @@ Feature: Search with ticket number should return ticket receipt
       | departureDate | 03/08/2019    |
     Then I get a 204 http status code response indicating no content
 
-  @ittemp
   Scenario Outline: Ticket receipt details for different types of itineraries
     Given I want to find trip details for scenario "<scenario>"
     When I search for my trip with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
@@ -40,7 +39,7 @@ Feature: Search with ticket number should return ticket receipt
       | Round trip with no connection                     | 0012382521768 | NATZIC      | CELINA    | 12/22/2019    | GJWVRI | AA2202 leaving LAX(Los Angeles, CA) to BNA(Nashville, TN) on 2019-12-22 at 13:23:00 and arriving on 2019-12-22 at 19:21:00 in class GVAIZNB3 and the flight status is USED.                                                                                                                                                                                          | AA2183 leaving BNA(Nashville, TN) to LAX(Los Angeles, CA) on 2019-12-26 at 20:16:00 and arriving on 2019-12-26 at 23:02:00 in class GVAIZNB3 and the flight status is USED.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
       | One way with one connection                       | 0012120308259 | HAYES       | SOPHIA    | 03/07/2020    | XUITDR | OH5288 leaving STL(St Louis, MO) to CLT(Charlotte, NC) on 2020-03-07 at 18:24:00 and arriving on 2020-03-07 at 21:20:00 in class SVAHZNO1 and the flight status is USED. AA2799 leaving CLT(Charlotte, NC) to BWI(Baltimore/Washington, MD) on 2020-03-07 at 22:30:00 and arriving on 2020-03-07 at 23:50:00 in class SVAHZNO1 and the flight status is USED.        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
       | One way with no connection                        | 0012399149997 | LEAHU       | BIANCA    | 01/24/2020    | SWGZIM | AA844 leaving ORD(Chicago, IL) to PHL(Philadelphia, PA) on 2020-01-24 at 18:55:00 and arriving on 2020-01-24 at 21:58:00 in class Y20AUC and the flight status is USED.                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-      | International round trip with 1 connection        | 0012332330812 | PAN         | CHENGHSIN | 03/07/2019    | QVHPVD | AA126 leaving HKG(Hong Kong, Hong Kong) to DFW(Dallas/Fort Worth, TX) on 2019-02-04 at 15:45:00 and arriving on 2019-02-04 at 16:10:00 in class ONE08TN1 and the flight status is USED.                                                                                                                                                                              | AA945 leaving DFW(Dallas/Fort Worth, TX) to SCL(Santiago, Chile) on 2019-02-05 at 20:25:00 and arriving on 2019-02-06 at 08:45:00 in class ONE08TN1 and the flight status is USED. AA940 leaving SCL(Santiago, Chile) to DFW(Dallas/Fort Worth, TX) on 2019-03-07 at 22:30:00 and arriving on 2019-03-08 at 05:27:00 in class ONE08TN1 and the flight status is USED. AA125 leaving DFW(Dallas/Fort Worth, TX) to HKG(Hong Kong, Hong Kong) on 2019-03-08 at 10:50:00 and arriving on 2019-03-09 at 17:35:00 in class ONE08TN1 and the flight status is USED.                                                                                                                                                                                                                                                                                                                                         |
+      | International round trip with 1 connection        | 0012120344750 | HAEEMS      | NATHANIEL | 05/15/2020    | KAFAFY | AA2943 leaving YYZ(Toronto, Canada) to CLT(Charlotte, NC) on 2020-05-15 at 15:59:00 and arriving on 2020-05-15 at 18:12:00 in class Q0ACZNN3 and the flight status is EXCH. AA2494 leaving CLT(Charlotte, NC) to MIA(Miami, FL) on 2020-05-15 at 19:55:00 and arriving on 2020-05-15 at 21:54:00 in class Q0ACZNN3 and the flight status is EXCH.                    | AA1246 leaving MIA(Miami, FL) to YYZ(Toronto, Canada) on 2020-05-18 at 20:33:00 and arriving on 2020-05-18 at 23:45:00 in class Q0ACZNN3 and the flight status is EXCH.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
   Scenario Outline: Verify Form of Payment and ticket fare details
     Given I want to retrieve payment details for scenario "<scenario>"
@@ -116,7 +115,7 @@ Feature: Search with ticket number should return ticket receipt
   Scenario Outline: One ancillaries bought with ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts
     Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
     When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
-    Then I get a successful response with ancillaries and fop details fopIssueDate "<fopIssueDate>", fopTypeCode "<fopTypeCode>",  fopTypeDescription "<fopTypeDescription>",  fopAccountNumberLastFour "<fopAccountNumberLastFour>", fopAmount "<fopAmount>", fopCurrencyCode "<fopCurrencyCode>" and fopIndex "<fopIndex>"
+    Then I get a successful response with ancillaries and fop details fopIssueDate "<fopIssueDate>", fopTypeCode "<fopTypeCode>", fopTypeDescription "<fopTypeDescription>", fopAccountNumberLastFour "<fopAccountNumberLastFour>", fopAmount "<fopAmount>", fopCurrencyCode "<fopCurrencyCode>" and fopIndex "<fopIndex>"
 
     Examples:
       | scenario                | ticketNumber  | lastName  | firstName | departureDate | fopIssueDate | fopTypeCode | fopTypeDescription        | fopAccountNumberLastFour | fopAmount | fopCurrencyCode | fopIndex |
@@ -137,7 +136,7 @@ Feature: Search with ticket number should return ticket receipt
   Scenario Outline: Two ancillaries bought with ticket (3 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts
     Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
     When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
-    Then I get a successful response with ancillaries and fop details fopIssueDate "<fopIssueDate>", fopTypeCode "<fopTypeCode>",  fopTypeDescription "<fopTypeDescription>",  fopAccountNumberLastFour "<fopAccountNumberLastFour>", fopAmount "<fopAmount>", fopCurrencyCode "<fopCurrencyCode>" and fopIndex "<fopIndex>"
+    Then I get a successful response with ancillaries and fop details fopIssueDate "<fopIssueDate>", fopTypeCode "<fopTypeCode>", fopTypeDescription "<fopTypeDescription>", fopAccountNumberLastFour "<fopAccountNumberLastFour>", fopAmount "<fopAmount>", fopCurrencyCode "<fopCurrencyCode>" and fopIndex "<fopIndex>"
 
     Examples:
       | scenario                | ticketNumber  | lastName | firstName | departureDate | fopIssueDate | fopTypeCode | fopTypeDescription  | fopAccountNumberLastFour | fopAmount | fopCurrencyCode | fopIndex |
@@ -145,14 +144,23 @@ Feature: Search with ticket number should return ticket receipt
       | 2ancillaries-secondfops | 0012132820896 | ADAMS    | PAUL      | 08/13/2020    | 2020-08-13   | CCBA        | Visa ending in 4890 | 4890                     | 100.00    | USD             | 1        |
       | 2ancillaries-thirdfops  | 0012132820896 | ADAMS    | PAUL      | 08/13/2020    | 2020-07-16   | CCBA        | Visa ending in 0270 | 0270                     | 44.31     | USD             | 2        |
 
-  Scenario Outline: Three ancillaries bought on different dates, pax amt = ticket FOP amt + Ancillary FOP amts
-    Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
-    When I search with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
-    Then I get a successful response with three ancillaries rowCount "<rowCount>", fopAmt "<fopAmt>", passengerTotalAmount "<passengerTotalAmount>", anclryFOPAmt1 "<anclryFOPAmt1>", anclryFOPAmt2 "<anclryFOPAmt2>", anclryFOPIssueDate "<anclryFOPIssueDate>", anclryFOPTypeCode "<anclryFOPTypeCode>", anclryFOPAccountNumberLast4 "<anclryFOPAccountNumberLast4>", anclryDocNbr "<anclryDocNbr>", anclryIssueDate "<anclryIssueDate>", anclryPriceCurrencyAmount "<anclryPriceCurrencyAmount>", anclrySalesCurrencyAmount "<anclrySalesCurrencyAmount>", anclryTaxCurrencyAmount "<anclryTaxCurrencyAmount>"
-
-    Examples:
-      | scenario                                                                                   | ticketNumber  | lastName | firstName | departureDate | rowCount | fopAmt | passengerTotalAmount | anclryFOPAmt1 | anclryFOPAmt2 | anclryFOPIssueDate | anclryFOPTypeCode | anclryFOPAccountNumberLast4 | anclryDocNbr | anclryIssueDate | anclryPriceCurrencyAmount | anclrySalesCurrencyAmount | anclryTaxCurrencyAmount |
-      | Two ancillaries bought with ticket (3 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts | 0012342760719 | MORRIS   | STEVE     | 03/17/2019    | 4        | 620.59 | 746.09               | 65.50         | 60.00         | 2019-03-07         | CCBA              | 3782                        | 285123032    | 2019-03-22      | 30.00                     | 30.00                     | 0.00                    |
+  Scenario: Search ticket with 3 ancillaries bought on different dates, pax amt = ticket FOP amt + Ancillary FOP amts
+    When I search ticket number with below criteria
+      | ticketNumber  | 0012120199665 |
+      | firstName     | KIMBERLY      |
+      | lastName      | MCDONALD      |
+      | departureDate | 03/08/2020    |
+    Then I get a successful response with the following ancillaries
+      | rowCount             | 4                            |
+      | passengerTotalAmount | 971.44                       |
+      | anclryFOP1IssueDate  | 2020-03-07                   |
+      | anclryFOPName1       | MAIN CABIN EXTRA (BPT - DFW) |
+      | anclryFOPName2       | PAID LFB UPGRADE (BPT - DFW) |
+      | anclryFOPName3       | PREFERRED SEATS (BPT - DFW)  |
+      | ticketFOP            | 837.79                       |
+      | anclryFOPAmt1        | 34.94                        |
+      | anclryFOPAmt2        | 64.47                        |
+      | anclryFOPAmt3        | 34.24                        |
 
   Scenario Outline: Invalid airline code
     Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
