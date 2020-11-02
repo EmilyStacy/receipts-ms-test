@@ -17,6 +17,7 @@ import com.aa.fly.receipts.data.TicketReceiptRepository;
 import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.exception.BulkTicketException;
 import com.aa.fly.receipts.service.impl.TicketReceiptServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,6 +40,16 @@ public class TicketReceiptServiceTest {
         assertThat(actualReceipt.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareAmount()).isEqualTo("77674");
         assertThat(actualReceipt.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode()).isEqualTo("USD2");
         assertThat(actualReceipt.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount()).isEqualTo("84930");
+    }
+    
+    @Test
+    public void testTicketReceiptBulkTicketException() throws ParseException {
+        SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
+        when(ticketReceiptRepository.findTicketReceiptByTicketNumber(criteria)).thenThrow(BulkTicketException.class);
+        
+        TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria).getBody();
+        assertThat(actualReceipt).isNotNull();
+        assertThat(actualReceipt.getStatusMessage()).isEqualTo("BulkTicket");
     }
 
     @Test
