@@ -1,13 +1,11 @@
 package com.aa.fly.receipts.steps;
 
 import com.aa.fly.receipts.SpringIntegrationSetup;
-import com.aa.fly.receipts.domain.Ancillary;
-import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.PassengerDetail;
-import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.domain.*;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import gherkin.deps.com.google.gson.Gson;
 import gherkin.deps.com.google.gson.GsonBuilder;
 import org.junit.Assert;
@@ -15,11 +13,38 @@ import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class FindAncilleriesDetailsByTicketNumber extends SpringIntegrationSetup {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SearchCriteria criteria = new SearchCriteria();
 
+    @Then("^I get a successful response with the following ancillaries$")
+    public void iGetASuccessfulResponseWithTheFollowingAncillaries(Map< String, String > testDataMap) {
+        Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
+        Assert.assertEquals(new BigDecimal(testDataMap.get("passengerTotalAmount")), new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount())
+                .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(1).getFopAmount()))
+                .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(2).getFopAmount()))
+                .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(3).getFopAmount()))
+        );
+        Assert.assertEquals(Integer.parseInt(testDataMap.get("rowCount")),ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
+        Assert.assertEquals(new BigDecimal(testDataMap.get("ticketFOP")),new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount()));
+        Assert.assertEquals(new BigDecimal(testDataMap.get("anclryFOPAmt1")),new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(1).getFopAmount()));
+        Assert.assertEquals(new BigDecimal(testDataMap.get("anclryFOPAmt2")),new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(2).getFopAmount()));
+        Assert.assertEquals(new BigDecimal(testDataMap.get("anclryFOPAmt3")),new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(3).getFopAmount()));
+        List<Ancillary> ancillaryArrayList1 = getAncillaries(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(1).getAncillaries());
+        List<Ancillary> ancillaryArrayList2 = getAncillaries(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(2).getAncillaries());
+        List<Ancillary> ancillaryArrayList3 = getAncillaries(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(3).getAncillaries());
+        Assert.assertEquals(testDataMap.get("anclryFOP1IssueDate"),ancillaryArrayList1.get(0).getAnclryIssueDate());
+        Assert.assertEquals(testDataMap.get("anclryFOPName1"),ancillaryArrayList1.get(0).getAnclryProdName());
+        Assert.assertEquals(testDataMap.get("anclryFOPName2"),ancillaryArrayList2.get(0).getAnclryProdName());
+        Assert.assertEquals(testDataMap.get("anclryFOPName3"),ancillaryArrayList3.get(0).getAnclryProdName());
+    }
     @Given("^I want to retrieve payment details - ancillaries for scenario \"([^\"]*)\"$")
     public void i_want_to_retrieve_payment_details_ancillaries_for_scenario(String arg1) throws Throwable {
 
@@ -40,6 +65,7 @@ public class FindAncilleriesDetailsByTicketNumber extends SpringIntegrationSetup
 
         Assert.assertEquals(passengerTotalAmount, ticketReceipt.getPassengerDetails().get(0).getPassengerTotalAmount());
         Assert.assertEquals(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount(), ticketReceipt.getPassengerDetails().get(0).getPassengerTotalAmount());
+
     }
 
     @Then("^I get a successful response with one ancillary rowCount \"([^\"]*)\", fopAmt \"([^\"]*)\", passengerTotalAmount \"([^\"]*)\", anclryFOPAmt1 \"([^\"]*)\", anclryFOPAmt2 \"([^\"]*)\", anclryFOPIssueDate \"([^\"]*)\", anclryFOPTypeCode \"([^\"]*)\", anclryFOPAccountNumberLast4 \"([^\"]*)\", anclryDocNbr \"([^\"]*)\", anclryIssueDate \"([^\"]*)\", anclryPriceCurrencyAmount \"([^\"]*)\", anclrySalesCurrencyAmount \"([^\"]*)\", anclryTaxCurrencyAmount \"([^\"]*)\"$")
@@ -109,7 +135,7 @@ public class FindAncilleriesDetailsByTicketNumber extends SpringIntegrationSetup
     }
 
 
-    @Then("^I get a successful response with ancillaries and fop details fopIssueDate \"([^\"]*)\", fopTypeCode \"([^\"]*)\",  fopTypeDescription \"([^\"]*)\",  fopAccountNumberLastFour \"([^\"]*)\", fopAmount \"([^\"]*)\", fopCurrencyCode \"([^\"]*)\" and fopIndex \"([^\"]*)\"$")
+    @Then("^I get a successful response with ancillaries and fop details fopIssueDate \"([^\"]*)\", fopTypeCode \"([^\"]*)\", fopTypeDescription \"([^\"]*)\", fopAccountNumberLastFour \"([^\"]*)\", fopAmount \"([^\"]*)\", fopCurrencyCode \"([^\"]*)\" and fopIndex \"([^\"]*)\"$")
     public void i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(String fopIssueDate, String fopTypeCode,
                                                                                                                                                                             String fopTypeDescription, String fopAccountNumberLastFour, String fopAmount, String fopCurrencyCode, int fopIndex) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
@@ -126,30 +152,16 @@ public class FindAncilleriesDetailsByTicketNumber extends SpringIntegrationSetup
         Assert.assertEquals(fopCurrencyCode, fop.getFopCurrencyCode());
     }
 
-    @Then("^I get a successful response with three ancillaries rowCount \"([^\"]*)\", fopAmt \"([^\"]*)\", passengerTotalAmount \"([^\"]*)\", anclryFOPAmt1 \"([^\"]*)\", anclryFOPAmt2 \"([^\"]*)\", anclryFOPIssueDate \"([^\"]*)\", anclryFOPTypeCode \"([^\"]*)\", anclryFOPAccountNumberLast4 \"([^\"]*)\", anclryDocNbr \"([^\"]*)\", anclryIssueDate \"([^\"]*)\", anclryPriceCurrencyAmount \"([^\"]*)\", anclrySalesCurrencyAmount \"([^\"]*)\", anclryTaxCurrencyAmount \"([^\"]*)\"$")
-    public void i_get_a_successful_response_with_two_ancillaries_rowCount_fopAmt_totalFareAmount_passengerTotalAmount_anclryDocNbr_anclryIssueDate_anclryPriceCurrencyAmount_anclrySalesCurrencyAmount_anclryTaxCurrencyAmount(
-            String rowCount, String fopAmt, String passengerTotalAmount, String anclryFOPAmt1, String anclryFOPAmt2, String anclryFOPIssueDate, String anclryFOPTypeCode,
-            String anclryFOPAccountNumberLast4, String anclryDocNbr, String anclryIssueDate, String anclryPriceCurrencyAmount,
-            String anclrySalesCurrencyAmount, String anclryTaxCurrencyAmount) throws Throwable {
-        HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
-        Assert.assertEquals(200, currentStatusCode.value());
-
-        Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
-
-        Assert.assertEquals(Integer.parseInt(rowCount), ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
-        Assert.assertEquals(new BigDecimal(passengerTotalAmount), new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount())
-                .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(1).getFopAmount()))
-                .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(2).getFopAmount()))
-                .add(new BigDecimal(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(3).getFopAmount()))
-        );
-
-    }
-
     @Then("^I get a successful response with invalid airline code rowCount \"([^\"]*)\"")
     public void i_get_a_successful_response_with_invalid_airline_code(String rowCount) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
     }
+
+    private List<Ancillary> getAncillaries(Set<Ancillary> ancillarySet)
+    {
+        return new ArrayList<>(ancillarySet);
+    }
+
 }
 
