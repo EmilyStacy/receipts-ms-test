@@ -1,5 +1,4 @@
 @TicketAndFees
-
 Feature: Search with ticket number should return ticket receipt
   As a user
   I want to search with ticket number
