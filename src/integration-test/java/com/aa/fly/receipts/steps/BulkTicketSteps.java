@@ -23,15 +23,15 @@ public class BulkTicketSteps extends SpringIntegrationSetup {
 
     }
 
-    @Then("^I get a response with bulk ticket found message pnr \"([^\"]*)\", statusMessage \"([^\"]*)\"$")
-    public void i_get_a_response_with_bulk_ticket_found_message_pnr_statusMessage(String pnr, String statusMessage) throws Throwable {
+    @Then("^I get a response with bulk ticket found message \"([^\"]*)\"$")
+    public void i_get_a_response_with_bulk_ticket_found_message_pnr_statusMessage(String statusMessage) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
         Assert.assertEquals(200, currentStatusCode.value());
 
         Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
-        Assert.assertEquals(pnr, ticketReceipt.getPnr());
         Assert.assertEquals(statusMessage, StatusMessage.BULK_TICKET.getStatusMessage());
+        Assert.assertEquals(statusMessage, ticketReceipt.getStatusMessage());
     }
 
 }
