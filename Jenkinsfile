@@ -130,7 +130,7 @@ pipeline {
                   """
             }
         }
-        
+       
 //        stage ('job:bff-e2e') {
 //            when {
 //                branch 'master'
