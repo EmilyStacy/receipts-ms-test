@@ -12,7 +12,7 @@ Feature: Search with ticket number should return ticket receipt
 
     Examples:
       | scenario                           | ticketNumber  | lastName | firstName | departureDate | originAirport | destinationAirport | pnr    | advantageNumber | loyaltyOwnerCode |
-      | Other airline frequent flier       | 0012384122707 | TRAISMAN | LEO       | 12/20/2019    | MCI           | ORD                | VSUFLN | 61140446        | AS               |
+      | Other airline frequent flier       | 0012132029794 | HATTORI  | MAX       | 08/06/2020    | NRT           | SEA                | WLXRJB | 122099003       | AS               |
       | One way with over night connection | 0012119066455 | RICHINS  | SHANNON   | 03/12/2020    | SGU           | VIE                | YYMFUN |                 | BA               |
 
   @OlderThan18Month
@@ -99,7 +99,7 @@ Feature: Search with ticket number should return ticket receipt
 
     Examples:
       | scenario                                                                  | ticketNumber  | lastName | firstName | departureDate | rowCount | fopAmt | totalFareAmount | passengerTotalAmount |
-      | Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt | 0012384122707 | TRAISMAN | LEO       | 12/20/2019    | 1        | 214.30 | 214.30          | 214.30               |
+      | Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt | 0012132029794 | HATTORI  | MAX       | 08/06/2020    | 1        | 50.85  | 50.85           | 50.85                |
 
   @1ancillaries-2fops
   Scenario Outline: One ancillary bought same date as ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amt
