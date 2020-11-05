@@ -111,7 +111,7 @@ pipeline {
                  }
             }
         }
-
+/*
         stage('deploy dev') {
             when {
                 // if it is a branch and not a PR
@@ -130,7 +130,7 @@ pipeline {
                   """
             }
         }
-       
+*/        
 //        stage ('job:bff-e2e') {
 //            when {
 //                branch 'master'
@@ -141,10 +141,12 @@ pipeline {
 //            }
 //        }
 
-        stage('deploy stage') {        
+        stage('deploy stage') {
+/*        
             when {
                 branch 'master'
             }
+*/
             steps {
                 sh "cf login -a '$PCF_PRODC_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
                 sh """
