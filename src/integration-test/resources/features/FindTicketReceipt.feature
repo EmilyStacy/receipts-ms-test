@@ -155,12 +155,12 @@ Feature: Search with ticket number should return ticket receipt
       | passengerTotalAmount | 971.44                       |
       | anclryFOP1IssueDate  | 2020-03-07                   |
       | anclryFOPName1       | PAID LFB UPGRADE (BPT - DFW) |
-      | anclryFOPName2       | MAIN CABIN EXTRA (BPT - DFW) |
-      | anclryFOPName3       | PREFERRED SEATS (BPT - DFW)  |
+      | anclryFOPName2       | PREFERRED SEATS (BPT - DFW)  |
+      | anclryFOPName3       | MAIN CABIN EXTRA (BPT - DFW) |
       | ticketFOP            | 837.79                       |
       | anclryFOPAmt1        | 64.47                        |
-      | anclryFOPAmt2        | 34.94                        |
-      | anclryFOPAmt3        | 34.24                        |
+      | anclryFOPAmt2        | 34.24                        |
+      | anclryFOPAmt3        | 34.94                        |
 
   Scenario Outline: Invalid airline code
     Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
