@@ -146,21 +146,54 @@ Feature: Search with ticket number should return ticket receipt
 
   Scenario: Search ticket with 3 ancillaries bought on different dates, pax amt = ticket FOP amt + Ancillary FOP amts
     When I search ticket number with below criteria
+      | ticketNumber  | 0012119346733  |
+      | firstName     | SHANIA         |
+      | lastName      | SMITH TURNBULL |
+      | departureDate | 03/12/2020     |
+    Then I get a successful response with the following ancillaries
+      | passengerTotalAmount         | 497.84                           |
+      | anclryFOP1IssueDate          | 2020-03-04                       |
+      | anclryFOP1TypeCode           | CCIK                             |
+      | anclryFOP1AccountDescription | Mastercard ending in 1692        |
+      | anclryFOP1AccountNumLastFour | 1692                             |
+      | anclryFOPName1               | PREFERRED SEATS (STT - MIA)      |
+      | anclryFOPAmt1                | 31.78                            |
+      | anclryFOPAmt1CurrencyCode    | USD                              |
+      | anclryFOP2IssueDate          | 2020-03-12                       |
+      | anclryFOP2TypeCode           | CCBA                             |
+      | anclryFOP2AccountDescription | Visa ending in 1835              |
+      | anclryFOP2AccountNumLastFour | 1835                             |
+      | anclryFOPName2               | UP50LB23KG/62LI158CM (STT - MIA) |
+      | anclryFOPAmt2                | 30.00                            |
+      | anclryFOPAmt2CurrencyCode    | USD                              |
+      | anclryFOP3IssueDate          | 2020-03-19                       |
+      | anclryFOP3TypeCode           | CCBA                             |
+      | anclryFOP3AccountDescription | Visa ending in 1755              |
+      | anclryFOP3AccountNumLastFour | 1755                             |
+      | anclryFOPName3               | PRIORITY (STT - MIA)             |
+      | anclryFOPAmt3                | 44.10                            |
+      | anclryFOPAmt3CurrencyCode    | USD                              |
+
+  Scenario: Search ticket with ancillary/ancillaries bought on the same date with tickets
+    When I search ticket number with below criteria
       | ticketNumber  | 0012120199665 |
       | firstName     | KIMBERLY      |
       | lastName      | MCDONALD      |
       | departureDate | 03/08/2020    |
-    Then I get a successful response with the following ancillaries
-      | rowCount             | 4                            |
-      | passengerTotalAmount | 971.44                       |
-      | anclryFOP1IssueDate  | 2020-03-07                   |
-      | anclryFOPName1       | PAID LFB UPGRADE (BPT - DFW) |
-      | anclryFOPName2       | PREFERRED SEATS (BPT - DFW)  |
-      | anclryFOPName3       | MAIN CABIN EXTRA (BPT - DFW) |
-      | ticketFOP            | 837.79                       |
-      | anclryFOPAmt1        | 64.47                        |
-      | anclryFOPAmt2        | 34.24                        |
-      | anclryFOPAmt3        | 34.94                        |
+    Then I get a successful response with the following ancillaries and ticket information
+      | ticketIssueDate              | 2020-03-07                   |
+      | ticketFOPTypeCode            | CCBA                         |
+      | ticketFOPAccountDescription  | Visa ending in 6106          |
+      | ticketFOPAccountNumLastFour  | 6106                         |
+      | ticketFOPAmt                 | 837.79                       |
+      | ticketFOPAmtCurrencyCode     | USD                          |
+      | anclryFOP1IssueDate          | 2020-03-07                   |
+      | anclryFOP1TypeCode           | CCBA                         |
+      | anclryFOP1AccountDescription | Visa ending in 6106          |
+      | anclryFOP1AccountNumLastFour | 6106                         |
+      | anclryFOPName1               | PAID LFB UPGRADE (BPT - DFW) |
+      | anclryFOPAmt1                | 64.47                        |
+      | anclryFOPAmt1CurrencyCode    | USD                          |
 
   Scenario Outline: Invalid airline code
     Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
