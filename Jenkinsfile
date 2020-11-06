@@ -96,30 +96,6 @@ pipeline {
             }
 	   }
 
-        stage('int tests Local') {
-            when {
-                not {
-                    branch 'master'
-                }
-            }            
-            steps {
-                sh """
-                	mvn spring-boot:run &
-                	sleep 10
-                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='http://localhost:8094'
-                  """
-
-                publishHTML target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: 'target/cucumberReport',
-                    reportFiles: 'index.html',
-                    reportName: 'Cucumber Rpt'
-                ]
-            }
-        }
-
        stage('coverity setup') {
             when {
                 branch 'master'
