@@ -96,12 +96,12 @@ pipeline {
             }
 	   }
 
-        stage('integration tests') {
-		    when {
-		        not {
-		            branch 'master'
-		       }
-		    }            
+        stage('int tests Local') {
+            when {
+                not {
+                    branch 'master'
+                }
+            }            
             steps {
                 sh """
                 	mvn spring-boot:run &
@@ -184,7 +184,7 @@ pipeline {
             }
         }
         
-        stage('integration tests') {
+        stage('int tests Stage') {
             when {
                 branch 'master'
             }
