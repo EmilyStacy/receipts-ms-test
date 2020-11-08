@@ -1,5 +1,7 @@
 package com.aa.fly.receipts.data;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +13,7 @@ import org.springframework.util.StringUtils;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 
 @Repository
 @Transactional(readOnly = true)
@@ -22,6 +25,9 @@ public class TicketReceiptRepository {
     @Value("${mosaic.ticket.schema.name:CERT_TCN_RECPT_VW}")
     private String ticketSchemaName;
 
+    // @Autowired
+    // private TicketReceiptRsExtracter ticketReceiptRsExtracter;
+    
     @Autowired
     private TicketReceiptMapper ticketReceiptMapper;
 
@@ -103,6 +109,13 @@ public class TicketReceiptRepository {
                 .toString();
         
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate, firstName, lastName);
+        // final List<TicketReceiptRsRow> ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+        // TicketReceipt ticketReceipt = null;
+        // if (ticketReceiptRsRowList != null) {
+        //    ticketReceipt = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+        // }
+        // sqlRowSet.beforeFirst();
+        
         TicketReceipt ticketReceipt = ticketReceiptMapper.mapTicketReceipt(sqlRowSet);
 
         if (ticketReceipt != null && StringUtils.hasText(ticketReceipt.getPnr())) {
