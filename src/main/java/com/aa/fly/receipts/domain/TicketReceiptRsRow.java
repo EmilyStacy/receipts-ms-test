@@ -22,26 +22,28 @@ public class TicketReceiptRsRow
    private Date depDt;
    private String firstNm;
    private String lastNm;
+   private String orgAtoCd;
+   private String destAtoCd;
+   private String pnr;
+   private String aadvantNbr;
+   private String lyltyOwnCd;
+   
+   private Date segDeptDt;
+   private String segDeptTm;
+   private String segDeptArprtCd;
+   private Date segArvltDt;
+   private String segArvlTm;
+   private String segArvlArprtCd;
+   
+   private String segCouponStatusCd;
+   private String segOperatCarrierCd;
+   private String flightNbr;
+   private String bookingClass;
+   private String fareBase;
+   private String couponSeqNbr;
 }
 /*
-.append("    ORG_ATO_CD, \n")
-.append("    DEST_ATO_CD, \n")
-.append("    PNR, \n")
-.append("    AADVANT_NBR, \n")
-.append("    LYLTY_OWN_CD, \n")
-// =================== trip details =======================
-.append("    SEG_DEPT_DT, \n")
-.append("    SEG_DEPT_TM, \n")
-.append("    SEG_DEPT_ARPRT_CD, \n")
-.append("    SEG_ARVL_DT, \n")
-.append("    SEG_ARVL_TM, \n")
-.append("    SEG_ARVL_ARPRT_CD, \n")
-.append("    SEG_COUPON_STATUS_CD, \n")
-.append("    SEG_OPERAT_CARRIER_CD, \n")
-.append("    FLIGHT_NBR, \n")
-.append("    BOOKING_CLASS, \n")
-.append("    FARE_BASE, \n")
-.append("    COUPON_SEQ_NBR, \n")
+
 // =================== cost - fop =======================
 .append("    FOP_ISSUE_DT, \n")
 .append("    FOP_TYPE_CD, \n")
