@@ -180,6 +180,101 @@ public class TicketReceiptRsExtracterTest {
 	}	
 	
 	@Test
+	public void testExtract_SqlRowSet_SegCouponStatusCd_Null() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("SEG_COUPON_STATUS_CD")).thenReturn(null);
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getSegCouponStatusCd());
+	}	
+	
+	@Test
+	public void testExtract_SqlRowSet_SegCouponStatusCd_Empty() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("SEG_COUPON_STATUS_CD")).thenReturn("");
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getSegCouponStatusCd());
+	}	
+	
+	@Test
+	public void testExtract_SqlRowSet_SegOperatCarrierCd_Null() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("SEG_OPERAT_CARRIER_CD")).thenReturn(null);
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getSegOperatCarrierCd());
+	}	
+	
+	@Test
+	public void testExtract_SqlRowSet_SegOperatCarrierCd_Empty() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("SEG_OPERAT_CARRIER_CD")).thenReturn("");
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getSegOperatCarrierCd());
+	}	
+	
+	@Test
+	public void testExtract_SqlRowSet_BookingClass_Null() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("BOOKING_CLASS")).thenReturn(null);
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getBookingClass());
+	}	
+	
+	@Test
+	public void testExtract_SqlRowSet_BookingClass_Empty() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("BOOKING_CLASS")).thenReturn("");
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getBookingClass());
+	}		
+	@Test
+	public void testExtract_SqlRowSet_FareBase_Null() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("FARE_BASE")).thenReturn(null);
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getFareBase());
+	}	
+	
+	@Test
+	public void testExtract_SqlRowSet_FareBase_Empty() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("FARE_BASE")).thenReturn("");
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getFareBase());
+	}	
+	
+	@Test
 	public void testExtract_SqlRowSet_One_Row() throws Exception {
         Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false); 
 		this.mockFields();
