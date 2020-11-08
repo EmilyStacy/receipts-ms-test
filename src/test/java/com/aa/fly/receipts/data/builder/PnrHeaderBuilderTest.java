@@ -61,6 +61,7 @@ public class PnrHeaderBuilderTest {
 		assertEquals(null, this.ticketReceipt.getOriginAirport());
 		assertEquals(null, this.ticketReceipt.getDestinationAirport());
 	}
+	
 	@Test
 	public void testBuild_Pnr_Header() throws Exception {
 		this.mockTicketReceiptRsRow();
@@ -115,5 +116,4 @@ public class PnrHeaderBuilderTest {
         
         return airport;
     }
-	
 }
