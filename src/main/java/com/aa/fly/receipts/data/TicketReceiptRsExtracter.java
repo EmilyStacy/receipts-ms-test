@@ -19,6 +19,7 @@ public class TicketReceiptRsExtracter {
 			ticketReceiptRsRowList = new ArrayList<>();
 			
 	        while (sqlRowSet.next()) {
+	        	
 				TicketReceiptRsRow ticketReceiptRsRow = 
 						TicketReceiptRsRow.builder()
 						.airlnAcctCd(StringUtils.isNotBlank(sqlRowSet.getString("AIRLN_ACCT_CD")) ? 
@@ -29,6 +30,7 @@ public class TicketReceiptRsExtracter {
 						.firstNm(sqlRowSet.getString("FIRST_NM").trim())
 						.lastNm(sqlRowSet.getString("LAST_NM").trim())
 						.build();
+				
 				ticketReceiptRsRowList.add(ticketReceiptRsRow);
 	        }
 		}

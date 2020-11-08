@@ -42,6 +42,30 @@ public class TicketReceiptRsExtracterTest {
 	}
 	
 	@Test
+	public void testExtract_SqlRowSet_AirlineCode_Null() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false); // first time return true
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("AIRLN_ACCT_CD")).thenReturn(null);
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getAirlnAcctCd());
+	}	
+	
+	@Test
+	public void testExtract_SqlRowSet_AirlineCode_Empty() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false); // first time return true
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("AIRLN_ACCT_CD")).thenReturn("");
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals(null, ticketReceiptRsRowList.get(0).getAirlnAcctCd());
+	}	
+	
+	@Test
 	public void testExtract_SqlRowSet_One_Row() throws Exception {
         Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false); // first time return true
 		this.mockFields();

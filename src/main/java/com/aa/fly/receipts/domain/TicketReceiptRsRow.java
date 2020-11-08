@@ -24,9 +24,6 @@ public class TicketReceiptRsRow
    private String lastNm;
 }
 /*
-.append("    DEP_DT, \n")
-.append("    FIRST_NM, \n")
-.append("    LAST_NM, \n")
 .append("    ORG_ATO_CD, \n")
 .append("    DEST_ATO_CD, \n")
 .append("    PNR, \n")
