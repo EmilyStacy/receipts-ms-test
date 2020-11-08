@@ -92,7 +92,7 @@ public class TicketReceiptRsExtracterTest {
         ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
 		assertNotNull(ticketReceiptRsRowList);
 		assertEquals(1, ticketReceiptRsRowList.size());
-		assertEquals(null, ticketReceiptRsRowList.get(0).getOrgAtoCd());
+		assertEquals("", ticketReceiptRsRowList.get(0).getOrgAtoCd());
 	}	
 	
 	@Test
@@ -104,7 +104,7 @@ public class TicketReceiptRsExtracterTest {
         ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
 		assertNotNull(ticketReceiptRsRowList);
 		assertEquals(1, ticketReceiptRsRowList.size());
-		assertEquals(null, ticketReceiptRsRowList.get(0).getOrgAtoCd());
+		assertEquals("", ticketReceiptRsRowList.get(0).getOrgAtoCd());
 	}	
 	
 	@Test
@@ -116,7 +116,7 @@ public class TicketReceiptRsExtracterTest {
         ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
 		assertNotNull(ticketReceiptRsRowList);
 		assertEquals(1, ticketReceiptRsRowList.size());
-		assertEquals(null, ticketReceiptRsRowList.get(0).getDestAtoCd());
+		assertEquals("", ticketReceiptRsRowList.get(0).getDestAtoCd());
 	}	
 	
 	@Test
@@ -128,7 +128,7 @@ public class TicketReceiptRsExtracterTest {
         ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
 		assertNotNull(ticketReceiptRsRowList);
 		assertEquals(1, ticketReceiptRsRowList.size());
-		assertEquals(null, ticketReceiptRsRowList.get(0).getDestAtoCd());
+		assertEquals("", ticketReceiptRsRowList.get(0).getDestAtoCd());
 	}	
 	
 	@Test

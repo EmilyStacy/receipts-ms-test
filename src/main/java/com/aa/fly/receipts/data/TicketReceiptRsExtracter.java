@@ -30,9 +30,9 @@ public class TicketReceiptRsExtracter {
 						.firstNm(sqlRowSet.getString("FIRST_NM").trim())
 						.lastNm(sqlRowSet.getString("LAST_NM").trim())
 						.orgAtoCd(StringUtils.isNotBlank(sqlRowSet.getString("ORG_ATO_CD")) ? 
-	                            sqlRowSet.getString("ORG_ATO_CD").trim() : null)
+	                            sqlRowSet.getString("ORG_ATO_CD").trim() : "")
 						.destAtoCd(StringUtils.isNotBlank(sqlRowSet.getString("DEST_ATO_CD")) ? 
-	                            sqlRowSet.getString("DEST_ATO_CD").trim() : null)
+	                            sqlRowSet.getString("DEST_ATO_CD").trim() : "")
 						.pnr(sqlRowSet.getString("PNR").trim())
 						.aadvantNbr(StringUtils.isNotBlank(sqlRowSet.getString("AADVANT_NBR")) ? 
 	                            sqlRowSet.getString("AADVANT_NBR").trim() : null)
