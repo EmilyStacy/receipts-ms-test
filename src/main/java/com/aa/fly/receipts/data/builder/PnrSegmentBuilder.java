@@ -15,10 +15,11 @@ public class PnrSegmentBuilder implements DataBuilderService {
 	@Autowired
 	private AirportService airportService;
 
-	public void build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow, int index) {
+	public void build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow, int rowIndex) {
 		build(ticketReceipt, ticketReceiptRsRow);
 		
-        //segmentDetail.setReturnTrip(("1").equals(ticketReceiptRsRow.getCouponSeqNbr()) && index != 0 ? "true" : "false");
+        //String returnTrip = ("1").equals(ticketReceiptRsRow.getCouponSeqNbr()) && rowIndex != 0 ? "true" : "false";
+		//ticketReceipt.getSegmentDetails().get(ticketReceipt.getSegmentDetails().size() - 1).setReturnTrip(returnTrip);
 	}
 
 	@Override
