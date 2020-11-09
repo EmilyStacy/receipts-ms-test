@@ -45,6 +45,13 @@ public class TicketReceiptRsExtracterTest {
 	static final String FARE_BASE = "OVBZZNB5";
 	static final String COUPON_SEQ_NBR = "1";
 	
+	static final String FOP_ISSUE_DT = "2020-10-10";
+	static final String FOP_TYPE_CD = "CCIK";
+	static final String FOP_AMT = "105.20";
+	static final String FOP_SEQ_ID = "1";
+	static final String FOP_ACCT_NBR_LAST4 = "1234";
+	static final String FOP_CURR_TYPE_CD = "USD2";
+	
     final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
  
     @Mock
@@ -250,6 +257,7 @@ public class TicketReceiptRsExtracterTest {
 		assertEquals(1, ticketReceiptRsRowList.size());
 		assertEquals(null, ticketReceiptRsRowList.get(0).getBookingClass());
 	}		
+	
 	@Test
 	public void testExtract_SqlRowSet_FareBase_Null() throws Exception {
         Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
@@ -272,6 +280,30 @@ public class TicketReceiptRsExtracterTest {
 		assertNotNull(ticketReceiptRsRowList);
 		assertEquals(1, ticketReceiptRsRowList.size());
 		assertEquals(null, ticketReceiptRsRowList.get(0).getFareBase());
+	}	
+	
+	@Test
+	public void testExtract_SqlRowSet_FopTypeCd_Null() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("FOP_TYPE_CD")).thenReturn(null);
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals("", ticketReceiptRsRowList.get(0).getFopTypeCd());
+	}	
+	
+	@Test
+	public void testExtract_SqlRowSet_FopTypeCd_Empty() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("FOP_TYPE_CD")).thenReturn("");
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals("", ticketReceiptRsRowList.get(0).getFopTypeCd());
 	}	
 	
 	@Test
@@ -308,6 +340,12 @@ public class TicketReceiptRsExtracterTest {
 		assertEquals(FARE_BASE, ticketReceiptRsRowList.get(0).getFareBase());
 		assertEquals(COUPON_SEQ_NBR, ticketReceiptRsRowList.get(0).getCouponSeqNbr());
 
+		assertEquals(dateFormat.parse(FOP_ISSUE_DT), ticketReceiptRsRowList.get(0).getFopIssueDt());
+		assertEquals(FOP_TYPE_CD, ticketReceiptRsRowList.get(0).getFopTypeCd());
+		assertEquals(FOP_AMT, ticketReceiptRsRowList.get(0).getFopAmt());
+		assertEquals(FOP_SEQ_ID, ticketReceiptRsRowList.get(0).getFopSeqId());
+		assertEquals(FOP_ACCT_NBR_LAST4, ticketReceiptRsRowList.get(0).getFopAcctNbrLast4());
+		assertEquals(FOP_CURR_TYPE_CD, ticketReceiptRsRowList.get(0).getFopCurrTypeCd());
 	}
 
 	@Test
@@ -346,6 +384,12 @@ public class TicketReceiptRsExtracterTest {
         Mockito.when(sqlRowSet.getString("BOOKING_CLASS")).thenReturn(BOOKING_CLASS);
         Mockito.when(sqlRowSet.getString("FARE_BASE")).thenReturn(FARE_BASE);
         Mockito.when(sqlRowSet.getString("COUPON_SEQ_NBR")).thenReturn(COUPON_SEQ_NBR);
-    }
-}
 
+        Mockito.when(sqlRowSet.getDate("FOP_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse(FOP_ISSUE_DT).getTime()));
+        Mockito.when(sqlRowSet.getString("FOP_TYPE_CD")).thenReturn(FOP_TYPE_CD);
+        Mockito.when(sqlRowSet.getString("FOP_AMT")).thenReturn(FOP_AMT);
+        Mockito.when(sqlRowSet.getString("FOP_SEQ_ID")).thenReturn(FOP_SEQ_ID);
+        Mockito.when(sqlRowSet.getString("FOP_ACCT_NBR_LAST4")).thenReturn(FOP_ACCT_NBR_LAST4);
+        Mockito.when(sqlRowSet.getString("FOP_CURR_TYPE_CD")).thenReturn(FOP_CURR_TYPE_CD);
+	}
+}

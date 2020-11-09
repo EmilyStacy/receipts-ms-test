@@ -54,6 +54,16 @@ public class TicketReceiptRsExtracter {
 						.fareBase(StringUtils.isNotBlank(sqlRowSet.getString("FARE_BASE")) ? 
 	                            sqlRowSet.getString("FARE_BASE").trim() : null)
 						.couponSeqNbr(sqlRowSet.getString("COUPON_SEQ_NBR"))
+						
+						.fopIssueDt(sqlRowSet.getDate("FOP_ISSUE_DT"))
+						.fopTypeCd(StringUtils.isNotBlank(sqlRowSet.getString("FOP_TYPE_CD")) ? 
+	                            sqlRowSet.getString("FOP_TYPE_CD").trim() : "")
+						.fopAmt(sqlRowSet.getString("FOP_AMT"))
+						.fopSeqId(sqlRowSet.getString("FOP_SEQ_ID"))
+						.fopAcctNbrLast4(StringUtils.isNotBlank(sqlRowSet.getString("FOP_ACCT_NBR_LAST4")) ? 
+	                            sqlRowSet.getString("FOP_ACCT_NBR_LAST4").trim() : "")
+						.fopCurrTypeCd(StringUtils.isNotBlank(sqlRowSet.getString("FOP_CURR_TYPE_CD")) ? 
+	                            sqlRowSet.getString("FOP_CURR_TYPE_CD").trim() : "")
 
 						.build();
 		

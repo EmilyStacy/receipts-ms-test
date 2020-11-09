@@ -41,6 +41,13 @@ public class TicketReceiptRsRow
    private String bookingClass;
    private String fareBase;
    private String couponSeqNbr;
+
+   private Date fopIssueDt;
+   private String fopTypeCd;
+   private String fopAmt;
+   private String fopSeqId;
+   private String fopAcctNbrLast4;
+   private String fopCurrTypeCd;
 }
 /*
 
