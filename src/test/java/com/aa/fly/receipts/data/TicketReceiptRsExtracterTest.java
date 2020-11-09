@@ -103,34 +103,10 @@ public class TicketReceiptRsExtracterTest {
 	}	
 	
 	@Test
-	public void testExtract_SqlRowSet_OrgAtoCd_Empty() throws Exception {
-        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
-		this.mockFields();
-        Mockito.when(sqlRowSet.getString("ORG_ATO_CD")).thenReturn("");
-		
-        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
-		assertNotNull(ticketReceiptRsRowList);
-		assertEquals(1, ticketReceiptRsRowList.size());
-		assertEquals("", ticketReceiptRsRowList.get(0).getOrgAtoCd());
-	}	
-	
-	@Test
 	public void testExtract_SqlRowSet_DestAtoCd_Null() throws Exception {
         Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
 		this.mockFields();
         Mockito.when(sqlRowSet.getString("DEST_ATO_CD")).thenReturn(null);
-		
-        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
-		assertNotNull(ticketReceiptRsRowList);
-		assertEquals(1, ticketReceiptRsRowList.size());
-		assertEquals("", ticketReceiptRsRowList.get(0).getDestAtoCd());
-	}	
-	
-	@Test
-	public void testExtract_SqlRowSet_DestAtoCd_Empty() throws Exception {
-        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
-		this.mockFields();
-        Mockito.when(sqlRowSet.getString("DEST_ATO_CD")).thenReturn("");
 		
         ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
 		assertNotNull(ticketReceiptRsRowList);
@@ -293,19 +269,31 @@ public class TicketReceiptRsExtracterTest {
 		assertEquals(1, ticketReceiptRsRowList.size());
 		assertEquals("", ticketReceiptRsRowList.get(0).getFopTypeCd());
 	}	
-	
+		
 	@Test
-	public void testExtract_SqlRowSet_FopTypeCd_Empty() throws Exception {
+	public void testExtract_SqlRowSet_FopAacctNbrLast4_Null() throws Exception {
         Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
 		this.mockFields();
-        Mockito.when(sqlRowSet.getString("FOP_TYPE_CD")).thenReturn("");
+        Mockito.when(sqlRowSet.getString("FOP_ACCT_NBR_LAST4")).thenReturn(null);
 		
         ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
 		assertNotNull(ticketReceiptRsRowList);
 		assertEquals(1, ticketReceiptRsRowList.size());
-		assertEquals("", ticketReceiptRsRowList.get(0).getFopTypeCd());
-	}	
+		assertEquals("", ticketReceiptRsRowList.get(0).getFopAcctNbrLast4());
+	}
 	
+	@Test
+	public void testExtract_SqlRowSet_FopCurrTypeCd_Null() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("FOP_CURR_TYPE_CD")).thenReturn(null);
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals("", ticketReceiptRsRowList.get(0).getFopCurrTypeCd());
+	}
+
 	@Test
 	public void testExtract_SqlRowSet_One_Row() throws Exception {
         Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false); 

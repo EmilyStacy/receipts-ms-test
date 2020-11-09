@@ -29,9 +29,9 @@ public class TicketReceiptRsExtracter {
 						.depDt(sqlRowSet.getDate("DEP_DT"))
 						.firstNm(sqlRowSet.getString("FIRST_NM").trim())
 						.lastNm(sqlRowSet.getString("LAST_NM").trim())
-						.orgAtoCd(StringUtils.isNotBlank(sqlRowSet.getString("ORG_ATO_CD")) ? 
+						.orgAtoCd(sqlRowSet.getString("ORG_ATO_CD") != null ? 
 	                            sqlRowSet.getString("ORG_ATO_CD").trim() : "")
-						.destAtoCd(StringUtils.isNotBlank(sqlRowSet.getString("DEST_ATO_CD")) ? 
+						.destAtoCd(sqlRowSet.getString("DEST_ATO_CD") != null ? 
 	                            sqlRowSet.getString("DEST_ATO_CD").trim() : "")
 						.pnr(sqlRowSet.getString("PNR").trim())
 						.aadvantNbr(StringUtils.isNotBlank(sqlRowSet.getString("AADVANT_NBR")) ? 
@@ -54,15 +54,14 @@ public class TicketReceiptRsExtracter {
 						.fareBase(StringUtils.isNotBlank(sqlRowSet.getString("FARE_BASE")) ? 
 	                            sqlRowSet.getString("FARE_BASE").trim() : null)
 						.couponSeqNbr(sqlRowSet.getString("COUPON_SEQ_NBR"))
-						
 						.fopIssueDt(sqlRowSet.getDate("FOP_ISSUE_DT"))
-						.fopTypeCd(StringUtils.isNotBlank(sqlRowSet.getString("FOP_TYPE_CD")) ? 
+						.fopTypeCd(sqlRowSet.getString("FOP_TYPE_CD") != null ? 
 	                            sqlRowSet.getString("FOP_TYPE_CD").trim() : "")
 						.fopAmt(sqlRowSet.getString("FOP_AMT"))
 						.fopSeqId(sqlRowSet.getString("FOP_SEQ_ID"))
-						.fopAcctNbrLast4(StringUtils.isNotBlank(sqlRowSet.getString("FOP_ACCT_NBR_LAST4")) ? 
+						.fopAcctNbrLast4(sqlRowSet.getString("FOP_ACCT_NBR_LAST4") != null ? 
 	                            sqlRowSet.getString("FOP_ACCT_NBR_LAST4").trim() : "")
-						.fopCurrTypeCd(StringUtils.isNotBlank(sqlRowSet.getString("FOP_CURR_TYPE_CD")) ? 
+						.fopCurrTypeCd(sqlRowSet.getString("FOP_CURR_TYPE_CD") != null ? 
 	                            sqlRowSet.getString("FOP_CURR_TYPE_CD").trim() : "")
 
 						.build();
