@@ -54,11 +54,53 @@ public class PnrSegmentBuilderTest {
     private TicketReceiptRsRow ticketReceiptRsRow = null;
 	
 	@Test
+	public void testBuild_Pnr_Segment_Not_First_Row_CouponSeqNbr_One_ReturnTrip_True() throws Exception {
+		this.mockTicketReceiptRsRow();
+		this.mockAirports();
+		this.ticketReceiptRsRow.setCouponSeqNbr("1");
+
+		pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 2);
+		
+		assertNotNull(this.ticketReceipt);
+		assertNotNull(this.ticketReceipt.getSegmentDetails());
+		assertEquals(1, this.ticketReceipt.getSegmentDetails().size());
+		assertEquals("true", this.ticketReceipt.getSegmentDetails().get(0).getReturnTrip());
+	}
+	
+	@Test
+	public void testBuild_Pnr_Segment_First_Row_CouponSeqNbr_One_ReturnTrip_False() throws Exception {
+		this.mockTicketReceiptRsRow();
+		this.mockAirports();
+		this.ticketReceiptRsRow.setCouponSeqNbr("1");
+
+		pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 0);
+		
+		assertNotNull(this.ticketReceipt);
+		assertNotNull(this.ticketReceipt.getSegmentDetails());
+		assertEquals(1, this.ticketReceipt.getSegmentDetails().size());
+		assertEquals("false", this.ticketReceipt.getSegmentDetails().get(0).getReturnTrip());
+	}
+	
+	@Test
+	public void testBuild_Pnr_Segment_Not_First_Row_CouponSeqNbr_Not_One_ReturnTrip_False() throws Exception {
+		this.mockTicketReceiptRsRow();
+		this.mockAirports();
+		this.ticketReceiptRsRow.setCouponSeqNbr("2");
+
+		pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 2);
+		
+		assertNotNull(this.ticketReceipt);
+		assertNotNull(this.ticketReceipt.getSegmentDetails());
+		assertEquals(1, this.ticketReceipt.getSegmentDetails().size());
+		assertEquals("false", this.ticketReceipt.getSegmentDetails().get(0).getReturnTrip());
+	}
+	
+	@Test
 	public void testBuild_Pnr_Segment() throws Exception {
 		this.mockTicketReceiptRsRow();
 		this.mockAirports();
-
-		pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow);
+		
+		pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 0);
 		
 		assertNotNull(this.ticketReceipt);
 		assertNotNull(this.ticketReceipt.getSegmentDetails());
@@ -84,7 +126,7 @@ public class PnrSegmentBuilderTest {
 		assertEquals(FLIGHT_NBR, this.ticketReceipt.getSegmentDetails().get(0).getFlightNumber());
 		assertEquals(BOOKING_CLASS, this.ticketReceipt.getSegmentDetails().get(0).getBookingClass());
 		assertEquals(FARE_BASE, this.ticketReceipt.getSegmentDetails().get(0).getFareBasis());
-		// assertEquals("false", this.ticketReceipt.getSegmentDetails().get(0).getReturnTrip());
+		assertEquals("false", this.ticketReceipt.getSegmentDetails().get(0).getReturnTrip());
 	}
 	
 	private void mockAirports() {

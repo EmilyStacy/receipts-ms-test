@@ -18,8 +18,8 @@ public class PnrSegmentBuilder implements DataBuilderService {
 	public void build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow, int rowIndex) {
 		build(ticketReceipt, ticketReceiptRsRow);
 		
-        //String returnTrip = ("1").equals(ticketReceiptRsRow.getCouponSeqNbr()) && rowIndex != 0 ? "true" : "false";
-		//ticketReceipt.getSegmentDetails().get(ticketReceipt.getSegmentDetails().size() - 1).setReturnTrip(returnTrip);
+        String returnTrip = ("1").equals(ticketReceiptRsRow.getCouponSeqNbr()) && rowIndex != 0 ? "true" : "false";
+		ticketReceipt.getSegmentDetails().get(ticketReceipt.getSegmentDetails().size() - 1).setReturnTrip(returnTrip);
 	}
 
 	@Override
