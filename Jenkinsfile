@@ -106,7 +106,7 @@ pipeline {
                             APP_NAME: 'receipts-ms',
                             CONFIG: ['java'],
                             COV_ENV: 'prod',
-                            NOTIFYUSERS: "DL_Ticketing_Receipts"
+                            NOTIFYUSERS: "DL_Ticketing_Intrepid"
                       )
                  }
             }
@@ -130,7 +130,7 @@ pipeline {
                   """
             }
         }
-        
+       
 //        stage ('job:bff-e2e') {
 //            when {
 //                branch 'master'
@@ -159,8 +159,8 @@ pipeline {
                  """
             }
         }
-
-        stage('integration tests') {
+        
+        stage('int tests Stage') {
             when {
                 branch 'master'
             }
