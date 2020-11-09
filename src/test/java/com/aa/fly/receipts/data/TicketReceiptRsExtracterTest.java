@@ -59,6 +59,12 @@ public class TicketReceiptRsExtracterTest {
 	static final String FARE_TDAM_AMT = "41704";
 	static final String TCN_BULK_IND = "";
 	
+	static final String TAX_CD_SEQ_ID = "1";
+	static final String TAX_CD = "AY";
+	static final String CITY_CD = "STL";
+	static final String TAX_AMT = "11.20";
+	static final String TAX_CURR_TYPE_CD = "USD2";
+	
     final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Mock
@@ -300,6 +306,18 @@ public class TicketReceiptRsExtracterTest {
 		assertEquals(1, ticketReceiptRsRowList.size());
 		assertEquals("", ticketReceiptRsRowList.get(0).getFopCurrTypeCd());
 	}
+	
+	@Test
+	public void testExtract_SqlRowSet_CityCd_Null() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("CITY_CD")).thenReturn(null);
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals("", ticketReceiptRsRowList.get(0).getCityCd());
+	}
 
 	@Test
 	public void testExtract_SqlRowSet_One_Row() throws Exception {
@@ -348,6 +366,12 @@ public class TicketReceiptRsExtracterTest {
 		assertEquals(EQFN_FARE_CURR_TYPE_CD, ticketReceiptRsRowList.get(0).getEqfnFareCurrTypeCd());
 		assertEquals(FARE_TDAM_AMT, ticketReceiptRsRowList.get(0).getFareTdamAmt());
 		assertEquals(TCN_BULK_IND, ticketReceiptRsRowList.get(0).getTcnBulkInd());
+		
+		assertEquals(TAX_CD_SEQ_ID, ticketReceiptRsRowList.get(0).getTaxCdSeqId());
+		assertEquals(TAX_CD, ticketReceiptRsRowList.get(0).getTaxCd());
+		assertEquals(CITY_CD, ticketReceiptRsRowList.get(0).getCityCd());
+		assertEquals(TAX_AMT, ticketReceiptRsRowList.get(0).getTaxAmt());
+		assertEquals(TAX_CURR_TYPE_CD, ticketReceiptRsRowList.get(0).getTaxCurrTypeCd());
 	}
     
 	@Test
@@ -400,6 +424,12 @@ public class TicketReceiptRsExtracterTest {
         Mockito.when(sqlRowSet.getString("EQFN_FARE_CURR_TYPE_CD")).thenReturn(EQFN_FARE_CURR_TYPE_CD);
         Mockito.when(sqlRowSet.getString("FARE_TDAM_AMT")).thenReturn(FARE_TDAM_AMT);
         Mockito.when(sqlRowSet.getString("TCN_BULK_IND")).thenReturn(TCN_BULK_IND);
+
+        Mockito.when(sqlRowSet.getString("TAX_CD_SEQ_ID")).thenReturn(TAX_CD_SEQ_ID);
+        Mockito.when(sqlRowSet.getString("TAX_CD")).thenReturn(TAX_CD);
+        Mockito.when(sqlRowSet.getString("CITY_CD")).thenReturn(CITY_CD);
+        Mockito.when(sqlRowSet.getString("TAX_AMT")).thenReturn(TAX_AMT);
+        Mockito.when(sqlRowSet.getString("TAX_CURR_TYPE_CD")).thenReturn(TAX_CURR_TYPE_CD);
 	}
 }
 

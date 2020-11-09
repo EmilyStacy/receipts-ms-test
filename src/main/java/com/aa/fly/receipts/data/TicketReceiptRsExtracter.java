@@ -69,6 +69,12 @@ public class TicketReceiptRsExtracter {
 						.eqfnFareCurrTypeCd(sqlRowSet.getString("EQFN_FARE_CURR_TYPE_CD"))
 						.fareTdamAmt(sqlRowSet.getString("FARE_TDAM_AMT"))
 						.tcnBulkInd(sqlRowSet.getString("TCN_BULK_IND"))
+						.taxCdSeqId(sqlRowSet.getString("TAX_CD_SEQ_ID"))
+						.taxCd(sqlRowSet.getString("TAX_CD").trim())
+						.cityCd(sqlRowSet.getString("CITY_CD") != null ? 
+	                            sqlRowSet.getString("CITY_CD").trim() : "")
+						.taxAmt(sqlRowSet.getString("TAX_AMT"))
+						.taxCurrTypeCd(sqlRowSet.getString("TAX_CURR_TYPE_CD"))
 
 						.build();
 		        
@@ -79,4 +85,6 @@ public class TicketReceiptRsExtracter {
 		return ticketReceiptRsRowList;
 	}
 }
+
+
 
