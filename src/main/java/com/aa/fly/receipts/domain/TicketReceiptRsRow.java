@@ -48,16 +48,16 @@ public class TicketReceiptRsRow
    private String fopSeqId;
    private String fopAcctNbrLast4;
    private String fopCurrTypeCd;
+   
+   private String fnumFareAmt;
+   private String fnumFareCurrTypeCd;
+   private String eqfnFareAmt;
+   private String eqfnFareCurrTypeCd;
+   private String fareTdamAmt;
+   private String tcnBulkInd;
 }
 /*
 
-// =================== cost - fop =======================
-.append("    FOP_ISSUE_DT, \n")
-.append("    FOP_TYPE_CD, \n")
-.append("    FOP_AMT, \n")
-.append("    FOP_SEQ_ID, \n")
-.append("    FOP_ACCT_NBR_LAST4, \n")
-.append("    FOP_CURR_TYPE_CD, \n")
 // =================== cost - fare =======================
 .append("    FNUM_FARE_AMT, \n")
 .append("    FNUM_FARE_CURR_TYPE_CD, \n")

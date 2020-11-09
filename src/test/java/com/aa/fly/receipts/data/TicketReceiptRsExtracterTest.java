@@ -52,8 +52,15 @@ public class TicketReceiptRsExtracterTest {
 	static final String FOP_ACCT_NBR_LAST4 = "1234";
 	static final String FOP_CURR_TYPE_CD = "USD2";
 	
+	static final String FNUM_FARE_AMT = "34300";
+	static final String FNUM_FARE_CURR_TYPE_CD = "USD2";
+	static final String EQFN_FARE_AMT = "0";
+	static final String EQFN_FARE_CURR_TYPE_CD = "";
+	static final String FARE_TDAM_AMT = "41704";
+	static final String TCN_BULK_IND = "";
+	
     final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
- 
+
     @Mock
     private SqlRowSet sqlRowSet;
     
@@ -334,8 +341,15 @@ public class TicketReceiptRsExtracterTest {
 		assertEquals(FOP_SEQ_ID, ticketReceiptRsRowList.get(0).getFopSeqId());
 		assertEquals(FOP_ACCT_NBR_LAST4, ticketReceiptRsRowList.get(0).getFopAcctNbrLast4());
 		assertEquals(FOP_CURR_TYPE_CD, ticketReceiptRsRowList.get(0).getFopCurrTypeCd());
+		
+		assertEquals(FNUM_FARE_AMT, ticketReceiptRsRowList.get(0).getFnumFareAmt());
+		assertEquals(FNUM_FARE_CURR_TYPE_CD, ticketReceiptRsRowList.get(0).getFnumFareCurrTypeCd());
+		assertEquals(EQFN_FARE_AMT, ticketReceiptRsRowList.get(0).getEqfnFareAmt());
+		assertEquals(EQFN_FARE_CURR_TYPE_CD, ticketReceiptRsRowList.get(0).getEqfnFareCurrTypeCd());
+		assertEquals(FARE_TDAM_AMT, ticketReceiptRsRowList.get(0).getFareTdamAmt());
+		assertEquals(TCN_BULK_IND, ticketReceiptRsRowList.get(0).getTcnBulkInd());
 	}
-
+    
 	@Test
 	public void testExtract_SqlRowSet_Two_Rows() throws Exception {
         Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(true).thenReturn(false); // first time return true and second time return true
@@ -379,5 +393,13 @@ public class TicketReceiptRsExtracterTest {
         Mockito.when(sqlRowSet.getString("FOP_SEQ_ID")).thenReturn(FOP_SEQ_ID);
         Mockito.when(sqlRowSet.getString("FOP_ACCT_NBR_LAST4")).thenReturn(FOP_ACCT_NBR_LAST4);
         Mockito.when(sqlRowSet.getString("FOP_CURR_TYPE_CD")).thenReturn(FOP_CURR_TYPE_CD);
+
+        Mockito.when(sqlRowSet.getString("FNUM_FARE_AMT")).thenReturn(FNUM_FARE_AMT);
+        Mockito.when(sqlRowSet.getString("FNUM_FARE_CURR_TYPE_CD")).thenReturn(FNUM_FARE_CURR_TYPE_CD);
+        Mockito.when(sqlRowSet.getString("EQFN_FARE_AMT")).thenReturn(EQFN_FARE_AMT);
+        Mockito.when(sqlRowSet.getString("EQFN_FARE_CURR_TYPE_CD")).thenReturn(EQFN_FARE_CURR_TYPE_CD);
+        Mockito.when(sqlRowSet.getString("FARE_TDAM_AMT")).thenReturn(FARE_TDAM_AMT);
+        Mockito.when(sqlRowSet.getString("TCN_BULK_IND")).thenReturn(TCN_BULK_IND);
 	}
 }
+

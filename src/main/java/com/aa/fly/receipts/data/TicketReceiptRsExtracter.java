@@ -64,6 +64,7 @@ public class TicketReceiptRsExtracter {
 						.fopCurrTypeCd(sqlRowSet.getString("FOP_CURR_TYPE_CD") != null ? 
 	                            sqlRowSet.getString("FOP_CURR_TYPE_CD").trim() : "")
 
+						
 						.build();
 		
 				ticketReceiptRsRowList.add(ticketReceiptRsRow);
