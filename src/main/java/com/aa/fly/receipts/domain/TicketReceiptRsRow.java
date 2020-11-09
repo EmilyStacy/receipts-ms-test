@@ -55,33 +55,23 @@ public class TicketReceiptRsRow
    private String eqfnFareCurrTypeCd;
    private String fareTdamAmt;
    private String tcnBulkInd;
+   
+   private String taxCdSeqId;
+   private String taxCd;
+   private String cityCd;
+   private String taxAmt;
+   private String taxCurrTypeCd;
+   
+   private String anclryDocNbr;
+   private Date anclryIssueDt;
+   private String anclryProdCd;
+   private String anclryProdNm;
+   private String anclryPriceLclCurncyAmt;
+   private String anclryPriceLclCurncyCd;
+   private String anclrySlsCurncyAmt;
+   private String anclrySlsCurncyCd;
+   private String anclryFopAmt;
+   private String anclryFopTypeCd;
+   private String anclryFopAcctNbrLast4;
+   private String anclryFopCurrTypeCd;
 }
-/*
-
-// =================== cost - fare =======================
-.append("    FNUM_FARE_AMT, \n")
-.append("    FNUM_FARE_CURR_TYPE_CD, \n")
-.append("    EQFN_FARE_AMT, \n")
-.append("    EQFN_FARE_CURR_TYPE_CD, \n")
-.append("    FARE_TDAM_AMT, \n")
-.append("    TCN_BULK_IND, \n")
-// =================== cost - tax =======================
-.append("    TAX_CD_SEQ_ID, \n")
-.append("    TAX_CD, \n")
-.append("    CITY_CD, \n")
-.append("    TAX_AMT, \n")
-.append("    TAX_CURR_TYPE_CD, \n")
-// =================== cost - ancillary =======================
-.append("    ANCLRY_DOC_NBR, \n")
-.append("    ANCLRY_ISSUE_DT, \n")
-.append("    ANCLRY_PROD_CD, \n")
-.append("    ANCLRY_PROD_NM, \n")
-.append("    ANCLRY_PRICE_LCL_CURNCY_AMT, \n")
-.append("    ANCLRY_PRICE_LCL_CURNCY_CD, \n")
-.append("    ANCLRY_SLS_CURNCY_AMT, \n")
-.append("    ANCLRY_SLS_CURNCY_CD, \n")
-.append("    ANCLRY_FOP_AMT, \n")
-.append("    ANCLRY_FOP_TYPE_CD, \n")
-.append("    ANCLRY_FOP_ACCT_NBR_LAST4, \n")
-.append("    ANCLRY_FOP_CURR_TYPE_CD \n")
-*/
