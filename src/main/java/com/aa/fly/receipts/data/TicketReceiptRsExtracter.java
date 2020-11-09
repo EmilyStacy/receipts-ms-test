@@ -63,10 +63,15 @@ public class TicketReceiptRsExtracter {
 	                            sqlRowSet.getString("FOP_ACCT_NBR_LAST4").trim() : "")
 						.fopCurrTypeCd(sqlRowSet.getString("FOP_CURR_TYPE_CD") != null ? 
 	                            sqlRowSet.getString("FOP_CURR_TYPE_CD").trim() : "")
+						.fnumFareAmt(sqlRowSet.getString("FNUM_FARE_AMT"))
+						.fnumFareCurrTypeCd(sqlRowSet.getString("FNUM_FARE_CURR_TYPE_CD"))
+						.eqfnFareAmt(sqlRowSet.getString("EQFN_FARE_AMT"))
+						.eqfnFareCurrTypeCd(sqlRowSet.getString("EQFN_FARE_CURR_TYPE_CD"))
+						.fareTdamAmt(sqlRowSet.getString("FARE_TDAM_AMT"))
+						.tcnBulkInd(sqlRowSet.getString("TCN_BULK_IND"))
 
-						
 						.build();
-		
+		        
 				ticketReceiptRsRowList.add(ticketReceiptRsRow);
 	        }
 		}
