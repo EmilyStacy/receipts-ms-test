@@ -9,11 +9,14 @@ import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.AirportService;
+import java.util.Objects;
 
 @Component
 public class TicketReceiptMapper {
 
 	private static final String FLIGHT_NBR = "FLIGHT_NBR";
+    private static final String SEG_DEPT_DT = "SEG_DEPT_DT";
+    private static final String SEG_DEPT_TM = "SEG_DEPT_TM";
 	
     @Autowired
     private AirportService airportService;
@@ -22,8 +25,8 @@ public class TicketReceiptMapper {
 
         TicketReceipt ticketReceipt = new TicketReceipt();
         int rowCount = 0;
-        String lastFlightNbr = "";
-        String currFlightNbr = null;
+        String lastDepartureDateTime = "";
+        String currentDepartureDateTime = null;
 
         while (rs.next()) {
             if (rowCount == 0) {
@@ -44,12 +47,12 @@ public class TicketReceiptMapper {
                 ticketReceipt.getPassengerDetails().add(passengerDetail);
             }
 
-            currFlightNbr = StringUtils.isNotBlank(rs.getString(FLIGHT_NBR)) ? rs.getString(FLIGHT_NBR).trim() : null;
+            currentDepartureDateTime = Objects.requireNonNull(rs.getDate(SEG_DEPT_DT)).toString().concat(Objects.requireNonNull(rs.getTime(SEG_DEPT_TM)).toString());
 
-            if (lastFlightNbr != null && !lastFlightNbr.equalsIgnoreCase(currFlightNbr))
+            if (!lastDepartureDateTime.equalsIgnoreCase(currentDepartureDateTime))
             {
                 ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));
-                lastFlightNbr = currFlightNbr;
+                lastDepartureDateTime = currentDepartureDateTime;
             }
             rowCount++;
         }
