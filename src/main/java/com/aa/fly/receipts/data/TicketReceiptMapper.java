@@ -9,10 +9,15 @@ import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.AirportService;
+import java.util.Objects;
 
 @Component
 public class TicketReceiptMapper {
 
+	private static final String FLIGHT_NBR = "FLIGHT_NBR";
+    private static final String SEG_DEPT_DT = "SEG_DEPT_DT";
+    private static final String SEG_DEPT_TM = "SEG_DEPT_TM";
+	
     @Autowired
     private AirportService airportService;
 
@@ -20,6 +25,8 @@ public class TicketReceiptMapper {
 
         TicketReceipt ticketReceipt = new TicketReceipt();
         int rowCount = 0;
+        String lastDepartureDateTime = "";
+        String currentDepartureDateTime = null;
 
         while (rs.next()) {
             if (rowCount == 0) {
@@ -28,8 +35,8 @@ public class TicketReceiptMapper {
                 ticketReceipt.setDepartureDate(rs.getDate("DEP_DT"));
                 ticketReceipt.setOriginAirport(airportService.getAirport(StringUtils.isNotBlank(rs.getString("ORG_ATO_CD")) ? rs.getString("ORG_ATO_CD").trim() : null));
                 ticketReceipt.setDestinationAirport(airportService.getAirport(StringUtils.isNotBlank(rs.getString("DEST_ATO_CD")) ? rs.getString("DEST_ATO_CD").trim() : null));
-                ticketReceipt.setPnr(rs.getString("PNR"));
-
+                ticketReceipt.setPnr(rs.getString("PNR").trim());
+                		
                 PassengerDetail passengerDetail = new PassengerDetail();
                 passengerDetail.setTicketNumber(rs.getString("TICKET_NBR"));
                 passengerDetail.setFirstName(rs.getString("FIRST_NM"));
@@ -40,7 +47,13 @@ public class TicketReceiptMapper {
                 ticketReceipt.getPassengerDetails().add(passengerDetail);
             }
 
-            ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));
+            currentDepartureDateTime = Objects.requireNonNull(rs.getDate(SEG_DEPT_DT)).toString().concat(Objects.requireNonNull(rs.getTime(SEG_DEPT_TM)).toString());
+
+            if (!lastDepartureDateTime.equalsIgnoreCase(currentDepartureDateTime))
+            {
+                ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));
+                lastDepartureDateTime = currentDepartureDateTime;
+            }
             rowCount++;
         }
         return ticketReceipt;
@@ -56,7 +69,7 @@ public class TicketReceiptMapper {
         segmentDetail.setSegmentStatus(StringUtils.isNotBlank(rs.getString("SEG_COUPON_STATUS_CD")) ? rs.getString("SEG_COUPON_STATUS_CD").trim() : "");
         segmentDetail.setSegmentArrivalTime(rs.getString("SEG_ARVL_TM"));
         segmentDetail.setCarrierCode(StringUtils.isNotBlank(rs.getString("SEG_OPERAT_CARRIER_CD")) ? rs.getString("SEG_OPERAT_CARRIER_CD").trim() : null);
-        segmentDetail.setFlightNumber(StringUtils.isNotBlank(rs.getString("FLIGHT_NBR")) ? rs.getString("FLIGHT_NBR").trim() : null);
+        segmentDetail.setFlightNumber(StringUtils.isNotBlank(rs.getString(FLIGHT_NBR)) ? rs.getString(FLIGHT_NBR).trim() : null);
         segmentDetail.setBookingClass(StringUtils.isNotBlank(rs.getString("BOOKING_CLASS")) ? rs.getString("BOOKING_CLASS").trim() : null);
         segmentDetail.setFareBasis(StringUtils.isNotBlank(rs.getString("FARE_BASE")) ? rs.getString("FARE_BASE").trim() : null);
         segmentDetail.setReturnTrip(StringUtils.isNotBlank(rs.getString("COUPON_SEQ_NBR")) && ("1").equals(rs.getString("COUPON_SEQ_NBR")) && rowCount != 0 ? "true" : "false");

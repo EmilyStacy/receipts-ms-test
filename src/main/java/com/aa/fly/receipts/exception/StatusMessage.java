@@ -2,7 +2,7 @@ package com.aa.fly.receipts.exception;
 
 public enum StatusMessage {
 
-    NO_COST("NoCostDetailsFound"), BULK_TICKET("BulkTicket");
+    BULK_TICKET("BulkTicket");
 
     private String message;
 

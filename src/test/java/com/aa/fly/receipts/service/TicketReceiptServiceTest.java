@@ -17,7 +17,7 @@ import com.aa.fly.receipts.data.TicketReceiptRepository;
 import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
-import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
+import com.aa.fly.receipts.exception.BulkTicketException;
 import com.aa.fly.receipts.service.impl.TicketReceiptServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,7 +33,6 @@ public class TicketReceiptServiceTest {
         TicketReceipt expectedReceipt = ReceiptsMSDomainTest.getTicketReceipt();
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
         when(ticketReceiptRepository.findTicketReceiptByTicketNumber(criteria)).thenReturn(expectedReceipt);
-        when(ticketReceiptRepository.findCostDetailsByTicketNumber(criteria, expectedReceipt.getPassengerDetails().get(0))).thenReturn(expectedReceipt.getPassengerDetails().get(0));
         TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria).getBody();
         assertThat(actualReceipt).isNotNull();
         assertThat(actualReceipt.getAirlineAccountCode()).isEqualTo("001");
@@ -42,18 +41,23 @@ public class TicketReceiptServiceTest {
         assertThat(actualReceipt.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode()).isEqualTo("USD2");
         assertThat(actualReceipt.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount()).isEqualTo("84930");
     }
-
+    
     @Test
-    public void findTicketReceipt_shouldReturnNoCostDetailsFoundStatusMessage() throws ParseException {
-        TicketReceipt expectedReceipt = ReceiptsMSDomainTest.getTicketReceipt();
+    public void testTicketReceiptBulkTicketException() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
-        when(ticketReceiptRepository.findTicketReceiptByTicketNumber(criteria)).thenReturn(expectedReceipt);
-        when(ticketReceiptRepository.findCostDetailsByTicketNumber(criteria, expectedReceipt.getPassengerDetails().get(0))).thenThrow(NoCostDetailsFoundException.class);
+        when(ticketReceiptRepository.findTicketReceiptByTicketNumber(criteria)).thenThrow(BulkTicketException.class);
+        
         TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria).getBody();
         assertThat(actualReceipt).isNotNull();
-        assertThat(actualReceipt.getAirlineAccountCode()).isEqualTo("001");
-        assertThat(actualReceipt.getPnr()).isEqualTo("MRYMPT");
-        assertThat(actualReceipt.getStatusMessage()).isEqualTo("NoCostDetailsFound");
+        assertThat(actualReceipt.getStatusMessage()).isEqualTo("BulkTicket");
+    }
+
+    @Test
+    public void testCriteriaTicketNumber10Chars() throws ParseException {
+        SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
+        criteria.setTicketNumber("1234567890");
+        TicketReceipt actualReceipt = ticketReceiptService.findTicketReceipt(criteria).getBody();
+        assertThat(actualReceipt).isNull();
     }
 
     @Test
@@ -65,7 +69,7 @@ public class TicketReceiptServiceTest {
         method.setAccessible(true);
 
         method.invoke(ticketReceiptService, sc);
-        assertThat(sc.getTicketNumber()).isEqualTo("0011234567890");
+        assertThat(sc.getTicketNumber()).isEqualTo("1234567890");
     }
 
     @Test
@@ -77,7 +81,7 @@ public class TicketReceiptServiceTest {
         method.setAccessible(true);
 
         method.invoke(ticketReceiptService, sc);
-        assertThat(sc.getTicketNumber()).isEqualTo("0011234567890");
+        assertThat(sc.getTicketNumber()).isEqualTo("1234567890");
     }
 
 

@@ -1,7 +1,6 @@
 package com.aa.fly.receipts.data;
 
 import com.aa.fly.receipts.domain.*;
-import com.aa.fly.receipts.exception.NoCostDetailsFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -11,12 +10,11 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -41,14 +39,10 @@ public class TicketReceiptRepositoryTest {
     @InjectMocks
     private TicketReceiptRepository receiptRepository;
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
     @Test
     public void findTicketReceiptByTicketNumber() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
         TicketReceipt ticketReceipt = ReceiptsMSDomainTest.getTicketReceipt();
-        List<TicketReceipt> ticketReceiptList = new ArrayList<>();
-        ticketReceiptList.add(ticketReceipt);
         when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(resultSet);
         when(ticketReceiptMapper.mapTicketReceipt(resultSet))
@@ -58,50 +52,12 @@ public class TicketReceiptRepositoryTest {
     }
 
     @Test
-    public void findCostDetailsByTicketNumber() throws ParseException {
+    public void findTicketReceiptByTicketNumberDataNotFound() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
-        PassengerDetail passengerDetail = new PassengerDetail();
-
-        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString(), anyString()))
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(resultSet);
-        when(resultSet.isBeforeFirst()).thenReturn(true);
-        PassengerDetail passengerDetailExpected = getPassengerDetailWithCostDetails(passengerDetail);
-        when(costDetailsMapper.mapCostDetails(resultSet, passengerDetail))
-                .thenReturn(passengerDetailExpected);
-
-        PassengerDetail passengerDetailActual = receiptRepository.findCostDetailsByTicketNumber(criteria, passengerDetail);
-
-        assertTrue(passengerDetailExpected.getFormOfPayments().get(0).equals(passengerDetailActual.getFormOfPayments().get(0)));
-    }
-
-    private PassengerDetail getPassengerDetailWithCostDetails(PassengerDetail passengerDetail) throws ParseException {
-        List<FormOfPayment> formOfPayments = new ArrayList<>();
-        FormOfPayment formOfPayment = new FormOfPayment();
-        formOfPayment.setFopAccountNumberLast4("0006");
-        formOfPayment.setFopIssueDate(dateFormat.parse("10/30/2019"));
-        AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency("53628", "CAD2");
-        formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
-        formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
-        formOfPayment.setFopTypeCode("CCBA");
-        formOfPayment.setFopTypeDescription("Visa");
-        formOfPayments.add(formOfPayment);
-        passengerDetail.setFormOfPayments(formOfPayments);
-        return passengerDetail;
-    }
-
-    @Test(expected = NoCostDetailsFoundException.class)
-    public void findCostDetailsByTicketNumber_ShouldThrowExceptionWhenCostDetailIsNotFound() throws ParseException {
-        SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
-        PassengerDetail passengerDetail = new PassengerDetail();
-
-        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString(), anyString()))
-                .thenReturn(resultSet);
-        when(resultSet.isBeforeFirst()).thenReturn(false);
-        PassengerDetail passengerDetailExpected = getPassengerDetailWithCostDetails(passengerDetail);
-        when(costDetailsMapper.mapCostDetails(resultSet, passengerDetail))
-                .thenReturn(passengerDetailExpected);
-
-        receiptRepository.findCostDetailsByTicketNumber(criteria, passengerDetail);
-
+        when(ticketReceiptMapper.mapTicketReceipt(resultSet))
+                .thenReturn(null);
+        assertNull(receiptRepository.findTicketReceiptByTicketNumber(criteria));
     }
 }

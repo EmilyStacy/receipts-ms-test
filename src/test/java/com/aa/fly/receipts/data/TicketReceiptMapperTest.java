@@ -2,6 +2,7 @@ package com.aa.fly.receipts.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -72,6 +73,7 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("SEG_OPERAT_CARRIER_CD")).thenReturn("AA");
         final String segmentDepartureTime = "8:05:00";
         Mockito.when(resultSet.getString("SEG_DEPT_TM")).thenReturn(segmentDepartureTime);
+        Mockito.when(resultSet.getTime("SEG_DEPT_TM")).thenReturn(Time.valueOf(segmentDepartureTime));
         final String segmentArrivalTime = "9:05:00";
         final String segmentStatus = "   USED   ";
         Mockito.when(resultSet.getString("SEG_ARVL_TM")).thenReturn(segmentArrivalTime);
@@ -139,6 +141,10 @@ public class TicketReceiptMapperTest {
         Mockito.when(resultSet.getString("PNR")).thenReturn("MRYMPT");
         Mockito.when(resultSet.getString("LYLTY_OWN_CD")).thenReturn(null);
         Mockito.when(resultSet.getString("SEG_COUPON_STATUS_CD")).thenReturn(null);
+        final String segmentDepartureTime = "8:05:00";
+        Mockito.when(resultSet.getTime("SEG_DEPT_TM")).thenReturn(Time.valueOf(segmentDepartureTime));
+        final Date departureDate = dateFormat.parse("2019-09-30");
+        Mockito.when(resultSet.getDate("SEG_DEPT_DT")).thenReturn(new java.sql.Date(departureDate.getTime()));
 
         TicketReceipt item = ticketReceiptMapper.mapTicketReceipt(resultSet);
         SegmentDetail segmentDetail = new SegmentDetail();
@@ -153,8 +159,6 @@ public class TicketReceiptMapperTest {
         assertThat(item.getSegmentDetails().get(0).getSegmentStatus()).isEqualTo("");
     }
 
-
-
     public Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {
         Airport airport = new Airport();
         airport.setCode(code);
@@ -165,5 +169,4 @@ public class TicketReceiptMapperTest {
         airport.setStateCode(state);
         return airport;
     }
-
 }
