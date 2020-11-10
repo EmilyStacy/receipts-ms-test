@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +16,15 @@ import org.mockito.Mockito;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
 import com.aa.fly.receipts.domain.Airport;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 import com.aa.fly.receipts.service.AirportService;
+import com.aa.fly.receipts.util.Constants;
+import com.aa.fly.receipts.util.Utils;
 
 /**
  * Created by 629874 on 5/17/2019.
@@ -31,12 +37,26 @@ public class TicketReceiptMapperTest {
 
     @Mock
     private AirportService airportService;
+    
+    @Mock
+    private PnrHeaderBuilder pnrHeaderBuilder;
 
     @InjectMocks
     private TicketReceiptMapper ticketReceiptMapper;
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private TicketReceiptRsRow ticketReceiptRsRow;
+    private List<TicketReceiptRsRow> ticketReceiptRsRowList = new ArrayList<>();
+    
+    static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    @Test
+    public void testMapTicketReceipt() throws ParseException {
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+    	TicketReceipt ticketReceipt = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+    }
+    
     @Test
     public void mapResultSet() throws ParseException {
 

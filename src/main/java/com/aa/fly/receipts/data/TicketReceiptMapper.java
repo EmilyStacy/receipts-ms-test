@@ -1,14 +1,20 @@
 package com.aa.fly.receipts.data;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 import com.aa.fly.receipts.service.AirportService;
+import com.aa.fly.receipts.service.DataBuilderService;
 
 @Component
 public class TicketReceiptMapper {
@@ -17,7 +23,40 @@ public class TicketReceiptMapper {
 	
     @Autowired
     private AirportService airportService;
+    
+    @Autowired
+    private DataBuilderService pnrHeaderBuilder;    
 
+    public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
+
+        TicketReceipt ticketReceipt = new TicketReceipt();
+        int rowCount = 0;
+        String lastFlightNbr = "";
+        String currFlightNbr = null;
+
+        Iterator<TicketReceiptRsRow> iterator = ticketReceiptRsRowList.iterator();
+        TicketReceiptRsRow ticketReceiptRsRow = null;
+
+        while (iterator.hasNext()) {
+        	ticketReceiptRsRow = iterator.next();
+        	
+            if (rowCount == 0) {
+
+                //ticketReceipt.getPassengerDetails().add(passengerDetail);
+            }
+
+            currFlightNbr = ticketReceiptRsRow.getFlightNbr();
+
+            if (lastFlightNbr != null && !lastFlightNbr.equalsIgnoreCase(currFlightNbr))
+            {
+                //ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));
+                lastFlightNbr = currFlightNbr;
+            }
+            rowCount++;
+        }
+        return ticketReceipt;
+    }
+    
     public TicketReceipt mapTicketReceipt(SqlRowSet rs) {
 
         TicketReceipt ticketReceipt = new TicketReceipt();
