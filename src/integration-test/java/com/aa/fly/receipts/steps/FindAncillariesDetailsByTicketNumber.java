@@ -34,10 +34,10 @@ public class FindAncillariesDetailsByTicketNumber extends SpringIntegrationSetup
         i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(testDataMap.get("anclryFOP2IssueDate"), testDataMap.get("anclryFOP2TypeCode"),
                 testDataMap.get("anclryFOP2AccountDescription"), testDataMap.get("anclryFOP2AccountNumLastFour"),testDataMap.get("anclryFOPAmt2"), testDataMap.get("anclryFOPAmt2CurrencyCode"), 2);
         i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(testDataMap.get("anclryFOP3IssueDate"), testDataMap.get("anclryFOP3TypeCode"),
-                testDataMap.get("anclryFOP3AccountDescription"), testDataMap.get("anclryFOP3AccountNumLastFour"),testDataMap.get("anclryFOPAmt3"), testDataMap.get("anclryFOPAmt3CurrencyCode"), 3);
+                testDataMap.get("anclryFOP3AccountDescription"), testDataMap.get("anclryFOP3AccountNumLastFour"),testDataMap.get("anclryFOPAmt3"), testDataMap.get("anclryFOPAmt3CurrencyCode"), 5);
         Assert.assertEquals(testDataMap.get("anclryFOPName1"),getAncillaryItem(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments(),1,0).getAnclryProdName());
         Assert.assertEquals(testDataMap.get("anclryFOPName2"),getAncillaryItem(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments(),2,0).getAnclryProdName());
-        Assert.assertEquals(testDataMap.get("anclryFOPName3"),getAncillaryItem(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments(),3,0).getAnclryProdName());
+        Assert.assertEquals(testDataMap.get("anclryFOPName3"),getAncillaryItem(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments(),5,0).getAnclryProdName());
     }
 
     @Given("^I want to retrieve payment details - ancillaries for scenario \"([^\"]*)\"$")
@@ -169,8 +169,8 @@ public class FindAncillariesDetailsByTicketNumber extends SpringIntegrationSetup
                 testDataMap.get("ticketFOPAccountDescription"), testDataMap.get("ticketFOPAccountNumLastFour"),testDataMap.get("ticketFOPAmt"), testDataMap.get("ticketFOPAmtCurrencyCode"), 0);
 
         i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(testDataMap.get("anclryFOP1IssueDate"), testDataMap.get("anclryFOP1TypeCode"),
-                testDataMap.get("anclryFOP1AccountDescription"), testDataMap.get("anclryFOP1AccountNumLastFour"),testDataMap.get("anclryFOPAmt1"), testDataMap.get("anclryFOPAmt1CurrencyCode"), 1);
-        Assert.assertEquals(testDataMap.get("anclryFOPName1"),getAncillaryItem(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments(),1,0).getAnclryProdName());
+                testDataMap.get("anclryFOP1AccountDescription"), testDataMap.get("anclryFOP1AccountNumLastFour"),testDataMap.get("anclryFOPAmt1"), testDataMap.get("anclryFOPAmt1CurrencyCode"), 2);
+        Assert.assertEquals(testDataMap.get("anclryFOPName1"),getAncillaryItem(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments(),2,0).getAnclryProdName());
     }
 }
 
