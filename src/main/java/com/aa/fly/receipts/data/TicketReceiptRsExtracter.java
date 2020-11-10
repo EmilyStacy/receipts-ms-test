@@ -75,9 +75,22 @@ public class TicketReceiptRsExtracter {
 	                            sqlRowSet.getString("CITY_CD").trim() : "")
 						.taxAmt(sqlRowSet.getString("TAX_AMT"))
 						.taxCurrTypeCd(sqlRowSet.getString("TAX_CURR_TYPE_CD"))
+						.anclryDocNbr(sqlRowSet.getString("ANCLRY_DOC_NBR") != null ? 
+	                            sqlRowSet.getString("ANCLRY_DOC_NBR") : "")
+						.anclryIssueDt(sqlRowSet.getDate("ANCLRY_ISSUE_DT"))
+						.anclryProdCd(sqlRowSet.getString("ANCLRY_PROD_CD"))
+						.anclryProdNm(sqlRowSet.getString("ANCLRY_PROD_NM"))
+						.anclryPriceLclCurncyAmt(sqlRowSet.getString("ANCLRY_PRICE_LCL_CURNCY_AMT"))
+						.anclryPriceLclCurncyCd(sqlRowSet.getString("ANCLRY_PRICE_LCL_CURNCY_CD"))
+						.anclrySlsCurncyAmt(sqlRowSet.getString("ANCLRY_SLS_CURNCY_AMT"))
+						.anclrySlsCurncyCd(sqlRowSet.getString("ANCLRY_SLS_CURNCY_CD"))
+						.anclryFopAmt(sqlRowSet.getString("ANCLRY_FOP_AMT"))
+						.anclryFopTypeCd(sqlRowSet.getString("ANCLRY_FOP_TYPE_CD"))
+						.anclryFopAcctNbrLast4(sqlRowSet.getString("ANCLRY_FOP_ACCT_NBR_LAST4"))
+						.anclryFopCurrTypeCd(sqlRowSet.getString("ANCLRY_FOP_CURR_TYPE_CD"))
 
 						.build();
-		        
+				
 				ticketReceiptRsRowList.add(ticketReceiptRsRow);
 	        }
 		}

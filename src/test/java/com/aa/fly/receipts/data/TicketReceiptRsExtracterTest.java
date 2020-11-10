@@ -65,7 +65,20 @@ public class TicketReceiptRsExtracterTest {
 	static final String TAX_AMT = "11.20";
 	static final String TAX_CURR_TYPE_CD = "USD2";
 	
-    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	static final String ANCLRY_DOC_NBR = "617097598";
+	static final String ANCLRY_ISSUE_DT = "2020-10-10";
+	static final String ANCLRY_PROD_CD = "089";
+	static final String ANCLRY_PROD_NM = "PAID LFB UPGRADE";
+	static final String ANCLRY_PRICE_LCL_CURNCY_AMT = "42.83";
+	static final String ANCLRY_PRICE_LCL_CURNCY_CD = "USD";
+	static final String ANCLRY_SLS_CURNCY_AMT = "46.04";
+	static final String ANCLRY_SLS_CURNCY_CD = "USD";
+	static final String ANCLRY_FOP_AMT = "4604";
+	static final String ANCLRY_FOP_TYPE_CD = "CCBA";
+	static final String ANCLRY_FOP_ACCT_NBR_LAST4 = "6170";
+	static final String ANCLRY_FOP_CURR_TYPE_CD = "USD2";
+
+	final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Mock
     private SqlRowSet sqlRowSet;
@@ -318,6 +331,18 @@ public class TicketReceiptRsExtracterTest {
 		assertEquals(1, ticketReceiptRsRowList.size());
 		assertEquals("", ticketReceiptRsRowList.get(0).getCityCd());
 	}
+	
+	@Test
+	public void testExtract_SqlRowSet_AnclryDocNbr_Null() throws Exception {
+        Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(false);
+		this.mockFields();
+        Mockito.when(sqlRowSet.getString("ANCLRY_DOC_NBR")).thenReturn(null);
+		
+        ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+		assertNotNull(ticketReceiptRsRowList);
+		assertEquals(1, ticketReceiptRsRowList.size());
+		assertEquals("", ticketReceiptRsRowList.get(0).getAnclryDocNbr());
+	}
 
 	@Test
 	public void testExtract_SqlRowSet_One_Row() throws Exception {
@@ -372,8 +397,21 @@ public class TicketReceiptRsExtracterTest {
 		assertEquals(CITY_CD, ticketReceiptRsRowList.get(0).getCityCd());
 		assertEquals(TAX_AMT, ticketReceiptRsRowList.get(0).getTaxAmt());
 		assertEquals(TAX_CURR_TYPE_CD, ticketReceiptRsRowList.get(0).getTaxCurrTypeCd());
+		
+		assertEquals(ANCLRY_DOC_NBR, ticketReceiptRsRowList.get(0).getAnclryDocNbr());
+		assertEquals(ANCLRY_ISSUE_DT, dateFormat.parse(ANCLRY_ISSUE_DT), ticketReceiptRsRowList.get(0).getAnclryIssueDt());
+		assertEquals(ANCLRY_PROD_CD, ticketReceiptRsRowList.get(0).getAnclryProdCd());
+		assertEquals(ANCLRY_PROD_NM, ticketReceiptRsRowList.get(0).getAnclryProdNm());
+		assertEquals(ANCLRY_PRICE_LCL_CURNCY_AMT, ticketReceiptRsRowList.get(0).getAnclryPriceLclCurncyAmt());
+		assertEquals(ANCLRY_PRICE_LCL_CURNCY_CD, ticketReceiptRsRowList.get(0).getAnclryPriceLclCurncyCd());
+		assertEquals(ANCLRY_SLS_CURNCY_AMT, ticketReceiptRsRowList.get(0).getAnclrySlsCurncyAmt());
+		assertEquals(ANCLRY_SLS_CURNCY_CD, ticketReceiptRsRowList.get(0).getAnclrySlsCurncyCd());
+		assertEquals(ANCLRY_FOP_AMT, ticketReceiptRsRowList.get(0).getAnclryFopAmt());
+		assertEquals(ANCLRY_FOP_TYPE_CD, ticketReceiptRsRowList.get(0).getAnclryFopTypeCd());
+		assertEquals(ANCLRY_FOP_ACCT_NBR_LAST4, ticketReceiptRsRowList.get(0).getAnclryFopAcctNbrLast4());
+		assertEquals(ANCLRY_FOP_CURR_TYPE_CD, ticketReceiptRsRowList.get(0).getAnclryFopCurrTypeCd());
 	}
-    
+
 	@Test
 	public void testExtract_SqlRowSet_Two_Rows() throws Exception {
         Mockito.when(sqlRowSet.next()).thenReturn(true).thenReturn(true).thenReturn(false); // first time return true and second time return true
@@ -430,6 +468,18 @@ public class TicketReceiptRsExtracterTest {
         Mockito.when(sqlRowSet.getString("CITY_CD")).thenReturn(CITY_CD);
         Mockito.when(sqlRowSet.getString("TAX_AMT")).thenReturn(TAX_AMT);
         Mockito.when(sqlRowSet.getString("TAX_CURR_TYPE_CD")).thenReturn(TAX_CURR_TYPE_CD);
+        
+        Mockito.when(sqlRowSet.getString("ANCLRY_DOC_NBR")).thenReturn(ANCLRY_DOC_NBR);
+        Mockito.when(sqlRowSet.getDate("ANCLRY_ISSUE_DT")).thenReturn(new java.sql.Date(dateFormat.parse(ANCLRY_ISSUE_DT).getTime()));
+        Mockito.when(sqlRowSet.getString("ANCLRY_PROD_CD")).thenReturn(ANCLRY_PROD_CD);
+        Mockito.when(sqlRowSet.getString("ANCLRY_PROD_NM")).thenReturn(ANCLRY_PROD_NM);
+        Mockito.when(sqlRowSet.getString("ANCLRY_PRICE_LCL_CURNCY_AMT")).thenReturn(ANCLRY_PRICE_LCL_CURNCY_AMT);
+        Mockito.when(sqlRowSet.getString("ANCLRY_PRICE_LCL_CURNCY_CD")).thenReturn(ANCLRY_PRICE_LCL_CURNCY_CD);
+        Mockito.when(sqlRowSet.getString("ANCLRY_SLS_CURNCY_AMT")).thenReturn(ANCLRY_SLS_CURNCY_AMT);
+        Mockito.when(sqlRowSet.getString("ANCLRY_SLS_CURNCY_CD")).thenReturn(ANCLRY_SLS_CURNCY_CD);
+        Mockito.when(sqlRowSet.getString("ANCLRY_FOP_AMT")).thenReturn(ANCLRY_FOP_AMT);
+        Mockito.when(sqlRowSet.getString("ANCLRY_FOP_TYPE_CD")).thenReturn(ANCLRY_FOP_TYPE_CD);
+        Mockito.when(sqlRowSet.getString("ANCLRY_FOP_ACCT_NBR_LAST4")).thenReturn(ANCLRY_FOP_ACCT_NBR_LAST4);
+        Mockito.when(sqlRowSet.getString("ANCLRY_FOP_CURR_TYPE_CD")).thenReturn(ANCLRY_FOP_CURR_TYPE_CD);
 	}
 }
-
