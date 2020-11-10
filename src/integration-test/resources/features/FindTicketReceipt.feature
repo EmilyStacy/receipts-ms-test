@@ -203,3 +203,12 @@ Feature: Search with ticket number should return ticket receipt
     Examples:
       | scenario             | ticketNumber  | lastName | firstName | departureDate | rowCount |
       | Invalid airline code | 0022132820896 | ADAMS    | PAUL      | 08/13/2020    | 3        |
+
+  Scenario Outline: Same flight number in round trip
+    Given I want to find trip details for scenario "<scenario>"
+    When I search for my trip with ticket number "<ticketNumber>", last name "<lastName>", first name "<firstName>", departure date "<departureDate>"
+    Then I get a successful response with pnr as "<PNR>", departSegmentString as "<departSegmentString>", returnSegmentString as "<returnSegmentString>"
+
+    Examples:
+      | scenario                              | ticketNumber  | lastName    | firstName | departureDate | PNR    | departSegmentString                                                                                                                                                             | returnSegmentString                                                                                                                                                            |
+      | Round trip with same flight number    | 0012117384146 | WORKMAN     | DAVID     | 03/20/2020    | LFIGIU | CP6022 leaving XNA(Fayetteville, AR) to LAX(Los Angeles, CA) on 2020-03-20 at 13:53:00 and arriving on 2020-03-20 at 15:32:00 in class VVDWZNB1 and the flight status is EXCH.  | CP6022 leaving LAX(Los Angeles, CA) to XNA(Fayetteville, AR) on 2020-03-25 at 08:10:00 and arriving on 2020-03-25 at 13:23:00 in class QWAHZNB1 and the flight status is EXCH. |
