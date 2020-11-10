@@ -1,5 +1,7 @@
 applications:
-- buildpack: java_buildpack_offline
+  buildpacks:
+    - java_buildpack_offline
+  stack: cflinuxfs3
   memory: 1G
   timeout: 180
   instances: 3
