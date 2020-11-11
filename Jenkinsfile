@@ -111,7 +111,7 @@ pipeline {
                  }
             }
         }
-/*
+
         stage('deploy dev') {
             when {
                 // if it is a branch and not a PR
@@ -130,7 +130,7 @@ pipeline {
                   """
             }
         }
-*/       
+
 //        stage ('job:bff-e2e') {
 //            when {
 //                branch 'master'
@@ -147,13 +147,12 @@ pipeline {
             }
 
             steps {
-            /*
+
                 sh "cf login -a '$PCF_PRODC_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
                 sh """
                     chmod u+x ./devops/epaas/deploy.sh
                     ./devops/epaas/deploy.sh ${PCF_PRODC_URL} $PCF_STAGE_PROD_ID_USR $PCF_STAGE_PROD_ID_PSW ${PCF_ORG} ${PCF_STAGE_SPACE} ${PCF_PRODC_DOMAIN} ${pcfAppName}-stage ${jarPath} ${cfKeepRollback} ${http_proxy} manifest-stage.yml ${PCF_GTM_DOMAIN}
                  """
-            */
                 sh "cf login -a '$PCF_PRODP_URL' -u '$PCF_STAGE_PROD_ID_USR' -p '$PCF_STAGE_PROD_ID_PSW' -o '$PCF_ORG' -s '$PCF_STAGE_SPACE'"
                 sh """
                     chmod u+x ./devops/epaas/deploy.sh
