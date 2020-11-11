@@ -1,6 +1,7 @@
 package com.aa.fly.receipts.data;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.sql.Time;
 import java.text.ParseException;
@@ -51,11 +52,12 @@ public class TicketReceiptMapperTest {
     static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Test
-    public void testMapTicketReceipt() throws ParseException {
+    public void testMapTicketReceipt_Resultset_One_Row() throws ParseException {
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
 
     	TicketReceipt ticketReceipt = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+    	assertEquals(ticketReceiptRsRow.getAirlnAcctCd(), ticketReceipt.getAirlineAccountCode());
     }
     
     @Test

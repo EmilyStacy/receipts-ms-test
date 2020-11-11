@@ -14,6 +14,7 @@ public interface DataBuilderService {
      * @param ticketReceipt - TicketReceipt response will be built by the builder.
      * @param ticketReceiptRsRow - TicketReceiptRsRow element of corresponding result set row
      * which TicketReceipt response will get built from.
+     * @return TicketReceipt which has populated values from TicketReceiptRsRow
      */
-    void build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow);
+	TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow);
 }

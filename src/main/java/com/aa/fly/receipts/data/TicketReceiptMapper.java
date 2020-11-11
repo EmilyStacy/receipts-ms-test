@@ -28,7 +28,7 @@ public class TicketReceiptMapper {
     private AirportService airportService;
     
     @Autowired
-    private DataBuilderService pnrHeaderBuilder;    
+    private PnrHeaderBuilder pnrHeaderBuilder;    
 
     public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
 
@@ -44,7 +44,8 @@ public class TicketReceiptMapper {
         	ticketReceiptRsRow = iterator.next();
         	
             if (rowCount == 0) {
-
+            	pnrHeaderBuilder.build(ticketReceipt, ticketReceiptRsRow);
+            	
                 //ticketReceipt.getPassengerDetails().add(passengerDetail);
             }
 
