@@ -161,12 +161,11 @@ pipeline {
             }
         }
         
-        stage('int tests Stage') {
         /*
+        stage('int tests Stage') {
             when {
                 branch 'master'
             }
-        */
             steps {
                 sh """
                     mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://receipts-bff-stage-south.mybluemix.net'
@@ -182,6 +181,7 @@ pipeline {
                 ]
             }
         }
+        */
 
         stage('deploy prod') {
             when {
