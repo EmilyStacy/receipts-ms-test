@@ -15,12 +15,14 @@ public class PnrHeaderBuilder implements DataBuilderService {
 	private AirportService airportService;
 
 	@Override
-	public void build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
+	public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
 		ticketReceipt.setAirlineAccountCode(ticketReceiptRsRow.getAirlnAcctCd());
 		ticketReceipt.setTicketIssueDate(ticketReceiptRsRow.getTicketIssueDt());
 		ticketReceipt.setDepartureDate(ticketReceiptRsRow.getDepDt());
 		ticketReceipt.setPnr(ticketReceiptRsRow.getPnr());		
         ticketReceipt.setOriginAirport(airportService.getAirport(ticketReceiptRsRow.getOrgAtoCd()));
         ticketReceipt.setDestinationAirport(airportService.getAirport(ticketReceiptRsRow.getDestAtoCd()));
+        
+        return ticketReceipt;
 	}
 }

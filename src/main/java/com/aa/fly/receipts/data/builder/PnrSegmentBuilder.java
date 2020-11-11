@@ -15,15 +15,17 @@ public class PnrSegmentBuilder implements DataBuilderService {
 	@Autowired
 	private AirportService airportService;
 
-	public void build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow, int rowIndex) {
-		build(ticketReceipt, ticketReceiptRsRow);
+	public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow, int rowIndex) {
+		TicketReceipt ticketReceiptOverload = build(ticketReceipt, ticketReceiptRsRow);
 		
         String returnTrip = ("1").equals(ticketReceiptRsRow.getCouponSeqNbr()) && rowIndex != 0 ? "true" : "false";
-		ticketReceipt.getSegmentDetails().get(ticketReceipt.getSegmentDetails().size() - 1).setReturnTrip(returnTrip);
+        ticketReceiptOverload.getSegmentDetails().get(ticketReceiptOverload.getSegmentDetails().size() - 1).setReturnTrip(returnTrip);
+		
+		return ticketReceiptOverload;
 	}
 
 	@Override
-	public void build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
+	public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
 		
         SegmentDetail segmentDetail = new SegmentDetail();
 
@@ -39,7 +41,8 @@ public class PnrSegmentBuilder implements DataBuilderService {
         segmentDetail.setBookingClass(ticketReceiptRsRow.getBookingClass());
         segmentDetail.setFareBasis(ticketReceiptRsRow.getFareBase());
         
-        ticketReceipt.getSegmentDetails().add(segmentDetail);        
+        ticketReceipt.getSegmentDetails().add(segmentDetail);
+        return ticketReceipt;
 	}
 }
 

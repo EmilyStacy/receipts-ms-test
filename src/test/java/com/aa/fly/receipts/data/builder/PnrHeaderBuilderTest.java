@@ -3,8 +3,6 @@ package com.aa.fly.receipts.data.builder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.text.ParseException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,7 +35,7 @@ public class PnrHeaderBuilderTest {
 		.build();
 		this.mockAirports();
 
-		pnrHeaderBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow);
+		this.ticketReceipt = pnrHeaderBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow);
 		
 		assertNotNull(this.ticketReceipt);
 		assertEquals(null, this.ticketReceipt.getOriginAirport());

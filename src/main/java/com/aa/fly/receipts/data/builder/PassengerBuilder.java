@@ -11,7 +11,7 @@ import com.aa.fly.receipts.service.DataBuilderService;
 public class PassengerBuilder implements DataBuilderService {
 
 	@Override
-	public void build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
+	public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
 		
         PassengerDetail passengerDetail = new PassengerDetail();
 
@@ -21,7 +21,9 @@ public class PassengerBuilder implements DataBuilderService {
         passengerDetail.setAdvantageNumber(ticketReceiptRsRow.getAadvantNbr());
         passengerDetail.setLoyaltyOwnerCode(ticketReceiptRsRow.getLyltyOwnCd());
         
-        ticketReceipt.getPassengerDetails().add(passengerDetail);        
+        ticketReceipt.getPassengerDetails().add(passengerDetail);
+        
+        return ticketReceipt;
 	}
 	
 	// public void setPassengerTotalAmount()

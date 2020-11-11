@@ -59,7 +59,7 @@ public class PnrSegmentBuilderTest {
 		this.mockAirports();
 		this.ticketReceiptRsRow.setCouponSeqNbr("1");
 
-		pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 2);
+		this.ticketReceipt = pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 2);
 		
 		assertNotNull(this.ticketReceipt);
 		assertNotNull(this.ticketReceipt.getSegmentDetails());
@@ -73,7 +73,7 @@ public class PnrSegmentBuilderTest {
 		this.mockAirports();
 		this.ticketReceiptRsRow.setCouponSeqNbr("1");
 
-		pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 0);
+		this.ticketReceipt = pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 0);
 		
 		assertNotNull(this.ticketReceipt);
 		assertNotNull(this.ticketReceipt.getSegmentDetails());
@@ -87,7 +87,7 @@ public class PnrSegmentBuilderTest {
 		this.mockAirports();
 		this.ticketReceiptRsRow.setCouponSeqNbr("2");
 
-		pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 2);
+		this.ticketReceipt = pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 2);
 		
 		assertNotNull(this.ticketReceipt);
 		assertNotNull(this.ticketReceipt.getSegmentDetails());
@@ -100,7 +100,7 @@ public class PnrSegmentBuilderTest {
 		this.mockTicketReceiptRsRow();
 		this.mockAirports();
 		
-		pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 0);
+		this.ticketReceipt = pnrSegmentBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow, 0);
 		
 		assertNotNull(this.ticketReceipt);
 		assertNotNull(this.ticketReceipt.getSegmentDetails());

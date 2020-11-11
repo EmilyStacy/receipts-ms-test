@@ -31,7 +31,7 @@ public class PassengerBuilderTest {
 	public void testBuild_Passenger() throws Exception {
 		this.mockTicketReceiptRsRow();
 		
-		passengerBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow);
+		this.ticketReceipt = passengerBuilder.build(this.ticketReceipt, this.ticketReceiptRsRow);
 		
 		assertNotNull(this.ticketReceipt);
 		assertNotNull(this.ticketReceipt.getPassengerDetails());
