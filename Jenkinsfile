@@ -162,13 +162,14 @@ pipeline {
         }
         
         stage('int tests Stage') {
+        /*
             when {
                 branch 'master'
             }
-            
+        */
             steps {
                 sh """
-                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://'${pcfAppName}-stage.${PCF_PRODP_DOMAIN}
+                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://receipts-bff-stage-south.mybluemix.net'
                   """
 
                 publishHTML target: [
