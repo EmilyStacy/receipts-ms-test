@@ -19,6 +19,11 @@ public class Constants {
 	public static final String DEST_ATO_STATE = "FL";
 	public static final String DEST_ATO_COUNTRY_CD = "USA";
 	public static final String DEST_ATO_COUNTRY_NM = "United States";
+	public static final String TICKET_NBR = "2128785282";
+	public static final String FIRST_NM = "JAXON";
+	public static final String LAST_NM = "SHAW";
+	public static final String AADVANT_NBR = "1A2B3C";
+	public static final String LYLTY_OWN_CD = "AA";
 	
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 }
