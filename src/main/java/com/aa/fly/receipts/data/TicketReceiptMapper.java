@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import com.aa.fly.receipts.data.builder.PassengerBuilder;
 import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
+import com.aa.fly.receipts.data.builder.PnrSegmentBuilder;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
@@ -28,14 +30,20 @@ public class TicketReceiptMapper {
     private AirportService airportService;
     
     @Autowired
-    private PnrHeaderBuilder pnrHeaderBuilder;    
+    private PnrHeaderBuilder pnrHeaderBuilder;
+    
+    @Autowired
+    private PassengerBuilder passengerBuilder;    
+    
+    @Autowired
+    private PnrSegmentBuilder pnrSegmentBuilder;    
 
     public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
 
-        TicketReceipt ticketReceipt = new TicketReceipt();
+        TicketReceipt ticketReceiptReturn = null;
         int rowCount = 0;
-        String lastFlightNbr = "";
-        String currFlightNbr = null;
+        String lastDepartureDateTime = "";
+        String currentDepartureDateTime = null;
 
         Iterator<TicketReceiptRsRow> iterator = ticketReceiptRsRowList.iterator();
         TicketReceiptRsRow ticketReceiptRsRow = null;
@@ -44,21 +52,22 @@ public class TicketReceiptMapper {
         	ticketReceiptRsRow = iterator.next();
         	
             if (rowCount == 0) {
-            	pnrHeaderBuilder.build(ticketReceipt, ticketReceiptRsRow);
-            	
-                //ticketReceipt.getPassengerDetails().add(passengerDetail);
+            	ticketReceiptReturn = pnrHeaderBuilder.build(new TicketReceipt(), ticketReceiptRsRow);
+            	ticketReceiptReturn = passengerBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
             }
 
-            currFlightNbr = ticketReceiptRsRow.getFlightNbr();
+            currentDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
+            		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
 
-            if (lastFlightNbr != null && !lastFlightNbr.equalsIgnoreCase(currFlightNbr))
+            if (!lastDepartureDateTime.equals(currentDepartureDateTime))
             {
-                //ticketReceipt.getSegmentDetails().add(mapSegmentDetails(rs, rowCount));
-                lastFlightNbr = currFlightNbr;
+            	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+                lastDepartureDateTime = currentDepartureDateTime;
             }
+            
             rowCount++;
         }
-        return ticketReceipt;
+        return ticketReceiptReturn;
     }
     
     public TicketReceipt mapTicketReceipt(SqlRowSet rs) {
