@@ -24,6 +24,28 @@ public class Constants {
 	public static final String LAST_NM = "SHAW";
 	public static final String AADVANT_NBR = "1A2B3C";
 	public static final String LYLTY_OWN_CD = "AA";
+	public static final String SEG_DEPT_DT = "2020-10-10";
+	public static final String SEG_DEPT_TM = "08:50:00";
+	public static final String SEG_DEPT_ARPRT_CD = "MCO";
+	public static final String SEG_DEPT_ARPRT_NAME = "Orlando International";
+	public static final String SEG_DEPT_ARPRT_CITY = "Orlando";
+	public static final String SEG_DEPT_ARPRT_STATE = "FL";
+	public static final String SEG_DEPT_ARPRT_COUNTRY_CD = "USA";
+	public static final String SEG_DEPT_ARPRT_COUNTRY_NM = "United States";
+	public static final String SEG_ARVL_DT = "2020-10-11";
+	public static final String SEG_ARVL_TM = "09:50:00";
+	public static final String SEG_ARVL_ARPRT_CD = "MIA";
+	public static final String SEG_ARVL_ARPRT_NAME = "Miami International";
+	public static final String SEG_ARVL_ARPRT_CITY = "Miami";
+	public static final String SEG_ARVL_ARPRT_STATE = "FL";
+	public static final String SEG_ARVL_ARPRT_COUNTRY_CD = "USA";
+	public static final String SEG_ARVL_ARPRT_COUNTRY_NM = "United States";	
+	public static final String SEG_COUPON_STATUS_CD = "OK";
+	public static final String SEG_OPERAT_CARRIER_CD = "AA";
+	public static final String FLIGHT_NBR = "1112";
+	public static final String BOOKING_CLASS = "B";
+	public static final String FARE_BASE = "OVBZZNB5";
+	public static final String COUPON_SEQ_NBR = "1";
 	
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 }
