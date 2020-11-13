@@ -197,7 +197,11 @@ public class TicketReceiptMapperTest {
     	assertEquals(ticketReceiptRsRow.getFlightNbr(), ticketReceiptReturn.getSegmentDetails().get(0).getFlightNumber());
     	assertEquals(ticketReceiptRsRow.getBookingClass(), ticketReceiptReturn.getSegmentDetails().get(0).getBookingClass());
     	assertEquals(ticketReceiptRsRow.getFareBase(), ticketReceiptReturn.getSegmentDetails().get(0).getFareBasis());
-    	assertEquals("false", ticketReceiptReturn.getSegmentDetails().get(0).getReturnTrip());    }
+    	assertEquals("false", ticketReceiptReturn.getSegmentDetails().get(0).getReturnTrip());
+    	
+    	assertEquals(ticketReceiptRsRowList.get(2).getSegDeptDt(), ticketReceiptReturn.getSegmentDetails().get(1).getSegmentDepartureDate());
+    	assertEquals(ticketReceiptRsRowList.get(2).getSegDeptTm(), ticketReceiptReturn.getSegmentDetails().get(1).getSegmentDepartureTime());    	
+    }
     
     private void mockTicketReceipt() throws ParseException {
     	ticketReceiptMock = new TicketReceipt();
