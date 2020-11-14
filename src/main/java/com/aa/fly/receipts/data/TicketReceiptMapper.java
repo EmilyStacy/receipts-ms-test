@@ -44,6 +44,7 @@ public class TicketReceiptMapper {
 //                throw new BulkTicketException("BulkTicket");
 //            }
         	
+        	// Building data from first row.
             if (rowCount == 0) {
             	ticketReceiptReturn = pnrHeaderBuilder.build(new TicketReceipt(), ticketReceiptRsRow);
             	ticketReceiptReturn = passengerBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
@@ -59,6 +60,7 @@ public class TicketReceiptMapper {
             currentDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
             		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
             
+        	// Building data from every row in the first segment.
             if (firstDepartureDateTime.equals(currentDepartureDateTime)) {
             	// Build Tax Item (Set).
             	// build FOPs --> based on, FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(fopSequenceId, fopTypeCode);
@@ -67,6 +69,7 @@ public class TicketReceiptMapper {
             	//   Build Ancillary FOPs.
             }
             
+        	// Building data from the row when segment changed.
             if (!lastDepartureDateTime.equals(currentDepartureDateTime))
             {
             	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
