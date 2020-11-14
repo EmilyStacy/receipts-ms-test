@@ -1,15 +1,12 @@
 package com.aa.fly.receipts.data;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
-import java.sql.Time;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -245,127 +242,6 @@ public class TicketReceiptMapperTest {
         segmentDetail.setReturnTrip("false");
         
         ticketReceiptMock.getSegmentDetails().add(segmentDetail);    	
-    }
-    
-    @Test
-    public void mapResultSet() throws ParseException {
-
-        Mockito.when(resultSet.next()).thenReturn(true, false); // first time return true and second time return false
-        Mockito.when(resultSet.getString("AIRLN_ACCT_CD")).thenReturn("001");
-        Mockito.when(resultSet.getString("TICKET_NBR")).thenReturn("2335038507");
-        Mockito.when(resultSet.getDate("TICKET_ISSUE_DT")).thenReturn(new java.sql.Date(Constants.dateFormat.parse("2019-03-14").getTime()));
-        final Date departureDate = Constants.dateFormat.parse("2019-09-30");
-        final Date arrivalDate = Constants.dateFormat.parse("2019-09-30");
-        Mockito.when(resultSet.getDate("DEP_DT")).thenReturn(new java.sql.Date(departureDate.getTime()));
-
-        Mockito.when(resultSet.getString("FIRST_NM")).thenReturn("SIMON");
-        Mockito.when(resultSet.getString("LAST_NM")).thenReturn("TEST");
-        Mockito.when(resultSet.getString("ORG_ATO_CD")).thenReturn("MCO");
-        Mockito.when(resultSet.getString("DEST_ATO_CD")).thenReturn("MIA");
-        Mockito.when(airportService.getAirport("MCO")).thenReturn(getAirport("MCO", "Orlando International", "Orlando", "FL", "USA", "United States"));
-        Mockito.when(airportService.getAirport("MIA")).thenReturn(getAirport("MIA", "Miami International", "Miami", "FL", "USA", "United States"));
-        Mockito.when(resultSet.getString("PNR")).thenReturn("MRYMPT");
-        Mockito.when(resultSet.getString("AADVANT_NBR")).thenReturn("279RFY4");
-
-        // mock passenger details
-        Mockito.when(resultSet.getString("TICKET_NBR")).thenReturn("2335038507");
-        Mockito.when(resultSet.getString("FIRST_NM")).thenReturn("SIMON");
-        Mockito.when(resultSet.getString("LAST_NM")).thenReturn("TEST");
-        Mockito.when(resultSet.getString("AADVANT_NBR")).thenReturn("279RFY4");
-        Mockito.when(resultSet.getString("LYLTY_OWN_CD")).thenReturn("AA  ");
-
-        // mock segment details
-        Mockito.when(resultSet.getDate("SEG_DEPT_DT")).thenReturn(new java.sql.Date(departureDate.getTime()));
-        Mockito.when(resultSet.getDate("SEG_ARVL_DT")).thenReturn(new java.sql.Date(arrivalDate.getTime()));
-        Mockito.when(resultSet.getString("SEG_DEPT_ARPRT_CD")).thenReturn("MCO");
-        Mockito.when(resultSet.getString("SEG_ARVL_ARPRT_CD")).thenReturn("MIA");
-        Mockito.when(resultSet.getString("SEG_OPERAT_CARRIER_CD")).thenReturn("AA");
-        final String segmentDepartureTime = "8:05:00";
-        Mockito.when(resultSet.getString("SEG_DEPT_TM")).thenReturn(segmentDepartureTime);
-        Mockito.when(resultSet.getTime("SEG_DEPT_TM")).thenReturn(Time.valueOf(segmentDepartureTime));
-        final String segmentArrivalTime = "9:05:00";
-        final String segmentStatus = "   USED   ";
-        Mockito.when(resultSet.getString("SEG_ARVL_TM")).thenReturn(segmentArrivalTime);
-        Mockito.when(resultSet.getString("SEG_COUPON_STATUS_CD")).thenReturn(segmentStatus);
-        Mockito.when(resultSet.getString("FLIGHT_NBR")).thenReturn("1536");
-        Mockito.when(resultSet.getString("BOOKING_CLASS")).thenReturn("B");
-        Mockito.when(resultSet.getString("FARE_BASE")).thenReturn("QVAJZNB3");
-        Mockito.when(resultSet.getString("COUPON_SEQ_NBR")).thenReturn("1");
-
-        TicketReceipt item = ticketReceiptMapper.mapTicketReceipt(resultSet);
-
-        // header
-        assertThat(item.getAirlineAccountCode()).isEqualTo("001");
-        assertThat(item.getTicketIssueDate()).isEqualTo(Constants.dateFormat.parse("2019-03-14"));
-        assertThat(item.getDepartureDate()).isEqualTo(departureDate);
-        assertThat(item.getOriginAirport().getCode()).isEqualTo("MCO");
-        assertThat(item.getDestinationAirport().getCode()).isEqualTo("MIA");
-        assertThat(item.getOriginAirport().getName()).isEqualTo("Orlando International");
-        assertThat(item.getDestinationAirport().getName()).isEqualTo("Miami International");
-        assertThat(item.getPnr()).isEqualTo("MRYMPT");
-
-        // passenger details
-        assertThat(item.getPassengerDetails().size()).isEqualTo(1);
-        PassengerDetail passengerDetail = item.getPassengerDetails().get(0);
-        assertThat(passengerDetail.getTicketNumber()).isEqualTo("2335038507");
-        assertThat(passengerDetail.getFirstName()).isEqualTo("SIMON");
-        assertThat(passengerDetail.getLastName()).isEqualTo("TEST");
-        assertThat(passengerDetail.getAdvantageNumber()).isEqualTo("279RFY4");
-        assertThat(passengerDetail.getLoyaltyOwnerCode()).isEqualTo("AA");
-
-        // segment details
-        assertThat(item.getSegmentDetails().size()).isEqualTo(1);
-        SegmentDetail segmentDetail = item.getSegmentDetails().get(0);
-        assertThat(segmentDetail.getDepartureAirport().getName()).isEqualTo("Orlando International");
-        assertThat(segmentDetail.getArrivalAirport().getName()).isEqualTo("Miami International");
-        assertThat(segmentDetail.getSegmentDepartureDate()).isEqualTo(departureDate);
-        assertThat(segmentDetail.getSegmentArrivalDate()).isEqualTo(arrivalDate);
-        assertThat(segmentDetail.getDepartureAirport().getCode()).isEqualTo("MCO");
-        assertThat(segmentDetail.getArrivalAirport().getCode()).isEqualTo("MIA");
-
-        assertThat(segmentDetail.getSegmentDepartureTime()).isEqualTo(segmentDepartureTime);
-        assertThat(segmentDetail.getSegmentArrivalTime()).isEqualTo(segmentArrivalTime);
-        assertThat(segmentDetail.getSegmentStatus()).isEqualTo("USED");
-        assertThat(segmentDetail.getFlightNumber()).isEqualTo("1536");
-        assertThat(segmentDetail.getCarrierCode()).isEqualTo("AA");
-        assertThat(segmentDetail.getBookingClass()).isEqualTo("B");
-        assertThat(segmentDetail.getFareBasis()).isEqualTo("QVAJZNB3");
-        assertThat(segmentDetail.getReturnTrip()).isEqualTo("false");
-    }
-
-    @Test
-    public void mapResultSetWithNulls() throws ParseException {
-
-        Mockito.when(resultSet.next()).thenReturn(true, false); // first time return true and second time return false
-        Mockito.when(resultSet.getString("AIRLN_ACCT_CD")).thenReturn(null);
-        Mockito.when(resultSet.getString("TICKET_NBR")).thenReturn("2335038507");
-        Mockito.when(resultSet.getDate("TICKET_ISSUE_DT")).thenReturn(new java.sql.Date(Constants.dateFormat.parse("2019-03-14").getTime()));
-        Mockito.when(resultSet.getDate("DEP_DT")).thenReturn(new java.sql.Date(Constants.dateFormat.parse("2019-09-30").getTime()));
-
-        Mockito.when(resultSet.getString("FIRST_NM")).thenReturn("SIMON");
-        Mockito.when(resultSet.getString("LAST_NM")).thenReturn("TEST");
-        Mockito.when(resultSet.getString("ORG_ATO_CD")).thenReturn(null);
-        Mockito.when(resultSet.getString("DEST_ATO_CD")).thenReturn(null);
-        Mockito.when(airportService.getAirport(null)).thenReturn(null);
-        Mockito.when(resultSet.getString("PNR")).thenReturn("MRYMPT");
-        Mockito.when(resultSet.getString("LYLTY_OWN_CD")).thenReturn(null);
-        Mockito.when(resultSet.getString("SEG_COUPON_STATUS_CD")).thenReturn(null);
-        final String segmentDepartureTime = "8:05:00";
-        Mockito.when(resultSet.getTime("SEG_DEPT_TM")).thenReturn(Time.valueOf(segmentDepartureTime));
-        final Date departureDate = Constants.dateFormat.parse("2019-09-30");
-        Mockito.when(resultSet.getDate("SEG_DEPT_DT")).thenReturn(new java.sql.Date(departureDate.getTime()));
-
-        TicketReceipt item = ticketReceiptMapper.mapTicketReceipt(resultSet);
-        SegmentDetail segmentDetail = new SegmentDetail();
-        segmentDetail.setSegmentStatus(null);
-        item.getSegmentDetails().add(segmentDetail);
-        assertThat(item.getAirlineAccountCode()).isNull();
-        assertThat(item.getTicketIssueDate()).isEqualTo(Constants.dateFormat.parse("2019-03-14"));
-        assertThat(item.getDepartureDate()).isEqualTo(Constants.dateFormat.parse("2019-09-30"));
-        assertThat(item.getOriginAirport()).isNull();
-        assertThat(item.getDestinationAirport()).isNull();
-        assertThat(item.getPnr()).isEqualTo("MRYMPT");
-        assertThat(item.getSegmentDetails().get(0).getSegmentStatus()).isEqualTo("");
     }
 
     public Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {
