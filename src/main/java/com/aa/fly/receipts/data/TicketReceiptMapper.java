@@ -27,7 +27,8 @@ public class TicketReceiptMapper {
 
         TicketReceipt ticketReceiptReturn = null;
         int rowCount = 0;
-        String lastDepartureDateTime = "";
+        String firstDepartureDateTime = null;
+        String lastDepartureDateTime = null;
         String currentDepartureDateTime = null;
 
         Iterator<TicketReceiptRsRow> iterator = ticketReceiptRsRowList.iterator();
@@ -39,11 +40,24 @@ public class TicketReceiptMapper {
             if (rowCount == 0) {
             	ticketReceiptReturn = pnrHeaderBuilder.build(new TicketReceipt(), ticketReceiptRsRow);
             	ticketReceiptReturn = passengerBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+            	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
+            	
+            	// Build Fare only need once here.
+            	
+            	lastDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
+                		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
+            	firstDepartureDateTime = lastDepartureDateTime;
             }
 
             currentDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
             		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
-
+            
+            if (firstDepartureDateTime.equals(currentDepartureDateTime)) {
+            	// Build Tax Item (Set).
+            	// build FOPs
+            	// Build Ancillary (Set).
+            }
+            
             if (!lastDepartureDateTime.equals(currentDepartureDateTime))
             {
             	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
@@ -52,6 +66,10 @@ public class TicketReceiptMapper {
             
             rowCount++;
         }
+        
+        // PassengerTotalAdjuster
+        // PassengerTaxAdjuster
+        
         return ticketReceiptReturn;
     }
 }

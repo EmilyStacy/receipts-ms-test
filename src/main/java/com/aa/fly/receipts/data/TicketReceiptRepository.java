@@ -2,7 +2,6 @@ package com.aa.fly.receipts.data;
 
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SearchCriteria;
