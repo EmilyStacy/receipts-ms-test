@@ -62,6 +62,7 @@ public class TicketReceiptRepositoryTest {
         .thenReturn(ticketReceiptRsRowList);
         when(ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList))
         .thenReturn(ticketReceipt);
+        
         assertEquals("MRYMPT", receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
         assertEquals("USED", receiptRepository.findTicketReceiptByTicketNumber(criteria).getSegmentDetails().get(0).getSegmentStatus());
     }
@@ -75,6 +76,7 @@ public class TicketReceiptRepositoryTest {
         .thenReturn(ticketReceiptRsRowList);
         when(ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList))
                 .thenReturn(new TicketReceipt());
+        
         assertNotNull(receiptRepository.findTicketReceiptByTicketNumber(criteria));
     }
 }
