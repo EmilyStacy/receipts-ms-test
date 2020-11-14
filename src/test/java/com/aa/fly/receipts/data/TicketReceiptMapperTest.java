@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 
 import java.sql.Time;
 import java.text.ParseException;
@@ -67,7 +68,7 @@ public class TicketReceiptMapperTest {
     	this.mockTicketReceipt();
     	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
-    	Mockito.when(pnrSegmentBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();        
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
@@ -109,7 +110,7 @@ public class TicketReceiptMapperTest {
     	this.mockTicketReceipt();
     	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
-    	Mockito.when(pnrSegmentBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();        
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
@@ -153,19 +154,23 @@ public class TicketReceiptMapperTest {
         this.addOneSegment();
         ticketReceiptMock.getSegmentDetails().get(1).setSegmentDepartureDate(Constants.dateFormat.parse(SEG_DEPT_DT2));
         ticketReceiptMock.getSegmentDetails().get(1).setSegmentDepartureTime(SEG_DEPT_TM2);
+        ticketReceiptMock.getSegmentDetails().get(1).setReturnTrip("true");
 
     	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
-    	Mockito.when(pnrSegmentBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();    
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
-    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+    	
+    	TicketReceiptRsRow ticketReceiptRsRow2 = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRow2.setCouponSeqNbr("2");
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow2);
     	
     	TicketReceiptRsRow ticketReceiptRsRow3 = Utils.mockTicketReceiptRsRow();
-
     	ticketReceiptRsRow3.setSegDeptDt(Constants.dateFormat.parse(SEG_DEPT_DT2));
     	ticketReceiptRsRow3.setSegDeptTm(SEG_DEPT_TM2);
+    	ticketReceiptRsRow3.setCouponSeqNbr("1");
     	ticketReceiptRsRowList.add(ticketReceiptRsRow3);
 
     	ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
@@ -201,6 +206,7 @@ public class TicketReceiptMapperTest {
     	
     	assertEquals(ticketReceiptRsRowList.get(2).getSegDeptDt(), ticketReceiptReturn.getSegmentDetails().get(1).getSegmentDepartureDate());
     	assertEquals(ticketReceiptRsRowList.get(2).getSegDeptTm(), ticketReceiptReturn.getSegmentDetails().get(1).getSegmentDepartureTime());    	
+    	assertEquals("true", ticketReceiptReturn.getSegmentDetails().get(1).getReturnTrip());
     }
     
     private void mockTicketReceipt() throws ParseException {

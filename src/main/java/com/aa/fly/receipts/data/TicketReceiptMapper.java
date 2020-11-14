@@ -61,7 +61,7 @@ public class TicketReceiptMapper {
 
             if (!lastDepartureDateTime.equals(currentDepartureDateTime))
             {
-            	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+            	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
                 lastDepartureDateTime = currentDepartureDateTime;
             }
             
