@@ -53,6 +53,14 @@ public class ReceiptsMSDomainTest {
     }
 
     @Test
+    public void testTicketAmountAndCurrencyToString() throws ParseException {
+    	AmountAndCurrency amountAndCurrency = new AmountAndCurrency("2000", "USD2");
+        Assert.assertEquals(
+                "AmountAndCurrency{amount='20.00', currency='USD'}",
+                amountAndCurrency.toString());
+    }
+    
+    @Test
     public void testTicketReceiptRsRowToString() throws ParseException {
     	TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
         Assert.assertEquals(
