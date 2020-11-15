@@ -2,6 +2,7 @@ package com.aa.fly.receipts.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
@@ -18,9 +19,11 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aa.fly.receipts.data.builder.PassengerBuilder;
+import com.aa.fly.receipts.data.builder.PassengerFareTaxFeeBuilder;
 import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
 import com.aa.fly.receipts.data.builder.PnrSegmentBuilder;
 import com.aa.fly.receipts.domain.Airport;
+import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
@@ -28,6 +31,7 @@ import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 import com.aa.fly.receipts.service.AirportService;
 import com.aa.fly.receipts.util.Constants;
 import com.aa.fly.receipts.util.Utils;
+import com.aa.fly.receipts.exception.BulkTicketException;
 
 /**
  * Created by 629874 on 5/17/2019.
@@ -50,6 +54,9 @@ public class TicketReceiptMapperTest {
     @Mock
     private PnrSegmentBuilder pnrSegmentBuilder;
 
+    @Mock
+    private PassengerFareTaxFeeBuilder passengerFareTaxFeeBuilder;
+
     @InjectMocks
     private TicketReceiptMapper ticketReceiptMapper;
 
@@ -60,12 +67,33 @@ public class TicketReceiptMapperTest {
     private static final String SEG_DEPT_DT2 = "2020-10-11";
     private static final String SEG_DEPT_TM2 = "06:50:00";
     
+    @Test(expected = BulkTicketException.class)
+    public void testMapTicketReceipt_Bulk_Ticket_BT() throws ParseException {
+    	
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRow.setTcnBulkInd("BT");
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+    	ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+    }
+    
+    @Test(expected = BulkTicketException.class)
+    public void testMapTicketReceipt_Bulk_Ticket_WT() throws ParseException {
+    	
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRow.setTcnBulkInd("WT");
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+    	ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+    }
+    
     @Test
     public void testMapTicketReceipt_Resultset_One_Row() throws ParseException {
     	this.mockTicketReceipt();
     	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();        
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
@@ -100,6 +128,11 @@ public class TicketReceiptMapperTest {
     	assertEquals(ticketReceiptRsRow.getBookingClass(), ticketReceiptReturn.getSegmentDetails().get(0).getBookingClass());
     	assertEquals(ticketReceiptRsRow.getFareBase(), ticketReceiptReturn.getSegmentDetails().get(0).getFareBasis());
     	assertEquals("false", ticketReceiptReturn.getSegmentDetails().get(0).getReturnTrip());
+    	
+    	assertEquals(Constants.BASE_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareAmount());
+    	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
+    	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
+    	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
     }
     
     @Test
@@ -108,6 +141,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();        
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
@@ -143,6 +177,11 @@ public class TicketReceiptMapperTest {
     	assertEquals(ticketReceiptRsRow.getBookingClass(), ticketReceiptReturn.getSegmentDetails().get(0).getBookingClass());
     	assertEquals(ticketReceiptRsRow.getFareBase(), ticketReceiptReturn.getSegmentDetails().get(0).getFareBasis());
     	assertEquals("false", ticketReceiptReturn.getSegmentDetails().get(0).getReturnTrip());
+    	
+    	assertEquals(Constants.BASE_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareAmount());
+    	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
+    	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
+    	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
     }
     
     @Test
@@ -156,6 +195,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();    
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
@@ -204,6 +244,11 @@ public class TicketReceiptMapperTest {
     	assertEquals(ticketReceiptRsRowList.get(2).getSegDeptDt(), ticketReceiptReturn.getSegmentDetails().get(1).getSegmentDepartureDate());
     	assertEquals(ticketReceiptRsRowList.get(2).getSegDeptTm(), ticketReceiptReturn.getSegmentDetails().get(1).getSegmentDepartureTime());    	
     	assertEquals("true", ticketReceiptReturn.getSegmentDetails().get(1).getReturnTrip());
+    	
+    	assertEquals(Constants.BASE_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareAmount());
+    	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
+    	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
+    	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
     }
     
     private void mockTicketReceipt() throws ParseException {
@@ -221,6 +266,14 @@ public class TicketReceiptMapperTest {
         passengerDetail.setLastName(Constants.LAST_NM);
         passengerDetail.setAdvantageNumber(Constants.AADVANT_NBR);
         passengerDetail.setLoyaltyOwnerCode(Constants.LYLTY_OWN_CD);
+        
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.setBaseFareAmount(Constants.BASE_FARE_AMOUNT);
+        fareTaxesFees.setBaseFareCurrencyCode(Constants.BASE_FARE_CURRENCY_CODE);
+        fareTaxesFees.setTotalFareAmount(Constants.TOTAL_FARE_AMOUNT);
+        fareTaxesFees.setTaxFareAmount(Constants.TAX_FARE_AMOUNT);
+        
+        passengerDetail.setFareTaxesFees(fareTaxesFees);
         
         ticketReceiptMock.getPassengerDetails().add(passengerDetail);
         addOneSegment();

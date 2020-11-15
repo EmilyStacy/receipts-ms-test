@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.aa.fly.receipts.data.builder.PassengerBuilder;
+import com.aa.fly.receipts.data.builder.PassengerFareTaxFeeBuilder;
 import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
 import com.aa.fly.receipts.data.builder.PnrSegmentBuilder;
 import com.aa.fly.receipts.domain.FormOfPaymentKey;
@@ -25,6 +26,8 @@ public class TicketReceiptMapper {
     private PnrSegmentBuilder pnrSegmentBuilder;    
     @Autowired
     private PassengerBuilder passengerBuilder;    
+    @Autowired
+    private PassengerFareTaxFeeBuilder passengerFareTaxFeeBuilder;    
     
     public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
 
@@ -40,17 +43,16 @@ public class TicketReceiptMapper {
         while (iterator.hasNext()) {
         	ticketReceiptRsRow = iterator.next();
         	
-//            if (StringUtils.isNotBlank(ticketReceiptRsRow.getTcnBulkInd())) {
-//                throw new BulkTicketException("BulkTicket");
-//            }
+            if (StringUtils.isNotBlank(ticketReceiptRsRow.getTcnBulkInd())) {
+                throw new BulkTicketException("BulkTicket");
+            }
         	
         	// Building data from first row.
             if (rowCount == 0) {
             	ticketReceiptReturn = pnrHeaderBuilder.build(new TicketReceipt(), ticketReceiptRsRow);
             	ticketReceiptReturn = passengerBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
             	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
-            	
-            	// Build Fare only need once here.
+            	ticketReceiptReturn = passengerFareTaxFeeBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
             	
             	lastDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
                 		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));

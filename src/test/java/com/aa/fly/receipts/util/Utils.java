@@ -32,6 +32,12 @@ public class Utils {
 		.bookingClass(Constants.BOOKING_CLASS)
 		.fareBase(Constants.FARE_BASE)
 		.couponSeqNbr(Constants.COUPON_SEQ_NBR)
+		
+		.eqfnFareAmt(Constants.EQFN_FARE_AMOUNT)
+		.eqfnFareCurrTypeCd(Constants.EQFN_FARE_CURRENCY_CODE)
+		.fnumFareAmt(Constants.FNUM_FARE_AMOUNT)
+		.fnumFareCurrTypeCd(Constants.FNUM_FARE_CURRENCY_CODE)
+		.fareTdamAmt(Constants.FARE_TDAM_AMOUNT)
 
 		.build();
 	}
