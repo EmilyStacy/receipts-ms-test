@@ -110,18 +110,18 @@ public class TicketReceiptMapper {
     }
     
     // Move to PassengerFopBuilder
-    private boolean isMappingFormOfPayment(String fopTypeCode) {
-        return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
-    }
-    
-    private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
-        boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
-        if (isExchange) {
-            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
-                    .collect(Collectors.toList());
-            formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
-        }
-
-        return formOfPayments;
-    }    
+//    private boolean isMappingFormOfPayment(String fopTypeCode) {
+//        return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
+//    }
+//    
+//    private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
+//        boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
+//        if (isExchange) {
+//            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
+//                    .collect(Collectors.toList());
+//            formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
+//        }
+//
+//        return formOfPayments;
+//    }    
 }
