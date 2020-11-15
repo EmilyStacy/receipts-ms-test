@@ -22,7 +22,7 @@ import com.aa.fly.receipts.service.WifiReceiptService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 
-public class ReceiptControllerTest {
+public class WifiReceiptControllerTest {
     @Mock
     private WifiReceiptService receiptService;
 
