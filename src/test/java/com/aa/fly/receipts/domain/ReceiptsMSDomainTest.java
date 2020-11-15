@@ -89,14 +89,6 @@ public class ReceiptsMSDomainTest {
                 "AmountAndCurrency{amount='20.00', currency='USD'}",
                 amountAndCurrency.toString());
     }
-    
-    @Test
-    public void testTicketReceiptRsRowToString() throws ParseException {
-    	TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
-        Assert.assertEquals(
-                "TicketReceiptRsRow(airlnAcctCd=001, ticketNbr=2128785282, ticketIssueDt=Sat Oct 10 00:00:00 CDT 2020",
-                ticketReceiptRsRow.toString().substring(0, 100));
-    }
 
     @Test
     public void testTicketSearchCriteriaToString() throws ParseException {
