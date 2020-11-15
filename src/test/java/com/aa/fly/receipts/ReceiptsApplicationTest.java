@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootTest
 public class ReceiptsApplicationTest {
 	
-
+   @Test
    public void ensureApplicationStarts()
    {
       ReceiptsApplication.main( new String[] {} );
