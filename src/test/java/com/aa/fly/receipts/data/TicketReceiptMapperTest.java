@@ -2,7 +2,6 @@ package com.aa.fly.receipts.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
@@ -28,10 +27,10 @@ import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.domain.TicketReceiptRsRow;
+import com.aa.fly.receipts.exception.BulkTicketException;
 import com.aa.fly.receipts.service.AirportService;
 import com.aa.fly.receipts.util.Constants;
 import com.aa.fly.receipts.util.Utils;
-import com.aa.fly.receipts.exception.BulkTicketException;
 
 /**
  * Created by 629874 on 5/17/2019.

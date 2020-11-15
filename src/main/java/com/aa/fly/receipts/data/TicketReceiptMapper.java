@@ -71,6 +71,7 @@ public class TicketReceiptMapper {
             	//   Build Ancillary FOPs.
             }
             
+            
         	// Building data from the row when segment changed.
             if (!lastDepartureDateTime.equals(currentDepartureDateTime))
             {
