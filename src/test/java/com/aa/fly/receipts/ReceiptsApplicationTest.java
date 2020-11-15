@@ -13,8 +13,8 @@ public class ReceiptsApplicationTest {
    @Test
    public void ensureApplicationStarts()
    {
-//      ReceiptsApplication.main( new String[] {} );
-//      Assert.assertNotNull( ReceiptsApplication.class );
+      ReceiptsApplication.main( new String[] {} );
+      Assert.assertNotNull( ReceiptsApplication.class );
    }
 }
 

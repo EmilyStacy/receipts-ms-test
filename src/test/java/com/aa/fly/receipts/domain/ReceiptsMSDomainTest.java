@@ -48,7 +48,7 @@ public class ReceiptsMSDomainTest {
         validateAccessors(FormOfPayment.class);
         validateAccessors(FareTaxesFees.class);
         validateAccessors(Ancillary.class);
-//        validateAccessors(AmountAndCurrency.class);
+        validateAccessors(AmountAndCurrency.class);
         validateAccessors(FormOfPaymentKey.class);
         validateAccessors(Tax.class);
         validateAccessors(TaxCodeAndDescription.class);
