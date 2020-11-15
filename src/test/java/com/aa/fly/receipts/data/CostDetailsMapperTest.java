@@ -33,6 +33,7 @@ import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.Tax;
 import com.aa.fly.receipts.exception.BulkTicketException;
+import com.aa.fly.receipts.util.Constants;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CostDetailsMapperTest {
@@ -57,6 +58,14 @@ public class CostDetailsMapperTest {
     @Test
     public void testMapCostDetails() throws ParseException {
         PassengerDetail passengerDetail = new PassengerDetail();
+        
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.setBaseFareAmount(Constants.BASE_FARE_AMOUNT);
+        fareTaxesFees.setBaseFareCurrencyCode(Constants.BASE_FARE_CURRENCY_CODE);
+        fareTaxesFees.setTotalFareAmount(Constants.TOTAL_FARE_AMOUNT);
+        fareTaxesFees.setTaxFareAmount(Constants.TAX_FARE_AMOUNT);
+        
+        passengerDetail.setFareTaxesFees(fareTaxesFees);
 
         Mockito.when(resultSet.next()).thenReturn(true, false);
         Mockito.when(resultSet.getString("FLIGHT_NBR")).thenReturn("1112");
@@ -109,7 +118,7 @@ public class CostDetailsMapperTest {
         assertThat(fops.get(0).getFopAmount()).isEqualTo("2252.95");
         assertThat(fops.get(0).getFopCurrencyCode()).isEqualTo("USD");
         assertThat(fops.get(0).getFopTypeCode()).isEqualTo("CCBA");
-        assertThat(passengerDetail.getFareTaxesFees().getTaxFareAmount()).isEqualTo("72.56");
+        assertThat(passengerDetail.getFareTaxesFees().getTaxFareAmount()).isEqualTo(Constants.TAX_FARE_AMOUNT);
         assertThat(passengerDetail.getFareTaxesFees().getTaxes().size()).isEqualTo(1);
 
         assertThat(fops.get(1).getAncillaries()).contains(ancillary);
@@ -245,6 +254,14 @@ public class CostDetailsMapperTest {
     @Test
     public void testMapCostDetailsForDifferentCurrencyCode() throws ParseException {
         PassengerDetail passengerDetail = new PassengerDetail();
+        
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.setBaseFareAmount(Constants.BASE_FARE_AMOUNT);
+        fareTaxesFees.setBaseFareCurrencyCode(Constants.BASE_FARE_CURRENCY_CODE);
+        fareTaxesFees.setTotalFareAmount(Constants.TOTAL_FARE_AMOUNT);
+        fareTaxesFees.setTaxFareAmount(Constants.TAX_FARE_AMOUNT);
+        
+        passengerDetail.setFareTaxesFees(fareTaxesFees);
 
         Mockito.when(resultSet.next()).thenReturn(true, false);
         Mockito.when(resultSet.getString("FLIGHT_NBR")).thenReturn("1112");
