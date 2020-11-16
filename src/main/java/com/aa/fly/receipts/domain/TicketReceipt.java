@@ -25,6 +25,7 @@ public class TicketReceipt {
 
     List<PassengerDetail> passengerDetails = new ArrayList<>();
     List<SegmentDetail> segmentDetails = new ArrayList<>();
+    List<FormOfPayment> formOfPayments=new ArrayList<>();
 
     private String statusMessage = "OK";
 
@@ -92,6 +93,14 @@ public class TicketReceipt {
 
     public void setPassengerDetails(List<PassengerDetail> passengerDetails) {
         this.passengerDetails = passengerDetails;
+    }
+
+    public List<FormOfPayment> getFormOfPayments() {
+        return formOfPayments;
+    }
+
+    public void setFormOfPayments(List<FormOfPayment> formOfPayments){
+        this.formOfPayments=formOfPayments;
     }
 
     public String getStatusMessage() {

@@ -1,6 +1,7 @@
 package com.aa.fly.receipts.util;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Constants {
 	public static final String AIRLN_ACCT_CD = "001";
@@ -46,6 +47,12 @@ public class Constants {
 	public static final String BOOKING_CLASS = "B";
 	public static final String FARE_BASE = "OVBZZNB5";
 	public static final String COUPON_SEQ_NBR = "1";
+
+	public static final String FOP_ISSUE_DT = "2020-10-10";
+	public static final String FOP_TYPE_CD = "CCBA";
+	public static final String FOP_AMT = "100.00";
+	public static final String FOP_ACCTNBR_LAST4 = "0270";
+	public static final String FOP_CURRTYPE_CD = "USD";
 	
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 }
