@@ -7,8 +7,9 @@ import com.aa.fly.receipts.service.DataBuilderService;
 import org.springframework.stereotype.Component;
 
 
+
 @Component
-public class FopBuilder implements DataBuilderService {
+public class PassengerFopBuilder implements DataBuilderService {
 
     @Override
 	public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
@@ -19,13 +20,14 @@ public class FopBuilder implements DataBuilderService {
         formOfPayment.setFopAmount(ticketReceiptRsRow.getFopAmt());
         formOfPayment.setFopAccountNumberLast4(ticketReceiptRsRow.getFopAcctNbrLast4());
         formOfPayment.setFopCurrencyCode(ticketReceiptRsRow.getFopCurrTypeCd());
-
+        formOfPayment.setFopTypeDescription(ticketReceiptRsRow.getFopTypeDescription());
         ticketReceipt.getFormOfPayments().add(formOfPayment);
 
         return ticketReceipt;
 
     }
-	
+
+
 
 }
 

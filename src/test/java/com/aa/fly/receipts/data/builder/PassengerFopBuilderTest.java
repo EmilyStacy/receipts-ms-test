@@ -9,10 +9,10 @@ import java.text.ParseException;
 
 import static org.junit.Assert.*;
 
-public class FopBuilderTest {
+public class PassengerFopBuilderTest {
 
 
-    private FopBuilder fopBuilder= new FopBuilder();
+    private PassengerFopBuilder passengerFopBuilder= new PassengerFopBuilder();
     private TicketReceipt ticketReceipt = new TicketReceipt();
     private TicketReceiptRsRow ticketReceiptRsRow = null;
 
@@ -20,7 +20,7 @@ public class FopBuilderTest {
     public void testBuild_FOP() throws Exception {
         this.mockTicketReceiptRsRow();
 
-        this.ticketReceipt = fopBuilder.build(this.ticketReceipt,this.ticketReceiptRsRow);
+        this.ticketReceipt = passengerFopBuilder.build(this.ticketReceipt,this.ticketReceiptRsRow);
         assertNotNull(this.ticketReceipt);
         assertNotNull(this.ticketReceipt.getFormOfPayments());
         assertEquals(1, this.ticketReceipt.getFormOfPayments().size());
@@ -29,6 +29,7 @@ public class FopBuilderTest {
         assertEquals(Constants.FOP_CURRTYPE_CD, this.ticketReceipt.getFormOfPayments().get(0).getFopCurrencyCode());
         assertEquals(Constants.FOP_TYPE_CD, this.ticketReceipt.getFormOfPayments().get(0).getFopTypeCode());
         assertEquals(Constants.FOP_ACCTNBR_LAST4, this.ticketReceipt.getFormOfPayments().get(0).getFopAccountNumberLast4());
+        assertEquals(Constants.FOP_TYPE_DESCRIPTION, this.ticketReceipt.getFormOfPayments().get(0).getFopTypeDescription());
 
     }
 
@@ -39,6 +40,7 @@ public class FopBuilderTest {
                 .fopCurrTypeCd(Constants.FOP_CURRTYPE_CD)
                 .fopIssueDt(Constants.dateFormat.parse(Constants.FOP_ISSUE_DT))
                 .fopTypeCd(Constants.FOP_TYPE_CD)
+                .fopTypeDescription(Constants.FOP_TYPE_DESCRIPTION)
                 .build();
     }
 }

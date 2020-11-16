@@ -48,6 +48,7 @@ public class TicketReceiptRsRow
    private String fopSeqId;
    private String fopAcctNbrLast4;
    private String fopCurrTypeCd;
+   private String fopTypeDescription;
 
    
    private String fnumFareAmt;

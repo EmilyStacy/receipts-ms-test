@@ -53,6 +53,7 @@ public class Constants {
 	public static final String FOP_AMT = "100.00";
 	public static final String FOP_ACCTNBR_LAST4 = "0270";
 	public static final String FOP_CURRTYPE_CD = "USD";
+	public static final String FOP_TYPE_DESCRIPTION = "Visa ending in 0270";
 	
 	public static final String EQFN_FARE_AMOUNT = "0";
 	public static final String EQFN_FARE_CURRENCY_CODE = "";
