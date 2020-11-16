@@ -25,11 +25,5 @@ public class PassengerBuilder implements DataBuilderService {
         
         return ticketReceipt;
 	}
-	
-	// public void setPassengerTotalAmount()
-	// public void setShowPassengerTotal()
-    // passengerTotalAmount
-    // showPassengerTotal
-
 }
 
