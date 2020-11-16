@@ -54,5 +54,16 @@ public class Constants {
 	public static final String FOP_ACCTNBR_LAST4 = "0270";
 	public static final String FOP_CURRTYPE_CD = "USD";
 	
+	public static final String EQFN_FARE_AMOUNT = "0";
+	public static final String EQFN_FARE_CURRENCY_CODE = "";
+	public static final String FNUM_FARE_AMOUNT = "39442";
+	public static final String FNUM_FARE_CURRENCY_CODE = "USD2";
+	public static final String FARE_TDAM_AMOUNT = "45280";
+
+	public static final String BASE_FARE_AMOUNT = "394.42";
+	public static final String BASE_FARE_CURRENCY_CODE = "USD";
+	public static final String TOTAL_FARE_AMOUNT = "452.80";
+	public static final String TAX_FARE_AMOUNT = "58.38";
+	
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 }

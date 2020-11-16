@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SearchCriteria;
@@ -25,8 +25,8 @@ public class TicketReceiptRepository {
     @Value("${mosaic.ticket.schema.name:CERT_TCN_RECPT_VW}")
     private String ticketSchemaName;
 
-    // @Autowired
-    // private TicketReceiptRsExtracter ticketReceiptRsExtracter;
+    @Autowired
+    private TicketReceiptRsExtracter ticketReceiptRsExtracter;
     
     @Autowired
     private TicketReceiptMapper ticketReceiptMapper;
@@ -109,16 +109,16 @@ public class TicketReceiptRepository {
                 .toString();
         
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate, firstName, lastName);
-        // final List<TicketReceiptRsRow> ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
-        // TicketReceipt ticketReceipt = null;
-        // if (ticketReceiptRsRowList != null) {
-        //    ticketReceipt = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
-        // }
-        // sqlRowSet.beforeFirst();
         
-        TicketReceipt ticketReceipt = ticketReceiptMapper.mapTicketReceipt(sqlRowSet);
+        final List<TicketReceiptRsRow> ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+        
+        TicketReceipt ticketReceipt = null;
+        
+        if (CollectionUtils.isEmpty(ticketReceiptRsRowList)) {
+        	ticketReceipt = new TicketReceipt();
+        } else {
+            ticketReceipt = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
 
-        if (ticketReceipt != null && StringUtils.hasText(ticketReceipt.getPnr())) {
             sqlRowSet.beforeFirst();
             PassengerDetail passengerDetail = costDetailsMapper.mapCostDetails(sqlRowSet, ticketReceipt.getPassengerDetails().get(0));
             ticketReceipt.getPassengerDetails().set(0, passengerDetail);

@@ -75,8 +75,12 @@ public class CostDetailsMapper {
 	
 	            if (rowCount == 0) {
 	                mapFormOfPayment(rs, formOfPayments);
-	                fareTaxesFees = mapFareTaxAndFees(rs);
-	                passengerDetail.setFareTaxesFees(fareTaxesFees);
+	                
+	                // Temp patch so this class continues to work until re-factoring is done.
+	                fareTaxesFees = passengerDetail.getFareTaxesFees();
+	                fareTaxesFees.getTaxes().add(mapTax(rs, fareTaxesFees.getBaseFareCurrencyCode()));
+	                // fareTaxesFees = mapFareTaxAndFees(rs);
+	                // passengerDetail.setFareTaxesFees(fareTaxesFees);
 	            } else {
 	
 	                if (!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
