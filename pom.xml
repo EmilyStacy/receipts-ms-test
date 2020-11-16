@@ -23,6 +23,7 @@
         <logging-lib-version>1.4.2</logging-lib-version>
         
         <sonar.sources>src/main/java</sonar.sources>
+        <sonar.coverage.exclusions>**/ReceiptsApplication.java</sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
