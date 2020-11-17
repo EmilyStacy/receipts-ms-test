@@ -6,7 +6,6 @@ import java.text.ParseException;
 
 import org.junit.jupiter.api.Test;
 
-import com.aa.fly.receipts.domain.Ancillary;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.util.Constants;
