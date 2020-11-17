@@ -3,8 +3,11 @@ package com.aa.fly.receipts.util;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.aa.fly.receipts.domain.Airport;
+import com.aa.fly.receipts.domain.Ancillary;
 import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
@@ -74,6 +77,16 @@ public class Utils {
         
         passengerDetail.setFareTaxesFees(fareTaxesFees);
         
+        addOneFormOfPayment(passengerDetail);
+        
+        ticketReceiptMock.getPassengerDetails().add(passengerDetail);
+        
+        addOneSegment(ticketReceiptMock);
+        
+        return ticketReceiptMock;
+    }
+    	
+    public static void addOneFormOfPayment(PassengerDetail passengerDetail) throws ParseException {
         FormOfPayment formOfPayment = new FormOfPayment();
         formOfPayment.setFopIssueDate(Constants.dateFormat.parse(Constants.FOP_ISSUE_DATE));
         formOfPayment.setFopTypeCode(Constants.FOP_TYPE_CODE);
@@ -85,13 +98,25 @@ public class Utils {
         List<FormOfPayment> formOfPayments = new ArrayList<FormOfPayment>();
         formOfPayments.add(formOfPayment);
         
-        passengerDetail.setFormOfPayments(formOfPayments);
+        passengerDetail.setFormOfPayments(formOfPayments);    	
+    }
+	
+    public static void addOneAncillary(FormOfPayment formOfPayment) throws ParseException {
+        Ancillary ancillary = new Ancillary();
+        ancillary.setAnclryDocNbr(Constants.ANCLRY_DOC_NBR);
+        ancillary.setAnclryIssueDate(Constants.ANCLRY_ISSUE_DATE);
+        ancillary.setAnclryProdCode(Constants.ANCLRY_PROD_CODE);
+        ancillary.setAnclryProdName(Constants.ANCLRY_PROD_NAME);
+        ancillary.setAnclryPriceCurrencyAmount(Constants.ANCLRY_PRICE_CURRENCY_AMOUNT);
+        ancillary.setAnclryPriceCurrencyCode(Constants.ANCLRY_PRICE_CURRENCY_CODE);
+        ancillary.setAnclrySalesCurrencyAmount(Constants.ANCLRY_SALES_CURRENCY_AMOUNT);
+        ancillary.setAnclrySalesCurrencyCode(Constants.ANCLRY_SALES_CURRENCY_CODE);
+        ancillary.setAnclryTaxCurrencyAmount(Constants.ANCLRY_TAX_CURRENCY_AMOUNT);
         
-        ticketReceiptMock.getPassengerDetails().add(passengerDetail);
+        Set<Ancillary> ancillaries = formOfPayment.getAncillaries();
+        ancillaries.add(ancillary);
         
-        addOneSegment(ticketReceiptMock);
-        
-        return ticketReceiptMock;
+        formOfPayment.setAncillaries(ancillaries);
     }
     
     public static void addOneSegment(TicketReceipt ticketReceiptMock) throws ParseException {
