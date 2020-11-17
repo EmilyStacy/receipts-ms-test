@@ -33,6 +33,13 @@ public class PassengerFopBuilderTest {
     private TicketReceipt ticketReceipt;
     private TicketReceiptRsRow ticketReceiptRsRow = null;
 
+    private Map<String, String> fopTypeMap() {
+        Map<String, String> fopTypeMap = new HashMap<>();
+        fopTypeMap.put("CCBA", "Visa");
+        fopTypeMap.put("CCVI", "Visa");
+        return fopTypeMap;
+    }
+
     @Test
     public void testBuild_FOP() throws Exception {
         this.ticketReceiptRsRow= Utils.mockTicketReceiptRsRow();
@@ -49,14 +56,7 @@ public class PassengerFopBuilderTest {
         assertEquals(Constants.FOP_TYPE_DESCRIPTION, this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
 
     }
-
-    public Map<String, String> fopTypeMap() {
-        Map<String, String> fopTypeMap = new HashMap<>();
-        fopTypeMap.put("CCBA", "Visa");
-        fopTypeMap.put("CCVI", "Visa");
-        return fopTypeMap;
-    }
-
+    
     private TicketReceipt mockTicketReceipt() throws ParseException {
 
         TicketReceipt receipt = new TicketReceipt();
