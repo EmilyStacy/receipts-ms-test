@@ -40,7 +40,7 @@ public class PassengerFopBuilder implements DataBuilderService {
 
     }
 
-    public String getFormOfPaymentDescription(String fopTypeCode, String last4) {
+    private String getFormOfPaymentDescription(String fopTypeCode, String last4) {
         String description = "";
 
         if (StringUtils.isNotBlank(fopTypeCode)) {
