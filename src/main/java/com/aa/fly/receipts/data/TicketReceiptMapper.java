@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.aa.fly.receipts.data.adjuster.PassengerTotalAdjuster;
 import com.aa.fly.receipts.data.builder.PassengerBuilder;
 import com.aa.fly.receipts.data.builder.PassengerFareTaxFeeBuilder;
 import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
@@ -34,6 +35,8 @@ public class TicketReceiptMapper {
     private PassengerBuilder passengerBuilder;    
     @Autowired
     private PassengerFareTaxFeeBuilder passengerFareTaxFeeBuilder;    
+//    @Autowired
+//    private PassengerTotalAdjuster passengerTotalAdjuster;    
     
     public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
 
@@ -100,11 +103,12 @@ public class TicketReceiptMapper {
             rowCount++;
         }
         
-        // passing ticketReceiptReturn
+        // One time adjustments, passing ticketReceiptReturn
         
         // PassengerFopAdjuster
-        // PassengerTotalAdjuster
         // PassengerTaxAdjuster
+        
+        // passengerTotalAdjuster.adjust(ticketReceiptReturn);
         
         return ticketReceiptReturn;
     }
