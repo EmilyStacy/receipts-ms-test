@@ -132,9 +132,16 @@ public class TicketReceiptMapperTest {
     	assertEquals(Constants.BASE_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareAmount());
     	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
     	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
-    	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
+    	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());
+    	
+    	assertEquals(ticketReceiptRsRow.getFopIssueDt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopIssueDate());
+    	assertEquals(ticketReceiptRsRow.getFopTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeCode());
+    	assertEquals(Constants.FOP_TYPE_DESCRIPTION, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+    	assertEquals(ticketReceiptRsRow.getFopAcctNbrLast4(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAccountNumberLast4());
+    	assertEquals(ticketReceiptRsRow.getFopAmt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount());
+    	assertEquals(ticketReceiptRsRow.getFopCurrTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopCurrencyCode());
     }
-    
+
     @Test
     public void testMapTicketReceipt_Resultset_Two_Rows_Same_Segment() throws ParseException {
     	ticketReceiptMock = Utils.mockTicketReceipt();
@@ -183,6 +190,14 @@ public class TicketReceiptMapperTest {
     	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
     	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
     	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
+
+    	assertEquals(1, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().size());
+    	assertEquals(ticketReceiptRsRow.getFopIssueDt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopIssueDate());
+    	assertEquals(ticketReceiptRsRow.getFopTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeCode());
+    	assertEquals(Constants.FOP_TYPE_DESCRIPTION, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+    	assertEquals(ticketReceiptRsRow.getFopAcctNbrLast4(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAccountNumberLast4());
+    	assertEquals(ticketReceiptRsRow.getFopAmt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount());
+    	assertEquals(ticketReceiptRsRow.getFopCurrTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopCurrencyCode());
     }
     
     @Test
@@ -251,5 +266,13 @@ public class TicketReceiptMapperTest {
     	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
     	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
     	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
+
+    	assertEquals(1, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().size());
+    	assertEquals(ticketReceiptRsRow.getFopIssueDt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopIssueDate());
+    	assertEquals(ticketReceiptRsRow.getFopTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeCode());
+    	assertEquals(Constants.FOP_TYPE_DESCRIPTION, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+    	assertEquals(ticketReceiptRsRow.getFopAcctNbrLast4(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAccountNumberLast4());
+    	assertEquals(ticketReceiptRsRow.getFopAmt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount());
+    	assertEquals(ticketReceiptRsRow.getFopCurrTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopCurrencyCode());
     }
 }
