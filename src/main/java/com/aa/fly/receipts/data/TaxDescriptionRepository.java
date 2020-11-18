@@ -88,4 +88,8 @@ public class TaxDescriptionRepository {
 
         return description;
     }
+
+    public Map<String, List<TaxCodeAndDescription>> getTaxCodeAndDescriptionMap() {
+        return taxCodeAndDescriptionMap;
+    }
 }
