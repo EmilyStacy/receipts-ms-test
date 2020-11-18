@@ -1,7 +1,6 @@
 package com.aa.fly.receipts.data;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -13,9 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.aa.fly.receipts.data.adjuster.PassengerTotalAdjuster;
 import com.aa.fly.receipts.data.builder.PassengerBuilder;
 import com.aa.fly.receipts.data.builder.PassengerFareTaxFeeBuilder;
+import com.aa.fly.receipts.data.builder.PassengerFopBuilder;
 import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
 import com.aa.fly.receipts.data.builder.PnrSegmentBuilder;
 import com.aa.fly.receipts.domain.FormOfPayment;
@@ -35,6 +34,8 @@ public class TicketReceiptMapper {
     private PassengerBuilder passengerBuilder;    
     @Autowired
     private PassengerFareTaxFeeBuilder passengerFareTaxFeeBuilder;    
+    @Autowired
+    private PassengerFopBuilder passengerFopBuilder;    
 //    @Autowired
 //    private PassengerTotalAdjuster passengerTotalAdjuster;    
     
@@ -46,7 +47,6 @@ public class TicketReceiptMapper {
         String lastDepartureDateTime = null;
         String currentDepartureDateTime = null;
         Set<FormOfPaymentKey> fopKeys = new HashSet<>();
-        List<FormOfPayment> formOfPayments = new ArrayList<>();
 
         Iterator<TicketReceiptRsRow> iterator = ticketReceiptRsRowList.iterator();
         TicketReceiptRsRow ticketReceiptRsRow = null;
@@ -75,17 +75,17 @@ public class TicketReceiptMapper {
             
         	// Building data from every row in the first segment.
             if (firstDepartureDateTime.equals(currentDepartureDateTime)) {
-            	// FOP building setup
-	            //FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(
-	            		//ticketReceiptRsRow.getFopSeqId(), ticketReceiptRsRow.getFopTypeCd());
-	            
-                //if (!fopKeys.contains(formOfPaymentKey) && isMappingFormOfPayment(ticketReceiptRsRow.getFopTypeCd())) {
-                	// build FOPs
-                	// ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
 
-                    //this.adjustFormOfPaymentsIfExchanged(ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments());
-    	            //fopKeys.add(formOfPaymentKey);
-                //}
+            	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(
+	            		ticketReceiptRsRow.getFopSeqId(), ticketReceiptRsRow.getFopTypeCd());
+	            
+                if (!fopKeys.contains(formOfPaymentKey) && isMappingFormOfPayment(ticketReceiptRsRow.getFopTypeCd())) {
+                	
+                	ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+
+                    this.adjustFormOfPaymentsIfExchanged(ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments());
+    	            fopKeys.add(formOfPaymentKey);
+                }
                 
             	// Build Tax Item (Set).
             	// Build Ancillary (Set) -> Add to set anclryDocNums.add(anclryDocNbr);
@@ -105,27 +105,27 @@ public class TicketReceiptMapper {
         
         // One time adjustments, passing ticketReceiptReturn
         
-        // PassengerFopAdjuster
-        // PassengerTaxAdjuster
-        
+        // PassengerFopAdjuster.adjust(ticketReceiptReturn);
+        // PassengerTaxZPAdjuster.adjust(ticketReceiptReturn);
+        // PassengerTaxXFAdjuster.adjust(ticketReceiptReturn);
         // passengerTotalAdjuster.adjust(ticketReceiptReturn);
         
         return ticketReceiptReturn;
     }
     
     // Move to PassengerFopBuilder
-//    private boolean isMappingFormOfPayment(String fopTypeCode) {
-//        return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
-//    }
-//    
-//    private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
-//        boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
-//        if (isExchange) {
-//            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
-//                    .collect(Collectors.toList());
-//            formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
-//        }
-//
-//        return formOfPayments;
-//    }    
+    private boolean isMappingFormOfPayment(String fopTypeCode) {
+        return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
+    }
+    
+    private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
+        boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
+        if (isExchange) {
+            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
+                    .collect(Collectors.toList());
+            formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
+        }
+
+        return formOfPayments;
+    }    
 }
