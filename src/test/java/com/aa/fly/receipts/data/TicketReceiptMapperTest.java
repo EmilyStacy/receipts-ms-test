@@ -21,10 +21,6 @@ import com.aa.fly.receipts.data.builder.PassengerBuilder;
 import com.aa.fly.receipts.data.builder.PassengerFareTaxFeeBuilder;
 import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
 import com.aa.fly.receipts.data.builder.PnrSegmentBuilder;
-import com.aa.fly.receipts.domain.Airport;
-import com.aa.fly.receipts.domain.FareTaxesFees;
-import com.aa.fly.receipts.domain.PassengerDetail;
-import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 import com.aa.fly.receipts.exception.BulkTicketException;
@@ -88,7 +84,7 @@ public class TicketReceiptMapperTest {
     
     @Test
     public void testMapTicketReceipt_Resultset_One_Row() throws ParseException {
-    	this.mockTicketReceipt();
+    	ticketReceiptMock = Utils.mockTicketReceipt();
     	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
@@ -136,7 +132,7 @@ public class TicketReceiptMapperTest {
     
     @Test
     public void testMapTicketReceipt_Resultset_Two_Rows_Same_Segment() throws ParseException {
-    	this.mockTicketReceipt();
+    	ticketReceiptMock = Utils.mockTicketReceipt();
     	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
@@ -185,8 +181,8 @@ public class TicketReceiptMapperTest {
     
     @Test
     public void testMapTicketReceipt_Resultset_Three_Rows_Two_Segments() throws ParseException {
-    	this.mockTicketReceipt();
-        this.addOneSegment();
+    	ticketReceiptMock = Utils.mockTicketReceipt();
+    	Utils.addOneSegment(ticketReceiptMock);
         ticketReceiptMock.getSegmentDetails().get(1).setSegmentDepartureDate(Constants.dateFormat.parse(SEG_DEPT_DT2));
         ticketReceiptMock.getSegmentDetails().get(1).setSegmentDepartureTime(SEG_DEPT_TM2);
         ticketReceiptMock.getSegmentDetails().get(1).setReturnTrip("true");
@@ -248,62 +244,5 @@ public class TicketReceiptMapperTest {
     	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
     	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
     	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
-    }
-    
-    private void mockTicketReceipt() throws ParseException {
-    	ticketReceiptMock = new TicketReceipt();
-    	ticketReceiptMock.setAirlineAccountCode(Constants.AIRLN_ACCT_CD);
-    	ticketReceiptMock.setTicketIssueDate(Constants.dateFormat.parse(Constants.TICKET_ISSUE_DT));
-    	ticketReceiptMock.setDepartureDate(Constants.dateFormat.parse(Constants.DEP_DT));
-    	ticketReceiptMock.setPnr(Constants.PNR);
-    	ticketReceiptMock.setOriginAirport(getAirport(Constants.SEG_DEPT_ARPRT_CD, Constants.SEG_DEPT_ARPRT_NAME, Constants.SEG_DEPT_ARPRT_CITY, Constants.SEG_DEPT_ARPRT_STATE, Constants.SEG_DEPT_ARPRT_COUNTRY_CD, Constants.SEG_DEPT_ARPRT_COUNTRY_NM));
-    	ticketReceiptMock.setDestinationAirport(getAirport(Constants.SEG_ARVL_ARPRT_CD, Constants.SEG_ARVL_ARPRT_NAME, Constants.SEG_ARVL_ARPRT_CITY, Constants.SEG_ARVL_ARPRT_STATE, Constants.SEG_ARVL_ARPRT_COUNTRY_CD, Constants.SEG_ARVL_ARPRT_COUNTRY_NM));
-
-        PassengerDetail passengerDetail = new PassengerDetail();    	
-        passengerDetail.setTicketNumber(Constants.TICKET_NBR);
-        passengerDetail.setFirstName(Constants.FIRST_NM);
-        passengerDetail.setLastName(Constants.LAST_NM);
-        passengerDetail.setAdvantageNumber(Constants.AADVANT_NBR);
-        passengerDetail.setLoyaltyOwnerCode(Constants.LYLTY_OWN_CD);
-        
-        FareTaxesFees fareTaxesFees = new FareTaxesFees();
-        fareTaxesFees.setBaseFareAmount(Constants.BASE_FARE_AMOUNT);
-        fareTaxesFees.setBaseFareCurrencyCode(Constants.BASE_FARE_CURRENCY_CODE);
-        fareTaxesFees.setTotalFareAmount(Constants.TOTAL_FARE_AMOUNT);
-        fareTaxesFees.setTaxFareAmount(Constants.TAX_FARE_AMOUNT);
-        
-        passengerDetail.setFareTaxesFees(fareTaxesFees);
-        
-        ticketReceiptMock.getPassengerDetails().add(passengerDetail);
-        addOneSegment();
-    }
-    
-    private void addOneSegment() throws ParseException {
-        SegmentDetail segmentDetail = new SegmentDetail();    	
-        segmentDetail.setSegmentDepartureDate(Constants.dateFormat.parse(Constants.SEG_DEPT_DT));
-        segmentDetail.setSegmentDepartureTime(Constants.SEG_DEPT_TM);
-        segmentDetail.setDepartureAirport(getAirport(Constants.SEG_DEPT_ARPRT_CD, Constants.SEG_DEPT_ARPRT_NAME, Constants.SEG_DEPT_ARPRT_CITY, Constants.SEG_DEPT_ARPRT_STATE, Constants.SEG_DEPT_ARPRT_COUNTRY_CD, Constants.SEG_DEPT_ARPRT_COUNTRY_NM));
-        segmentDetail.setSegmentArrivalDate(Constants.dateFormat.parse(Constants.SEG_ARVL_DT));
-        segmentDetail.setSegmentArrivalTime(Constants.SEG_ARVL_TM);
-        segmentDetail.setArrivalAirport(getAirport(Constants.SEG_ARVL_ARPRT_CD, Constants.SEG_ARVL_ARPRT_NAME, Constants.SEG_ARVL_ARPRT_CITY, Constants.SEG_ARVL_ARPRT_STATE, Constants.SEG_ARVL_ARPRT_COUNTRY_CD, Constants.SEG_ARVL_ARPRT_COUNTRY_NM));
-        segmentDetail.setSegmentStatus(Constants.SEG_COUPON_STATUS_CD);
-        segmentDetail.setCarrierCode(Constants.SEG_OPERAT_CARRIER_CD);
-        segmentDetail.setFlightNumber(Constants.FLIGHT_NBR);
-        segmentDetail.setBookingClass(Constants.BOOKING_CLASS);
-        segmentDetail.setFareBasis(Constants.FARE_BASE);
-        segmentDetail.setReturnTrip("false");
-        
-        ticketReceiptMock.getSegmentDetails().add(segmentDetail);    	
-    }
-
-    public Airport getAirport(String code, String name, String city, String state, String countryCode, String countryName) {
-        Airport airport = new Airport();
-        airport.setCode(code);
-        airport.setCity(city);
-        airport.setCountryCode(countryCode);
-        airport.setCountryName(countryName);
-        airport.setName(name);
-        airport.setStateCode(state);
-        return airport;
     }
 }
