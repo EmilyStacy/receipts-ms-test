@@ -38,25 +38,25 @@ public class CreditCardAliasRepositoryTest {
 
 
 
-@Test
-    public void toTitleCaseReturnNullWhenInputIsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException{
-    Method method = creditCardAliasRepository.getClass().getDeclaredMethod("toTitleCase", String.class);
-    method.setAccessible(true);
-    String input = null;
-    String returnValue =  (String) method.invoke(creditCardAliasRepository, input);
-    assertNull(returnValue);
+    @Test
+        public void toTitleCaseReturnNullWhenInputIsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException{
+        Method method = creditCardAliasRepository.getClass().getDeclaredMethod("toTitleCase", String.class);
+        method.setAccessible(true);
+        String input = null;
+        String returnValue =  (String) method.invoke(creditCardAliasRepository, input);
+        assertNull(returnValue);
 
-}
+    }
 
-@Test
-    public void toTitleCaseReturnLowerCaseWhenTokenLengthBiggerThan3() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException{
-    Method method = creditCardAliasRepository.getClass().getDeclaredMethod("toTitleCase", String.class);
-    method.setAccessible(true);
-    String input = "AA PERSONAL CARD";
-    String returnValue =  (String) method.invoke(creditCardAliasRepository, input);
-    assertEquals("AA Personal Card", returnValue);
+    @Test
+        public void toTitleCaseReturnLowerCaseWhenTokenLengthBiggerThan3() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException{
+        Method method = creditCardAliasRepository.getClass().getDeclaredMethod("toTitleCase", String.class);
+        method.setAccessible(true);
+        String input = "AA PERSONAL CARD";
+        String returnValue =  (String) method.invoke(creditCardAliasRepository, input);
+        assertEquals("AA Personal Card", returnValue);
 
-}
+    }
 
     @Test
     public void toTitleCaseReturnUpperCaseWhenTokenLengthShorterThan3() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException{
@@ -68,43 +68,26 @@ public class CreditCardAliasRepositoryTest {
 
     }
 
-// test loadCreditCardAliases
+    @Test
+    public void testLoadCreditCardAliases() throws NoSuchMethodException {
+    Mockito.when(jdbcTemplate.queryForRowSet(anyString()))
+                .thenReturn(resultSet);
+    Mockito.when(resultSet.next()).thenReturn(true).thenReturn(false);
+    Mockito.when(resultSet.getString("CREDIT_CARD_TYPE_ALIAS_CD")).thenReturn("AA ");
+    Mockito.when(this.resultSet.getString("CREDIT_CARD_TYPE_ALIAS_DESC")).thenReturn("AA PERSONAL CARD");
+    creditCardAliasRepository.loadCreditCardAliases();
+        Assert.assertEquals("AA Personal Card",creditCardAliasRepository.getCreditCardAliasMap().get("CCAA"));
+    }
 
-//    @Test
-//    public void testLoadCreditCardAliases() throws NoSuchMethodException {
-//    //arrange
-//    //SqlRowSet resultSet = Mockito.mock(SqlRowSet.class);
-//    Mockito.when(jdbcTemplate.queryForRowSet(anyString()))
-//                .thenReturn(resultSet);
-//    Mockito.when(this.resultSet.next()).thenReturn(true).thenReturn(false);
-//    Mockito.when(this.resultSet.getString("CREDIT_CARD_TYPE_ALIAS_CD")).thenReturn("AA ");
-//        Mockito.when(this.resultSet.getString("CREDIT_CARD_TYPE_ALIAS_DESC")).thenReturn("AA PERSONAL CARD");
-//    //act
-//    creditCardAliasRepository.loadCreditCardAliases();
-//    //assert
-//    Assert.assertEquals("CC AAPERSONALCARD",this.resultSet.getString(" CREDIT_CARD_TYPE_ALIAS_CD "));
-//    }
-//
-//    @Test public void testLoadCreditCardAliasesCreateMap() throws NoSuchMethodException, ParseException {
-//       //arrange
-//       // SqlRowSet resultSet = Mockito.mock(SqlRowSet.class);
-//        Mockito.when(jdbcTemplate.queryForRowSet(anyString()))
-//                .thenReturn(this.resultSet);
-//        Mockito.when(this.resultSet.next()).thenReturn(true).thenReturn(false);
-//        Mockito.when(this.resultSet.getString("CREDIT_CARD_TYPE_ALIAS_CD")).thenReturn("AA PERSONAL CARD");
-//        ReflectionTestUtils.setField(creditCardAliasRepository, "creditCardAliasMap", getcreditCardAliasMap());
-//        //act
-//        creditCardAliasRepository.loadCreditCardAliases();
-//        //assert
-//        //Assert.assertTrue(EqualsBuilder.reflectionEquals(1, getcreditCardAliasMap().size()));
-//        Assert.assertEquals(1, getcreditCardAliasMap().size());
-//
-//    }
-//
-//    private Map<String, String> getcreditCardAliasMap() throws ParseException {
-//    Map<String, String> creditCardAliasMap = new HashMap<>();
-//    return creditCardAliasMap;
-//    }
+    @Test public void testLoadCreditCardAliasesCreateMap() {
+        Mockito.when(jdbcTemplate.queryForRowSet(anyString()))
+                .thenReturn(resultSet);
+        Mockito.when(resultSet.next()).thenReturn(true).thenReturn(false);
+        Mockito.when(resultSet.getString("CREDIT_CARD_TYPE_ALIAS_CD")).thenReturn("AA PERSONAL CARD");
+        creditCardAliasRepository.loadCreditCardAliases();
+        Assert.assertEquals(1, creditCardAliasRepository.getCreditCardAliasMap().size());
+
+    }
 
 }
 
