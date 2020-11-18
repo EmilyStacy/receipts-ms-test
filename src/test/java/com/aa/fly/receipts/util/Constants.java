@@ -57,14 +57,15 @@ public class Constants {
 	public static final String BASE_FARE_CURRENCY_CODE = "USD";
 	public static final String TOTAL_FARE_AMOUNT = "452.80";
 	public static final String TAX_FARE_AMOUNT = "58.38";
-	
+
 	public static final String FOP_ISSUE_DATE = "2020-10-10";
 	public static final String FOP_TYPE_CODE = "CCBA";
 	public static final String FOP_TYPE_DESCRIPTION = "Visa ending in 0270";
 	public static final String FOP_ACCOUNT_NUMBER_LAST4 = "0270";
 	public static final String FOP_AMOUNT = "452.80";
 	public static final String FOP_CURRENCY_CODE = "USD";
-	
+	public static final String FOP_ACCOUNT_NUMBER_LAST4_Null= "";
+
 	public static final String ANCLRY_DOC_NBR = "619785952";
 	public static final String ANCLRY_ISSUE_DATE = "2020-10-12";
 	public static final String ANCLRY_PROD_CODE = "090";
@@ -74,6 +75,6 @@ public class Constants {
 	public static final String ANCLRY_SALES_CURRENCY_AMOUNT = "USD";
 	public static final String ANCLRY_SALES_CURRENCY_CODE = "USD";
 	public static final String ANCLRY_TAX_CURRENCY_AMOUNT = "0.00";
-	
+
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 }
