@@ -20,11 +20,6 @@ public class PassengerFopBuilder implements DataBuilderService {
 
     private Map<String, String> fopTypeMap;
 
-    @Autowired
-    public void setFopTypeMap(Map<String, String> fopTypeMap) {
-        this.fopTypeMap = fopTypeMap;
-    }
-
     @Override
     public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
 
@@ -34,7 +29,7 @@ public class PassengerFopBuilder implements DataBuilderService {
         formOfPayment.setFopAmount(ticketReceiptRsRow.getFopAmt());
         formOfPayment.setFopAccountNumberLast4(ticketReceiptRsRow.getFopAcctNbrLast4());
         formOfPayment.setFopCurrencyCode(ticketReceiptRsRow.getFopCurrTypeCd());
-        formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(ticketReceiptRsRow.getFopTypeCd(),ticketReceiptRsRow.getFopAcctNbrLast4()));
+        formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(ticketReceiptRsRow.getFopTypeCd(), ticketReceiptRsRow.getFopAcctNbrLast4()));
         ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().add(formOfPayment);
         return ticketReceipt;
 
@@ -42,13 +37,10 @@ public class PassengerFopBuilder implements DataBuilderService {
 
     private String getFormOfPaymentDescription(String fopTypeCode, String last4) {
         String description = "";
-
         if (StringUtils.isNotBlank(fopTypeCode)) {
-
             if (fopTypeCode.startsWith("CC") && StringUtils.isNotBlank(last4)) {
                 description = creditCardAliasRepository.getCreditCardAliasMap().get(fopTypeCode);
                 description = description + " ending in " + last4;
-
             } else {
                 description = fopTypeMap.get(fopTypeCode);
             }
