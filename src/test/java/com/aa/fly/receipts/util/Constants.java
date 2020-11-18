@@ -75,5 +75,12 @@ public class Constants {
 	public static final String ANCLRY_SALES_CURRENCY_CODE = "USD";
 	public static final String ANCLRY_TAX_CURRENCY_AMOUNT = "0.00";
 	
+	public static final String TAX_CODE_SEQUENCE_ID = "1";
+	public static final String TAX_CODE = "AY";
+	public static final String TAX_DESCRIPTION = "SECURITY SERVICE FEE";
+	public static final String CITY_CODE = "";
+	public static final String TAX_AMOUNT = "11.20";
+	public static final String TAX_CURRENCY_CODE = "USD";
+	
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 }

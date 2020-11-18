@@ -11,6 +11,7 @@ import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SegmentDetail;
+import com.aa.fly.receipts.domain.Tax;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 
@@ -74,6 +75,8 @@ public class Utils {
         fareTaxesFees.setTotalFareAmount(Constants.TOTAL_FARE_AMOUNT);
         fareTaxesFees.setTaxFareAmount(Constants.TAX_FARE_AMOUNT);
         
+        addOneTaxItem(fareTaxesFees);
+        
         passengerDetail.setFareTaxesFees(fareTaxesFees);
         
         addOneFormOfPayment(passengerDetail);
@@ -117,6 +120,18 @@ public class Utils {
         
         formOfPayment.setAncillaries(ancillaries);
     }
+    
+    public static void addOneTaxItem(FareTaxesFees fareTaxesFees) throws ParseException {
+        Tax tax = new Tax();    	
+        tax.setTaxCodeSequenceId(Constants.TAX_CODE_SEQUENCE_ID);
+        tax.setTaxCode(Constants.TAX_CODE);
+        tax.setTaxDescription(Constants.TAX_DESCRIPTION);
+        tax.setCityCode(Constants.CITY_CODE);
+        tax.setTaxAmount(Constants.TAX_AMOUNT);
+        tax.setTaxCurrencyCode(Constants.TAX_CURRENCY_CODE);
+        
+        fareTaxesFees.getTaxes().add(tax);
+    }    
     
     public static void addOneSegment(TicketReceipt ticketReceiptMock) throws ParseException {
         SegmentDetail segmentDetail = new SegmentDetail();    	
