@@ -27,14 +27,14 @@ public class TicketReceiptRsRow
    private String pnr;
    private String aadvantNbr;
    private String lyltyOwnCd;
-   
+
    private Date segDeptDt;
    private String segDeptTm;
    private String segDeptArprtCd;
    private Date segArvltDt;
    private String segArvlTm;
    private String segArvlArprtCd;
-   
+
    private String segCouponStatusCd;
    private String segOperatCarrierCd;
    private String flightNbr;
@@ -48,20 +48,20 @@ public class TicketReceiptRsRow
    private String fopSeqId;
    private String fopAcctNbrLast4;
    private String fopCurrTypeCd;
-   
+
    private String fnumFareAmt;
    private String fnumFareCurrTypeCd;
    private String eqfnFareAmt;
    private String eqfnFareCurrTypeCd;
    private String fareTdamAmt;
    private String tcnBulkInd;
-   
+
    private String taxCdSeqId;
    private String taxCd;
    private String cityCd;
    private String taxAmt;
    private String taxCurrTypeCd;
-   
+
    private String anclryDocNbr;
    private Date anclryIssueDt;
    private String anclryProdCd;
