@@ -83,11 +83,12 @@ public class TicketReceiptMapper {
                 if (!fopKeys.contains(formOfPaymentKey) && isMappingFormOfPayment(ticketReceiptRsRow.getFopTypeCd())) {
                 	
                 	ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
-                	List<FormOfPayment> formOfPayments = this.adjustFormOfPaymentsIfExchanged(
+                    fopKeys.add(formOfPaymentKey);
+
+                    List<FormOfPayment> formOfPayments = this.adjustFormOfPaymentsIfExchanged(
                 			ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments());
                     
                 	ticketReceiptReturn.getPassengerDetails().get(0).setFormOfPayments(formOfPayments);
-                    fopKeys.add(formOfPaymentKey);
                 }
                 
             	// Build Tax Item (Set).
