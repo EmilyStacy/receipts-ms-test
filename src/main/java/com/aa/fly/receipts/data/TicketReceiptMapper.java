@@ -57,34 +57,37 @@ public class TicketReceiptMapper {
             if (StringUtils.isNotBlank(ticketReceiptRsRow.getTcnBulkInd())) {
                 throw new BulkTicketException("BulkTicket");
             }
-        	
+            
+        	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(
+            		ticketReceiptRsRow.getFopSeqId(), ticketReceiptRsRow.getFopTypeCd());
+
+        	currentDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
+            		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
+            
         	// Building data from first row.
             if (rowCount == 0) {
             	ticketReceiptReturn = pnrHeaderBuilder.build(new TicketReceipt(), ticketReceiptRsRow);
             	ticketReceiptReturn = passengerBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
             	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
             	ticketReceiptReturn = passengerFareTaxFeeBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
-            	
-            	lastDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
-                		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
+            	ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+                fopKeys.add(formOfPaymentKey);
+
+            	lastDepartureDateTime = currentDepartureDateTime;
             	firstDepartureDateTime = lastDepartureDateTime;
             }
-
-            currentDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
-            		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
             
         	// Building data from every row in the first segment.
             if (firstDepartureDateTime.equals(currentDepartureDateTime)) {
-
-            	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(
-	            		ticketReceiptRsRow.getFopSeqId(), ticketReceiptRsRow.getFopTypeCd());
-	            
+            	
                 if (!fopKeys.contains(formOfPaymentKey) && isMappingFormOfPayment(ticketReceiptRsRow.getFopTypeCd())) {
                 	
                 	ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
-
-                    this.adjustFormOfPaymentsIfExchanged(ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments());
-    	            fopKeys.add(formOfPaymentKey);
+                	List<FormOfPayment> formOfPayments = this.adjustFormOfPaymentsIfExchanged(
+                			ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments());
+                    
+                	ticketReceiptReturn.getPassengerDetails().get(0).setFormOfPayments(formOfPayments);
+                    fopKeys.add(formOfPaymentKey);
                 }
                 
             	// Build Tax Item (Set).
@@ -92,7 +95,7 @@ public class TicketReceiptMapper {
             	// if (anclryDocNbr not in anclryDocNums)
             	//   Build Ancillary FOPs.
             }
-           
+
         	// Building data from the row when segment changed.
             if (!lastDepartureDateTime.equals(currentDepartureDateTime))
             {
@@ -105,7 +108,6 @@ public class TicketReceiptMapper {
         
         // One time adjustments, passing ticketReceiptReturn
         
-        // PassengerFopAdjuster.adjust(ticketReceiptReturn);
         // PassengerTaxZPAdjuster.adjust(ticketReceiptReturn);
         // PassengerTaxXFAdjuster.adjust(ticketReceiptReturn);
         // passengerTotalAdjuster.adjust(ticketReceiptReturn);
