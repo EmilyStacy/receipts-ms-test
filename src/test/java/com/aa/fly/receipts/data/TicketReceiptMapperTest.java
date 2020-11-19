@@ -87,8 +87,80 @@ public class TicketReceiptMapperTest {
     }
 
     @Test
+    public void testMapTicketReceipt_Resultset_Two_Rows_FOP_CA() throws ParseException {
+    	ticketReceiptMock = Utils.mockTicketReceipt();
+    	ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeCode("CA");
+    	ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopAmount("10.00");
+    	ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeDescription("CASH/CHECK");    	
+    	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRow.setFopSeqId("2");
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+    	ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+    	
+    	assertNotNull(ticketReceiptReturn);
+    	assertEquals("CASH/CHECK", ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+    }
+    
+    @Test
+    public void testMapTicketReceipt_Resultset_Two_Rows_FOP_CCBA() throws ParseException {
+    	ticketReceiptMock = Utils.mockTicketReceipt();
+    	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRow.setFopSeqId("2");
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+    	ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+    	
+    	assertNotNull(ticketReceiptReturn);
+    	assertEquals(Constants.FOP_TYPE_DESCRIPTION, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+    }
+    
+    @Test
+    public void testMapTicketReceipt_Resultset_One_Row_FOP_EX() throws ParseException {
+    	ticketReceiptMock = Utils.mockTicketReceipt();
+    	ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeCode("EX");
+    	ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopAmount("1.00");
+    	ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeDescription("Exchange");
+    	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRow.setFopTypeCd("EX");
+    	ticketReceiptRsRow.setFopAmt("1.00");
+    	
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+    	ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+    	
+    	assertNotNull(ticketReceiptReturn);
+    	assertEquals("Exchange", ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+    }
+    
+    @Test
     public void testMapTicketReceipt_Resultset_One_Row_FOP_EF() throws ParseException {
     	ticketReceiptMock = Utils.mockTicketReceipt();
+    	ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeCode("EF");
+    	ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopAmount("0.00");
+    	ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeDescription("Exchange");
     	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
@@ -104,6 +176,7 @@ public class TicketReceiptMapperTest {
     	ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
     	
     	assertNotNull(ticketReceiptReturn);
+    	assertEquals("Exchange", ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
     }
     
     @Test
