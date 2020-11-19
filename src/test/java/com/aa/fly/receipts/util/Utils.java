@@ -54,6 +54,7 @@ public class Utils {
                 .fopAcctNbrLast4(Constants.FOP_ACCOUNT_NUMBER_LAST4)
                 .fopAmt(Constants.FOP_AMOUNT)
                 .fopCurrTypeCd(Constants.FOP_CURRENCY_CODE)
+                .fopSeqId("1")
 
                 .build();
     }
