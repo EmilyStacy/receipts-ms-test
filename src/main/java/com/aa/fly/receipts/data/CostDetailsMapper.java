@@ -71,10 +71,10 @@ public class CostDetailsMapper {
 	                throw new BulkTicketException("BulkTicket");
 	            }
 	
-	            FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(fopSequenceId, fopTypeCode);
+	            // FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(fopSequenceId, fopTypeCode);
 	
 	            if (rowCount == 0) {
-	                mapFormOfPayment(rs, formOfPayments);
+	                // mapFormOfPayment(rs, formOfPayments);
 	                
 	                // Temp patch so this class continues to work until re-factoring is done.
 	                fareTaxesFees = passengerDetail.getFareTaxesFees();
@@ -83,18 +83,18 @@ public class CostDetailsMapper {
 	                // passengerDetail.setFareTaxesFees(fareTaxesFees);
 	            } else {
 	
-	                if (!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
-	                    mapFormOfPayment(rs, formOfPayments);
-	                    formOfPayments = adjustFormOfPaymentsIfExchanged(formOfPayments);
-	                }
+	                // if (!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
+	                //    mapFormOfPayment(rs, formOfPayments);
+	                //    formOfPayments = adjustFormOfPaymentsIfExchanged(formOfPayments);
+	                // }
 	                fareTaxesFees.getTaxes().add(mapTax(rs, fareTaxesFees.getBaseFareCurrencyCode()));
 	            }
 	
-	            passengerDetail.setFormOfPayments(formOfPayments);
-	            fopKeys.add(formOfPaymentKey);
+	            // passengerDetail.setFormOfPayments(formOfPayments);
+	            // fopKeys.add(formOfPaymentKey);
 	            rowCount++;
 	
-	            mapAnclry(rs, formOfPayments, anclryDocNums);
+	            mapAnclry(rs, passengerDetail.getFormOfPayments(), anclryDocNums);
             } else {
             	break;
             }
@@ -151,40 +151,40 @@ public class CostDetailsMapper {
         return passengerDetail;
     }
 
-    private void mapFormOfPayment(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
-        FormOfPayment formOfPayment = new FormOfPayment();
-        formOfPayment.setFopAccountNumberLast4(StringUtils.isNotBlank(rs.getString("FOP_ACCT_NBR_LAST4")) ? rs.getString("FOP_ACCT_NBR_LAST4").trim() : "");
-        formOfPayment.setFopIssueDate(rs.getDate("FOP_ISSUE_DT"));
-
-        String fopAmount = StringUtils.isNotBlank(rs.getString("FOP_AMT")) ? rs.getString("FOP_AMT").trim() : "0";
-        String fopCurrencyCode = StringUtils.isNotBlank(rs.getString("FOP_CURR_TYPE_CD")) ? rs.getString("FOP_CURR_TYPE_CD").trim() : "";
-        AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency(fopAmount, fopCurrencyCode);
-
-        formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
-        formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
-
-        formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : "");
-        formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(formOfPayment.getFopTypeCode(), formOfPayment.getFopAccountNumberLast4()));
-
-        formOfPayments.add(0, formOfPayment);
-    }
-
-    private boolean mapFormOfPayment(String fopTypeCode) {
-        if (fopTypeCode == null)
-            return false;
-        return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
-    }
-
-    private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
-        boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
-        if (isExchange) {
-            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
-                    .collect(Collectors.toList());
-            formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
-        }
-
-        return formOfPayments;
-    }
+//    private void mapFormOfPayment(SqlRowSet rs, List<FormOfPayment> formOfPayments) {
+//        FormOfPayment formOfPayment = new FormOfPayment();
+//        formOfPayment.setFopAccountNumberLast4(StringUtils.isNotBlank(rs.getString("FOP_ACCT_NBR_LAST4")) ? rs.getString("FOP_ACCT_NBR_LAST4").trim() : "");
+//        formOfPayment.setFopIssueDate(rs.getDate("FOP_ISSUE_DT"));
+//
+//        String fopAmount = StringUtils.isNotBlank(rs.getString("FOP_AMT")) ? rs.getString("FOP_AMT").trim() : "0";
+//        String fopCurrencyCode = StringUtils.isNotBlank(rs.getString("FOP_CURR_TYPE_CD")) ? rs.getString("FOP_CURR_TYPE_CD").trim() : "";
+//        AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency(fopAmount, fopCurrencyCode);
+//
+//        formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
+//        formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
+//
+//        formOfPayment.setFopTypeCode(StringUtils.isNotBlank(rs.getString(FOP_TYPE_CD)) ? rs.getString(FOP_TYPE_CD).trim() : "");
+//        formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(formOfPayment.getFopTypeCode(), formOfPayment.getFopAccountNumberLast4()));
+//
+//        formOfPayments.add(0, formOfPayment);
+//    }
+//
+//    private boolean mapFormOfPayment(String fopTypeCode) {
+//        if (fopTypeCode == null)
+//            return false;
+//        return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
+//    }
+//
+//    private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
+//        boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
+//        if (isExchange) {
+//            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
+//                    .collect(Collectors.toList());
+//            formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
+//        }
+//
+//        return formOfPayments;
+//    }
 
     private FormOfPayment mapAnclryFormOfPayment(SqlRowSet rs) {
         FormOfPayment formOfPayment = new FormOfPayment();

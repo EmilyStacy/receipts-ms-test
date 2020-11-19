@@ -34,7 +34,6 @@ public class PassengerTaxZPAdjuster implements DataAdjusterService {
                 }
             }
         }
-
 		return ticketReceipt;
 	}
 }

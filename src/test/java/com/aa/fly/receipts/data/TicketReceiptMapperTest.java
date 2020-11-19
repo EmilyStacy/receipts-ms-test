@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aa.fly.receipts.data.builder.PassengerBuilder;
 import com.aa.fly.receipts.data.builder.PassengerFareTaxFeeBuilder;
+import com.aa.fly.receipts.data.builder.PassengerFopBuilder;
 import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
 import com.aa.fly.receipts.data.builder.PnrSegmentBuilder;
 import com.aa.fly.receipts.domain.TicketReceipt;
@@ -52,6 +53,9 @@ public class TicketReceiptMapperTest {
     @Mock
     private PassengerFareTaxFeeBuilder passengerFareTaxFeeBuilder;
 
+    @Mock
+    private PassengerFopBuilder passengerFopBuilder;
+
     @InjectMocks
     private TicketReceiptMapper ticketReceiptMapper;
 
@@ -81,6 +85,26 @@ public class TicketReceiptMapperTest {
 
     	ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
     }
+
+    @Test
+    public void testMapTicketReceipt_Resultset_One_Row_FOP_EF() throws ParseException {
+    	ticketReceiptMock = Utils.mockTicketReceipt();
+    	Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRow.setFopTypeCd("EF");
+    	ticketReceiptRsRow.setFopAmt("0.00");
+    	
+    	ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+    	ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+    	
+    	assertNotNull(ticketReceiptReturn);
+    }
     
     @Test
     public void testMapTicketReceipt_Resultset_One_Row() throws ParseException {
@@ -89,6 +113,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();        
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
@@ -127,9 +152,16 @@ public class TicketReceiptMapperTest {
     	assertEquals(Constants.BASE_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareAmount());
     	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
     	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
-    	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
+    	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());
+    	
+    	assertEquals(ticketReceiptRsRow.getFopIssueDt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopIssueDate());
+    	assertEquals(ticketReceiptRsRow.getFopTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeCode());
+    	assertEquals(Constants.FOP_TYPE_DESCRIPTION, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+    	assertEquals(ticketReceiptRsRow.getFopAcctNbrLast4(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAccountNumberLast4());
+    	assertEquals(ticketReceiptRsRow.getFopAmt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount());
+    	assertEquals(ticketReceiptRsRow.getFopCurrTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopCurrencyCode());
     }
-    
+
     @Test
     public void testMapTicketReceipt_Resultset_Two_Rows_Same_Segment() throws ParseException {
     	ticketReceiptMock = Utils.mockTicketReceipt();
@@ -137,6 +169,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();        
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
@@ -177,6 +210,14 @@ public class TicketReceiptMapperTest {
     	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
     	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
     	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
+
+    	assertEquals(1, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().size());
+    	assertEquals(ticketReceiptRsRow.getFopIssueDt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopIssueDate());
+    	assertEquals(ticketReceiptRsRow.getFopTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeCode());
+    	assertEquals(Constants.FOP_TYPE_DESCRIPTION, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+    	assertEquals(ticketReceiptRsRow.getFopAcctNbrLast4(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAccountNumberLast4());
+    	assertEquals(ticketReceiptRsRow.getFopAmt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount());
+    	assertEquals(ticketReceiptRsRow.getFopCurrTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopCurrencyCode());
     }
     
     @Test
@@ -191,6 +232,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+    	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();    
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
@@ -244,5 +286,13 @@ public class TicketReceiptMapperTest {
     	assertEquals(Constants.BASE_FARE_CURRENCY_CODE, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
     	assertEquals(Constants.TOTAL_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
     	assertEquals(Constants.TAX_FARE_AMOUNT, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());    	
+
+    	assertEquals(1, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().size());
+    	assertEquals(ticketReceiptRsRow.getFopIssueDt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopIssueDate());
+    	assertEquals(ticketReceiptRsRow.getFopTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeCode());
+    	assertEquals(Constants.FOP_TYPE_DESCRIPTION, ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+    	assertEquals(ticketReceiptRsRow.getFopAcctNbrLast4(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAccountNumberLast4());
+    	assertEquals(ticketReceiptRsRow.getFopAmt(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount());
+    	assertEquals(ticketReceiptRsRow.getFopCurrTypeCd(), ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopCurrencyCode());
     }
 }

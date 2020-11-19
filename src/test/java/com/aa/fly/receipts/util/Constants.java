@@ -64,6 +64,7 @@ public class Constants {
 	public static final String FOP_ACCOUNT_NUMBER_LAST4 = "0270";
 	public static final String FOP_AMOUNT = "452.80";
 	public static final String FOP_CURRENCY_CODE = "USD";
+	public static final String FOP_SEQ_ID = "1";
 	public static final String FOP_ACCOUNT_NUMBER_LAST4_Null= "";
 
 	public static final String ANCLRY_DOC_NBR = "619785952";
