@@ -12,14 +12,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PassengerAncillaryBuilderTest {
-
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
     @InjectMocks
     private PassengerAncillaryBuilder passengerAncillaryBuilder;
@@ -30,7 +27,7 @@ public class PassengerAncillaryBuilderTest {
     }
 
     @Test
-    public void testThatIfMosaicHasNoAncillariesThenTicketReceiptHasNoAncillariesAsWell() throws ParseException {
+    public void testThatIfMosaicHasAncillariesThenTicketReceiptWillHaveAncillariesAsWell() throws ParseException {
         TicketReceipt ticketReceipt = Utils.mockTicketReceipt();
         TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
         Utils.addOneAncillary(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0));
@@ -47,6 +44,32 @@ public class PassengerAncillaryBuilderTest {
         assertEquals(Constants.ANCLRY_SALES_CURRENCY_AMOUNT, actualAncillary.getAnclrySalesCurrencyAmount());
         assertEquals(Constants.ANCLRY_SALES_CURRENCY_CODE, actualAncillary.getAnclrySalesCurrencyCode());
         assertEquals(Constants.ANCLRY_TAX_CURRENCY_AMOUNT, actualAncillary.getAnclryTaxCurrencyAmount());
+    }
+
+    @Test
+    public void testIfFopHasNoAncillariesThenTicketReceiptWillAlsoHaveNoAncillaries() throws ParseException {
+        TicketReceipt ticketReceipt = Utils.mockTicketReceipt();
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        ticketReceipt = passengerAncillaryBuilder.build(ticketReceipt, ticketReceiptRsRow);
+        assertTrue(CollectionUtils.isEmpty(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getAncillaries()));
+    }
+
+    @Test
+    public void testIfAncillaryDocNumberIsNullThenNoAncillariesInFOP() throws ParseException {
+        TicketReceipt ticketReceipt = Utils.mockTicketReceipt();
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        ticketReceiptRsRow.setAnclryDocNbr(null);
+        ticketReceipt = passengerAncillaryBuilder.build(ticketReceipt, ticketReceiptRsRow);
+        assertTrue(CollectionUtils.isEmpty(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getAncillaries()));
+    }
+
+    @Test
+    public void testIfAncillaryDocNumberIsBlankThenNoAncillariesInFOP() throws ParseException {
+        TicketReceipt ticketReceipt = Utils.mockTicketReceipt();
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        ticketReceiptRsRow.setAnclryDocNbr("");
+        ticketReceipt = passengerAncillaryBuilder.build(ticketReceipt, ticketReceiptRsRow);
+        assertTrue(CollectionUtils.isEmpty(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getAncillaries()));
     }
 
 }
