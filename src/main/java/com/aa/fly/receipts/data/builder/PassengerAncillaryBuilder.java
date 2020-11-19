@@ -23,35 +23,33 @@ public class PassengerAncillaryBuilder implements DataBuilderService {
     public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
 
         String ancillaryDocNumber = ticketReceiptRsRow.getAnclryDocNbr();
-        Set<String> ancillaryDocSet = new HashSet<>();
         Set<Ancillary> ancillaryList = new HashSet<>();
 
-        if (StringUtils.isNotBlank(ancillaryDocNumber) && !ancillaryDocSet.contains(ancillaryDocNumber)) {
+        if (StringUtils.isNotBlank(ancillaryDocNumber)) {
             Ancillary ancillary = new Ancillary();
             ancillary.setAnclryDocNbr(ancillaryDocNumber);
             ancillary.setAnclryIssueDate(ticketReceiptRsRow.getAnclryIssueDt() != null ? dateFormat.format(ticketReceiptRsRow.getAnclryIssueDt()) : "");
-            ancillary.setAnclryProdCode(StringUtils.isNotBlank(ticketReceiptRsRow.getAnclryProdCd()) ? ticketReceiptRsRow.getAnclryProdCd().trim() : "");
+            ancillary.setAnclryProdCode(ticketReceiptRsRow.getAnclryProdCd());
 
-            String ancillaryProdName = StringUtils.isNotBlank(ticketReceiptRsRow.getAnclryProdNm()) ? ticketReceiptRsRow.getAnclryProdNm().trim() : "";
-            String segDeptAirportCode = StringUtils.isNotBlank(ticketReceiptRsRow.getSegDeptArprtCd()) ? ticketReceiptRsRow.getSegDeptArprtCd().trim() : "";
-            String segArvlAirportCode = StringUtils.isNotBlank(ticketReceiptRsRow.getSegArvlArprtCd()) ? ticketReceiptRsRow.getSegArvlArprtCd().trim() : "";
+            String ancillaryProdName = ticketReceiptRsRow.getAnclryProdNm();
+            String segDeptAirportCode = ticketReceiptRsRow.getSegDeptArprtCd();
+            String segArvlAirportCode = ticketReceiptRsRow.getSegArvlArprtCd();
 
             ancillary.setAnclryProdName(ancillaryProdName);
             if (StringUtils.isNotBlank(ancillaryProdName) && StringUtils.isNotBlank(segDeptAirportCode) && StringUtils.isNotBlank(segArvlAirportCode)) {
                 ancillary.setAnclryProdName(ancillaryProdName + " (" + segDeptAirportCode + " - " + segArvlAirportCode + ")");
             }
 
-            String ancillaryPriceCurrencyAmount = StringUtils.isNotBlank(ticketReceiptRsRow.getAnclryPriceLclCurncyAmt()) ? ticketReceiptRsRow.getAnclryPriceLclCurncyAmt().trim() : "0";
+            String ancillaryPriceCurrencyAmount = ticketReceiptRsRow.getAnclryPriceLclCurncyAmt();
             ancillary.setAnclryPriceCurrencyAmount(ancillaryPriceCurrencyAmount);
-            ancillary.setAnclryPriceCurrencyCode(StringUtils.isNotBlank(ticketReceiptRsRow.getAnclryPriceLclCurncyCd()) ? ticketReceiptRsRow.getAnclryPriceLclCurncyCd().trim() : "");
+            ancillary.setAnclryPriceCurrencyCode(ticketReceiptRsRow.getAnclryPriceLclCurncyCd());
 
-            String anclrySalesCurrencyAmount = StringUtils.isNotBlank(ticketReceiptRsRow.getAnclrySlsCurncyAmt()) ? ticketReceiptRsRow.getAnclrySlsCurncyAmt().trim() : "0";
+            String anclrySalesCurrencyAmount = ticketReceiptRsRow.getAnclrySlsCurncyAmt();
             ancillary.setAnclrySalesCurrencyAmount(anclrySalesCurrencyAmount);
-            ancillary.setAnclrySalesCurrencyCode(StringUtils.isNotBlank(ticketReceiptRsRow.getAnclrySlsCurncyCd()) ? ticketReceiptRsRow.getAnclrySlsCurncyCd().trim() : "");
+            ancillary.setAnclrySalesCurrencyCode(ticketReceiptRsRow.getAnclrySlsCurncyCd());
 
             BigDecimal anclryTaxCurrencyAmount = new BigDecimal(anclrySalesCurrencyAmount).subtract(new BigDecimal(ancillaryPriceCurrencyAmount)).setScale(2, RoundingMode.CEILING);
             ancillary.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
-            ancillaryDocSet.add(ancillaryDocNumber);
 
             ancillaryList.add(ancillary);
 
