@@ -17,7 +17,7 @@ import java.util.Set;
 @Component
 public class PassengerAncillaryBuilder implements DataBuilderService {
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
@@ -30,15 +30,7 @@ public class PassengerAncillaryBuilder implements DataBuilderService {
             ancillary.setAnclryDocNbr(ancillaryDocNumber);
             ancillary.setAnclryIssueDate(ticketReceiptRsRow.getAnclryIssueDt() != null ? dateFormat.format(ticketReceiptRsRow.getAnclryIssueDt()) : "");
             ancillary.setAnclryProdCode(ticketReceiptRsRow.getAnclryProdCd());
-
-            String ancillaryProdName = ticketReceiptRsRow.getAnclryProdNm();
-            String segDeptAirportCode = ticketReceiptRsRow.getSegDeptArprtCd();
-            String segArvlAirportCode = ticketReceiptRsRow.getSegArvlArprtCd();
-
-            ancillary.setAnclryProdName(ancillaryProdName);
-            if (StringUtils.isNotBlank(ancillaryProdName) && StringUtils.isNotBlank(segDeptAirportCode) && StringUtils.isNotBlank(segArvlAirportCode)) {
-                ancillary.setAnclryProdName(ancillaryProdName + " (" + segDeptAirportCode + " - " + segArvlAirportCode + ")");
-            }
+            ancillary.setAnclryProdName(ticketReceiptRsRow.getAnclryProdNm());
 
             String ancillaryPriceCurrencyAmount = ticketReceiptRsRow.getAnclryPriceLclCurncyAmt();
             ancillary.setAnclryPriceCurrencyAmount(ancillaryPriceCurrencyAmount);

@@ -30,7 +30,7 @@ public class PassengerAncillaryBuilderTest {
     public void testThatIfMosaicHasAncillariesThenTicketReceiptWillHaveAncillariesAsWell() throws ParseException {
         TicketReceipt ticketReceipt = Utils.mockTicketReceipt();
         TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
-        Utils.addOneAncillary(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0));
+        Utils.addAncillaryToTicketReceiptRow(ticketReceiptRsRow);
         ticketReceipt = passengerAncillaryBuilder.build(ticketReceipt, ticketReceiptRsRow);
         assertFalse(CollectionUtils.isEmpty(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getAncillaries()));
 
@@ -43,7 +43,7 @@ public class PassengerAncillaryBuilderTest {
         assertEquals(Constants.ANCLRY_PRICE_CURRENCY_CODE, actualAncillary.getAnclryPriceCurrencyCode());
         assertEquals(Constants.ANCLRY_SALES_CURRENCY_AMOUNT, actualAncillary.getAnclrySalesCurrencyAmount());
         assertEquals(Constants.ANCLRY_SALES_CURRENCY_CODE, actualAncillary.getAnclrySalesCurrencyCode());
-        assertEquals(Constants.ANCLRY_TAX_CURRENCY_AMOUNT, actualAncillary.getAnclryTaxCurrencyAmount());
+        assertEquals("55.69", actualAncillary.getAnclryTaxCurrencyAmount());
     }
 
     @Test
