@@ -1,5 +1,6 @@
 package com.aa.fly.receipts.data.builder;
 
+import com.aa.fly.receipts.data.TaxDescriptionRepository;
 import com.aa.fly.receipts.domain.*;
 import com.aa.fly.receipts.service.DataBuilderService;
 import com.aa.fly.receipts.util.Constants;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PassengerTaxFeeItemBuilderTest {
@@ -25,15 +27,19 @@ public class PassengerTaxFeeItemBuilderTest {
     @Mock
     private TicketReceiptRsRow ticketReceiptRsRow;
 
+    @Mock
+    private TaxDescriptionRepository taxDescriptionRepository;
+
     @InjectMocks
     private DataBuilderService passengerTaxFeeItemBuilder = new PassengerTaxFeeItemBuilder();
 
     private TicketReceipt ticketReceiptMock, ticketReceiptReturn;
 
     @Test
-    public void testBuild_PassengerFareTaxFee_EqfnFareAmt_Zero() throws Exception {
+    public void testBuild_PassengerTaxFeeItemBuilder() throws Exception {
         this.mockTicketReceipt();
 
+        Mockito.when(taxDescriptionRepository.getDescription(any(), any())).thenReturn("SECURITY SERVICE FEE");
         Mockito.when(ticketReceiptRsRow.getTaxCdSeqId()).thenReturn("1");
         Mockito.when(ticketReceiptRsRow.getTaxCd()).thenReturn("AY");
         Mockito.when(ticketReceiptRsRow.getTaxAmt()).thenReturn("1120");
@@ -61,17 +67,17 @@ public class PassengerTaxFeeItemBuilderTest {
     private void mockTicketReceipt() throws ParseException {
 
         ticketReceiptMock = new TicketReceipt();
+
+        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+        fareTaxesFees.setBaseFareCurrencyCode(Constants.BASE_FARE_CURRENCY_CODE);
+
         PassengerDetail passengerDetail = new PassengerDetail();
+        passengerDetail.setFareTaxesFees(fareTaxesFees);
         passengerDetail.setTicketNumber(Constants.TICKET_NBR);
         passengerDetail.setFirstName(Constants.FIRST_NM);
         passengerDetail.setLastName(Constants.LAST_NM);
         passengerDetail.setAdvantageNumber(Constants.AADVANT_NBR);
         passengerDetail.setLoyaltyOwnerCode(Constants.LYLTY_OWN_CD);
-
-        FareTaxesFees fareTaxesFees = new FareTaxesFees();
-        fareTaxesFees.setBaseFareCurrencyCode(Constants.BASE_FARE_CURRENCY_CODE);
-
-        passengerDetail.setFareTaxesFees(fareTaxesFees);
 
         ticketReceiptMock.getPassengerDetails().add(passengerDetail);
     }

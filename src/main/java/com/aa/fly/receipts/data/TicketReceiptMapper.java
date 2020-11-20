@@ -8,15 +8,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.aa.fly.receipts.data.builder.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.aa.fly.receipts.data.builder.PassengerBuilder;
-import com.aa.fly.receipts.data.builder.PassengerFareTaxFeeBuilder;
-import com.aa.fly.receipts.data.builder.PassengerFopBuilder;
-import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
-import com.aa.fly.receipts.data.builder.PnrSegmentBuilder;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.FormOfPaymentKey;
 import com.aa.fly.receipts.domain.TicketReceipt;
@@ -35,7 +31,9 @@ public class TicketReceiptMapper {
     @Autowired
     private PassengerFareTaxFeeBuilder passengerFareTaxFeeBuilder;    
     @Autowired
-    private PassengerFopBuilder passengerFopBuilder;    
+    private PassengerFopBuilder passengerFopBuilder;
+    @Autowired
+    private PassengerTaxFeeItemBuilder passengerTaxFeeItemBuilder;
 //    @Autowired
 //    private PassengerTotalAdjuster passengerTotalAdjuster;    
     
@@ -92,6 +90,7 @@ public class TicketReceiptMapper {
                 }
                 
             	// Build Tax Item (Set).
+                ticketReceiptReturn = passengerTaxFeeItemBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
             	// Build Ancillary (Set) -> Add to set anclryDocNums.add(anclryDocNbr);
             	// if (anclryDocNbr not in anclryDocNums)
             	//   Build Ancillary FOPs.

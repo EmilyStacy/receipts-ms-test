@@ -73,22 +73,22 @@ public class CostDetailsMapper {
 	
 	            // FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(fopSequenceId, fopTypeCode);
 	
-	            if (rowCount == 0) {
+//	            if (rowCount == 0) {
 	                // mapFormOfPayment(rs, formOfPayments);
 	                
 	                // Temp patch so this class continues to work until re-factoring is done.
-	                fareTaxesFees = passengerDetail.getFareTaxesFees();
-	                fareTaxesFees.getTaxes().add(mapTax(rs, fareTaxesFees.getBaseFareCurrencyCode()));
+//	                fareTaxesFees = passengerDetail.getFareTaxesFees();
+//	                fareTaxesFees.getTaxes().add(mapTax(rs, fareTaxesFees.getBaseFareCurrencyCode()));
 	                // fareTaxesFees = mapFareTaxAndFees(rs);
 	                // passengerDetail.setFareTaxesFees(fareTaxesFees);
-	            } else {
+//	            } else {
 	
 	                // if (!fopKeys.contains(formOfPaymentKey) && mapFormOfPayment(fopTypeCode)) {
 	                //    mapFormOfPayment(rs, formOfPayments);
 	                //    formOfPayments = adjustFormOfPaymentsIfExchanged(formOfPayments);
 	                // }
-	                fareTaxesFees.getTaxes().add(mapTax(rs, fareTaxesFees.getBaseFareCurrencyCode()));
-	            }
+//	                fareTaxesFees.getTaxes().add(mapTax(rs, fareTaxesFees.getBaseFareCurrencyCode()));
+//	            }
 	
 	            // passengerDetail.setFormOfPayments(formOfPayments);
 	            // fopKeys.add(formOfPaymentKey);
@@ -249,57 +249,57 @@ public class CostDetailsMapper {
         }
     }
 
-    private FareTaxesFees mapFareTaxAndFees(SqlRowSet rs) {
+//    private FareTaxesFees mapFareTaxAndFees(SqlRowSet rs) {
+//
+//        FareTaxesFees fareTaxesFees = new FareTaxesFees();
+//
+//        String baseFareAmount;
+//        String baseFareCurrencyCode;
+//
+//        String totalFareAmount = rs.getString("FARE_TDAM_AMT");
+//
+//        int eqfnFareAmt = Integer.parseInt(rs.getString("EQFN_FARE_AMT"));
+//        if (eqfnFareAmt == 0) {
+//            baseFareAmount = rs.getString("FNUM_FARE_AMT");
+//            baseFareCurrencyCode = rs.getString("FNUM_FARE_CURR_TYPE_CD");
+//        } else {
+//            baseFareAmount = rs.getString("EQFN_FARE_AMT");
+//            baseFareCurrencyCode = rs.getString("EQFN_FARE_CURR_TYPE_CD");
+//        }
+//
+//        AmountAndCurrency baseFareAmountAndCurrency = new AmountAndCurrency(baseFareAmount, baseFareCurrencyCode);
+//        AmountAndCurrency totalFareAmountAndCurrency = new AmountAndCurrency(totalFareAmount, baseFareCurrencyCode);
+//
+//        fareTaxesFees.setBaseFareCurrencyCode(baseFareAmountAndCurrency.getCurrencyCode());
+//        fareTaxesFees.setBaseFareAmount(baseFareAmountAndCurrency.getAmount());
+//        fareTaxesFees.setTotalFareAmount(totalFareAmountAndCurrency.getAmount());
+////        fareTaxesFees.getTaxes().add(mapTax(rs, baseFareCurrencyCode));
+//        return fareTaxesFees;
+//    }
 
-        FareTaxesFees fareTaxesFees = new FareTaxesFees();
-
-        String baseFareAmount;
-        String baseFareCurrencyCode;
-
-        String totalFareAmount = rs.getString("FARE_TDAM_AMT");
-
-        int eqfnFareAmt = Integer.parseInt(rs.getString("EQFN_FARE_AMT"));
-        if (eqfnFareAmt == 0) {
-            baseFareAmount = rs.getString("FNUM_FARE_AMT");
-            baseFareCurrencyCode = rs.getString("FNUM_FARE_CURR_TYPE_CD");
-        } else {
-            baseFareAmount = rs.getString("EQFN_FARE_AMT");
-            baseFareCurrencyCode = rs.getString("EQFN_FARE_CURR_TYPE_CD");
-        }
-
-        AmountAndCurrency baseFareAmountAndCurrency = new AmountAndCurrency(baseFareAmount, baseFareCurrencyCode);
-        AmountAndCurrency totalFareAmountAndCurrency = new AmountAndCurrency(totalFareAmount, baseFareCurrencyCode);
-
-        fareTaxesFees.setBaseFareCurrencyCode(baseFareAmountAndCurrency.getCurrencyCode());
-        fareTaxesFees.setBaseFareAmount(baseFareAmountAndCurrency.getAmount());
-        fareTaxesFees.setTotalFareAmount(totalFareAmountAndCurrency.getAmount());
-        fareTaxesFees.getTaxes().add(mapTax(rs, baseFareCurrencyCode));
-        return fareTaxesFees;
-    }
-
-    private Tax mapTax(SqlRowSet rs, String baseFareCurrencyCode) {
-
-        Tax tax = new Tax();
-        tax.setTaxCodeSequenceId(rs.getString("TAX_CD_SEQ_ID"));
-        tax.setTaxCode(rs.getString("TAX_CD").trim());
-
-        AmountAndCurrency amountAndCurrency = new AmountAndCurrency(rs.getString("TAX_AMT"), rs.getString("TAX_CURR_TYPE_CD"));
-        tax.setTaxAmount(amountAndCurrency.getAmount());
-        tax.setTaxCurrencyCode(amountAndCurrency.getCurrencyCode());
-
-        String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD")) ? rs.getString("CITY_CD").trim() : "";
-        tax.setCityCode(cityCode);
-
-        String description = taxDescriptionRepository.getDescription(tax.getTaxCode(), rs.getDate("TICKET_ISSUE_DT"));
-        if ("USD".equals(baseFareCurrencyCode)) {
-            cityCode = cityCode.length() == 0 ? cityCode : "(".concat(cityCode).concat(")");
-            description = cityCode.length() == 0 ? description : description.concat(" ").concat(cityCode);
-
-        }
-        tax.setTaxDescription(description);
-
-        return tax;
-    }
+//    private Tax mapTax(SqlRowSet rs, String baseFareCurrencyCode) {
+//
+//        Tax tax = new Tax();
+//        tax.setTaxCodeSequenceId(rs.getString("TAX_CD_SEQ_ID"));
+//        tax.setTaxCode(rs.getString("TAX_CD").trim());
+//
+//        AmountAndCurrency amountAndCurrency = new AmountAndCurrency(rs.getString("TAX_AMT"), rs.getString("TAX_CURR_TYPE_CD"));
+//        tax.setTaxAmount(amountAndCurrency.getAmount());
+//        tax.setTaxCurrencyCode(amountAndCurrency.getCurrencyCode());
+//
+//        String cityCode = StringUtils.isNotBlank(rs.getString("CITY_CD")) ? rs.getString("CITY_CD").trim() : "";
+//        tax.setCityCode(cityCode);
+//
+//        String description = taxDescriptionRepository.getDescription(tax.getTaxCode(), rs.getDate("TICKET_ISSUE_DT"));
+//        if ("USD".equals(baseFareCurrencyCode)) {
+//            cityCode = cityCode.length() == 0 ? cityCode : "(".concat(cityCode).concat(")");
+//            description = cityCode.length() == 0 ? description : description.concat(" ").concat(cityCode);
+//
+//        }
+//        tax.setTaxDescription(description);
+//
+//        return tax;
+//    }
 
     public PassengerDetail adjustTaxesWithOtherCurrencies(PassengerDetail passengerDetail) {
         if (passengerDetail == null || passengerDetail.getFareTaxesFees() == null)

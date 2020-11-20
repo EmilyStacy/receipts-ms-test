@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class PassengerTaxFeeItemBuilder implements DataBuilderService {
 
     @Autowired
-    private TaxDescriptionRepository taxDescriptionRepository = new TaxDescriptionRepository();
+    private TaxDescriptionRepository taxDescriptionRepository;
 
     @Override
     public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
