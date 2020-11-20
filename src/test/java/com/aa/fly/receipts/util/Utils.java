@@ -1,21 +1,16 @@
 package com.aa.fly.receipts.util;
 
+import com.aa.fly.receipts.domain.*;
+
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.aa.fly.receipts.domain.Airport;
-import com.aa.fly.receipts.domain.Ancillary;
-import com.aa.fly.receipts.domain.FareTaxesFees;
-import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.PassengerDetail;
-import com.aa.fly.receipts.domain.SegmentDetail;
-import com.aa.fly.receipts.domain.Tax;
-import com.aa.fly.receipts.domain.TicketReceipt;
-import com.aa.fly.receipts.domain.TicketReceiptRsRow;
-
 public class Utils {
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public static TicketReceiptRsRow mockTicketReceiptRsRow() throws ParseException {
         return TicketReceiptRsRow.builder()
@@ -59,6 +54,17 @@ public class Utils {
                 .build();
     }
 
+    public static void addAncillaryToTicketReceiptRow(final TicketReceiptRsRow ticketReceiptRsRow) throws ParseException {
+        ticketReceiptRsRow.setAnclryDocNbr(Constants.ANCLRY_DOC_NBR);
+        ticketReceiptRsRow.setAnclryIssueDt(dateFormat.parse(Constants.ANCLRY_ISSUE_DATE));
+        ticketReceiptRsRow.setAnclryProdNm(Constants.ANCLRY_PROD_NAME);
+        ticketReceiptRsRow.setAnclryProdCd(Constants.ANCLRY_PROD_CODE);
+        ticketReceiptRsRow.setAnclryPriceLclCurncyAmt(Constants.ANCLRY_PRICE_CURRENCY_AMOUNT);
+        ticketReceiptRsRow.setAnclryPriceLclCurncyCd(Constants.ANCLRY_PRICE_CURRENCY_CODE);
+        ticketReceiptRsRow.setAnclrySlsCurncyAmt(Constants.ANCLRY_SALES_CURRENCY_AMOUNT);
+        ticketReceiptRsRow.setAnclrySlsCurncyCd(Constants.ANCLRY_SALES_CURRENCY_CODE);
+    }
+
     public static TicketReceipt mockTicketReceipt() throws ParseException {
         TicketReceipt ticketReceiptMock = new TicketReceipt();
         ticketReceiptMock.setAirlineAccountCode(Constants.AIRLN_ACCT_CD);
@@ -80,9 +86,9 @@ public class Utils {
         fareTaxesFees.setBaseFareCurrencyCode(Constants.BASE_FARE_CURRENCY_CODE);
         fareTaxesFees.setTotalFareAmount(Constants.TOTAL_FARE_AMOUNT);
         fareTaxesFees.setTaxFareAmount(Constants.TAX_FARE_AMOUNT);
-        
+
         addOneTaxItem(fareTaxesFees);
-        
+
         passengerDetail.setFareTaxesFees(fareTaxesFees);
 
         addOneFormOfPayment(passengerDetail);
@@ -126,19 +132,19 @@ public class Utils {
 
         formOfPayment.setAncillaries(ancillaries);
     }
-    
+
     public static void addOneTaxItem(FareTaxesFees fareTaxesFees) throws ParseException {
-        Tax tax = new Tax();    	
+        Tax tax = new Tax();
         tax.setTaxCodeSequenceId(Constants.TAX_CODE_SEQUENCE_ID);
         tax.setTaxCode(Constants.TAX_CODE);
         tax.setTaxDescription(Constants.TAX_DESCRIPTION);
         tax.setCityCode(Constants.CITY_CODE);
         tax.setTaxAmount(Constants.TAX_AMOUNT);
         tax.setTaxCurrencyCode(Constants.TAX_CURRENCY_CODE);
-        
+
         fareTaxesFees.getTaxes().add(tax);
-    }    
-    
+    }
+
     public static void addOneSegment(TicketReceipt ticketReceiptMock) throws ParseException {
         SegmentDetail segmentDetail = new SegmentDetail();
         segmentDetail.setSegmentDepartureDate(Constants.dateFormat.parse(Constants.SEG_DEPT_DT));

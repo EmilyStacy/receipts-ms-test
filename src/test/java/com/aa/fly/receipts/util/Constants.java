@@ -73,9 +73,9 @@ public class Constants {
 	public static final String ANCLRY_PROD_NAME = "MAIN CABIN EXTRA (PHL - LAX)";
 	public static final String ANCLRY_PRICE_CURRENCY_AMOUNT = "44.31";
 	public static final String ANCLRY_PRICE_CURRENCY_CODE = "USD";
-	public static final String ANCLRY_SALES_CURRENCY_AMOUNT = "USD";
+	public static final String ANCLRY_SALES_CURRENCY_AMOUNT = "100.00";
 	public static final String ANCLRY_SALES_CURRENCY_CODE = "USD";
-	public static final String ANCLRY_TAX_CURRENCY_AMOUNT = "0.00";
+	public static final String ANCLRY_TAX_CURRENCY_AMOUNT = "55.69";
 	
 	public static final String TAX_CODE_SEQUENCE_ID = "1";
 	public static final String TAX_CODE = "AY";
