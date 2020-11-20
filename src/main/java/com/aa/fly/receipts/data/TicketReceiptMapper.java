@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.aa.fly.receipts.data.builder.PassengerAncillaryBuilder;
 import com.aa.fly.receipts.data.builder.PassengerBuilder;
 import com.aa.fly.receipts.data.builder.PassengerFareTaxFeeBuilder;
 import com.aa.fly.receipts.data.builder.PassengerFopBuilder;
@@ -38,7 +39,7 @@ public class TicketReceiptMapper {
     private PassengerFopBuilder passengerFopBuilder;    
 //    @Autowired
 //    private PassengerTotalAdjuster passengerTotalAdjuster;    
-    
+        
     public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
 
         int rowCount = 0;
@@ -47,6 +48,7 @@ public class TicketReceiptMapper {
         String lastDepartureDateTime = null;
         String currentDepartureDateTime = null;
         Set<FormOfPaymentKey> fopKeys = new HashSet<>();
+        Set<String> anclryDocNums = new HashSet<>();
 
         Iterator<TicketReceiptRsRow> iterator = ticketReceiptRsRowList.iterator();
         TicketReceiptRsRow ticketReceiptRsRow = null;
@@ -80,6 +82,7 @@ public class TicketReceiptMapper {
         	// Building data from every row in the first segment.
             if (firstDepartureDateTime.equals(currentDepartureDateTime)) {
             	
+            	// Build Passenger Ticket FOP if not already
                 if (!fopKeys.contains(formOfPaymentKey) && isMappingFormOfPayment(ticketReceiptRsRow.getFopTypeCd())) {
                 	
                 	ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
@@ -92,9 +95,15 @@ public class TicketReceiptMapper {
                 }
                 
             	// Build Tax Item (Set).
-            	// Build Ancillary (Set) -> Add to set anclryDocNums.add(anclryDocNbr);
-            	// if (anclryDocNbr not in anclryDocNums)
-            	//   Build Ancillary FOPs.
+
+            	// Build Passenger Ancillary FOP if not already
+//                if (!ticketReceiptRsRow.getAnclryDocNbr().isEmpty() && 
+//                		!anclryDocNums.contains(ticketReceiptRsRow.getAnclryDocNbr())) {
+//                	// call PassengerAncillaryFopBuilder
+//                		// call PassengerAncillaryBuilder from PassengerAncillaryFopBuilder?
+//                	
+//                    anclryDocNums.add(ticketReceiptRsRow.getAnclryDocNbr());
+//                }
             }
 
         	// Building data from the row when segment changed.
