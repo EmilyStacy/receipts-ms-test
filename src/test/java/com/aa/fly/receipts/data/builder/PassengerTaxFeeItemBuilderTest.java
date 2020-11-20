@@ -36,7 +36,7 @@ public class PassengerTaxFeeItemBuilderTest {
     private TicketReceipt ticketReceiptMock, ticketReceiptReturn;
 
     @Test
-    public void testBuild_PassengerTaxFeeItemBuilder() throws Exception {
+    public void testBuild_PassengerTaxFeeItemBuilder_NoCityCode() throws Exception {
         this.mockTicketReceipt();
 
         Mockito.when(taxDescriptionRepository.getDescription(any(), any())).thenReturn("SECURITY SERVICE FEE");
@@ -62,6 +62,35 @@ public class PassengerTaxFeeItemBuilderTest {
         assertEquals("11.20", taxes.get(0).getTaxAmount());
         assertEquals("USD", taxes.get(0).getTaxCurrencyCode());
         assertEquals(11.2, taxes.get(0).getTaxAmountDouble(), 0.01);
+    }
+
+    @Test
+    public void testBuild_PassengerTaxFeeItemBuilder_WithCityCode() throws Exception {
+        this.mockTicketReceipt();
+
+        Mockito.when(taxDescriptionRepository.getDescription(any(), any())).thenReturn("SYS GEN PFC");
+        Mockito.when(ticketReceiptRsRow.getTaxCdSeqId()).thenReturn("4");
+        Mockito.when(ticketReceiptRsRow.getTaxCd()).thenReturn("XF");
+        Mockito.when(ticketReceiptRsRow.getTaxAmt()).thenReturn("450");
+        Mockito.when(ticketReceiptRsRow.getTaxCurrTypeCd()).thenReturn("USD2");
+        Mockito.when(ticketReceiptRsRow.getCityCd()).thenReturn("STT");
+        Mockito.when(ticketReceiptRsRow.getTicketIssueDt()).thenReturn(Date.valueOf("2020-03-04"));
+
+        ticketReceiptReturn = passengerTaxFeeItemBuilder.build(ticketReceiptMock, ticketReceiptRsRow);
+
+        List<Tax> taxes = new ArrayList<>(ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxes());
+
+        assertNotNull(ticketReceiptReturn);
+        assertNotNull(ticketReceiptReturn.getPassengerDetails());
+        assertNotNull(ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees());
+        assertEquals(1, ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().size());
+        assertEquals("4", taxes.get(0).getTaxCodeSequenceId());
+        assertEquals("XF", taxes.get(0).getTaxCode());
+        assertEquals("SYS GEN PFC (STT)", taxes.get(0).getTaxDescription());
+        assertEquals("STT", taxes.get(0).getCityCode());
+        assertEquals("4.50", taxes.get(0).getTaxAmount());
+        assertEquals("USD", taxes.get(0).getTaxCurrencyCode());
+        assertEquals(4.5, taxes.get(0).getTaxAmountDouble(), 0.01);
     }
 
     private void mockTicketReceipt() throws ParseException {
