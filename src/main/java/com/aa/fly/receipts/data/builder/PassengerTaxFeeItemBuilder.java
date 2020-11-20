@@ -16,19 +16,19 @@ public class PassengerTaxFeeItemBuilder implements DataBuilderService {
     @Override
     public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
 
+        String baseCurrencyCode = ticketReceipt.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode();
+        String cityCode = ticketReceiptRsRow.getCityCd();
+
         Tax tax = new Tax();
         tax.setTaxCodeSequenceId(ticketReceiptRsRow.getTaxCdSeqId());
         tax.setTaxCode(ticketReceiptRsRow.getTaxCd());
-
         AmountAndCurrency amountAndCurrency = new AmountAndCurrency(ticketReceiptRsRow.getTaxAmt(), ticketReceiptRsRow.getTaxCurrTypeCd());
         tax.setTaxAmount(amountAndCurrency.getAmount());
         tax.setTaxCurrencyCode(amountAndCurrency.getCurrencyCode());
-
-        String cityCode = StringUtils.isNotBlank(ticketReceiptRsRow.getCityCd()) ? ticketReceiptRsRow.getCityCd().trim() : "";
         tax.setCityCode(cityCode);
 
         String description = taxDescriptionRepository.getDescription(tax.getTaxCode(), ticketReceiptRsRow.getTicketIssueDt());
-        if ("USD".equals(ticketReceipt.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode())) {
+        if ("USD".equals(baseCurrencyCode)) {
             cityCode = cityCode.length() == 0 ? cityCode : "(".concat(cityCode).concat(")");
             description = cityCode.length() == 0 ? description : description.concat(" ").concat(cityCode);
 
