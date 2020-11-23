@@ -50,6 +50,11 @@ public class Utils {
                 .fopAmt(Constants.FOP_AMOUNT)
                 .fopCurrTypeCd(Constants.FOP_CURRENCY_CODE)
                 .fopSeqId(Constants.FOP_SEQ_ID)
+                .anclryIssueDt(Constants.dateFormat.parse(Constants.ANCLRY_ISSUE_DATE))
+                .anclryFopAcctNbrLast4(Constants.ANCLRY_FOP_ACCOUNT_NUMBER_LAST4)
+                .anclryFopAmt(Constants.ANCLRY_FOP_AMOUNT)
+                .anclryFopCurrTypeCd(Constants.ANCLRY_FOP_CURRENCY_CODE)
+                .anclryFopTypeCd(Constants.ANCLRY_FOP_TYPE_CODE)
 
                 .build();
     }
