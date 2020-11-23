@@ -130,6 +130,8 @@ public class PassengerTaxXFAdjusterTest {
 	public void testBuild_PassengerTax_EUR_XF_BaseCurrencyAmt_EUR() throws Exception {
 
 		ticketReceiptMock = Utils.mockTicketReceipt();
+		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setTotalFareAmount("245.57");
+		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setBaseFareAmount("46.00");
 		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setBaseFareCurrencyCode("EUR");
 		Tax xfTax = new Tax();
 		xfTax.setTaxCode("XF");
