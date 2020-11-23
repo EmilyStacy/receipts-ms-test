@@ -21,6 +21,11 @@ public class PassengerAncillaryFopBuilder implements DataBuilderService {
 
     private Map<String, String> fopTypeMap;
 
+    @Autowired
+    public void setFopTypeMap(Map<String, String> fopTypeMap) {
+        this.fopTypeMap = fopTypeMap;
+    }
+
     @Override
     public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
 
