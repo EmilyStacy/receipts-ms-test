@@ -93,23 +93,23 @@ public class PassengerTaxXFAdjusterTest {
 	}
 
 	@Test
-	public void testBuild_PassengerTax_CAD_XF_BaseCurrencyAmt_USD() throws Exception {
+	public void testBuild_PassengerTax_USD_XF_BaseCurrencyAmt_CAD() throws Exception {
 		ticketReceiptMock = Utils.mockTicketReceipt();
 		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setTotalFareAmount("1039.60");
-		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setBaseFareAmount("700");
-		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setBaseFareCurrencyCode("USD");
+		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setBaseFareAmount("923.40");
+		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setBaseFareCurrencyCode("CAD");
 
 		Tax xfTax1 = new Tax();
 		xfTax1.setTaxCode("XF");
 		xfTax1.setTaxAmount("75.00");
 		xfTax1.setTaxCodeSequenceId("2");
-		xfTax1.setTaxCurrencyCode("CAD");
+		xfTax1.setTaxCurrencyCode("USD");
 
 		Tax xfTax2 = new Tax();
 		xfTax2.setTaxCode("XF");
 		xfTax2.setTaxAmount("30.00");
 		xfTax2.setTaxCodeSequenceId("3");
-		xfTax2.setTaxCurrencyCode("CAD");
+		xfTax2.setTaxCurrencyCode("USD");
 
 		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().add(xfTax1);
 		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().add(xfTax2);
@@ -119,10 +119,10 @@ public class PassengerTaxXFAdjusterTest {
 				.filter(t -> "XF".equals(t.getTaxCode())).count();
 		Tax adjustedTax = ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().stream()
 				.filter(t -> "XF".equals(t.getTaxCode())).findAny().orElseThrow(null);
-		assertEquals(2, xfTaxItems);
+		assertEquals(1, xfTaxItems);
 		assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
 		assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("CAD");
-		assertThat(adjustedTax.getTaxAmount()).isEqualTo("75.00");
+		assertThat(adjustedTax.getTaxAmount()).isEqualTo("116.20");
 
 	}
 
