@@ -8,15 +8,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.aa.fly.receipts.data.builder.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.aa.fly.receipts.data.builder.PassengerBuilder;
-import com.aa.fly.receipts.data.builder.PassengerFareTaxFeeBuilder;
-import com.aa.fly.receipts.data.builder.PassengerFopBuilder;
-import com.aa.fly.receipts.data.builder.PnrHeaderBuilder;
-import com.aa.fly.receipts.data.builder.PnrSegmentBuilder;
 import com.aa.fly.receipts.domain.FormOfPayment;
 import com.aa.fly.receipts.domain.FormOfPaymentKey;
 import com.aa.fly.receipts.domain.TicketReceipt;
@@ -29,16 +25,18 @@ public class TicketReceiptMapper {
     @Autowired
     private PnrHeaderBuilder pnrHeaderBuilder;
     @Autowired
-    private PnrSegmentBuilder pnrSegmentBuilder;    
+    private PnrSegmentBuilder pnrSegmentBuilder;
     @Autowired
-    private PassengerBuilder passengerBuilder;    
+    private PassengerBuilder passengerBuilder;
     @Autowired
-    private PassengerFareTaxFeeBuilder passengerFareTaxFeeBuilder;    
+    private PassengerFareTaxFeeBuilder passengerFareTaxFeeBuilder;
     @Autowired
-    private PassengerFopBuilder passengerFopBuilder;    
+    private PassengerFopBuilder passengerFopBuilder;
+    @Autowired
+    private PassengerTaxFeeItemBuilder passengerTaxFeeItemBuilder;
 //    @Autowired
-//    private PassengerTotalAdjuster passengerTotalAdjuster;    
-    
+//    private PassengerTotalAdjuster passengerTotalAdjuster;
+
     public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
 
         int rowCount = 0;
@@ -47,77 +45,89 @@ public class TicketReceiptMapper {
         String lastDepartureDateTime = null;
         String currentDepartureDateTime = null;
         Set<FormOfPaymentKey> fopKeys = new HashSet<>();
+        Set<String> anclryDocNums = new HashSet<>();
 
         Iterator<TicketReceiptRsRow> iterator = ticketReceiptRsRowList.iterator();
         TicketReceiptRsRow ticketReceiptRsRow = null;
 
         while (iterator.hasNext()) {
-        	ticketReceiptRsRow = iterator.next();
-        	
+            ticketReceiptRsRow = iterator.next();
+
             if (StringUtils.isNotBlank(ticketReceiptRsRow.getTcnBulkInd())) {
                 throw new BulkTicketException("BulkTicket");
             }
-        	
-        	// Building data from first row.
-            if (rowCount == 0) {
-            	ticketReceiptReturn = pnrHeaderBuilder.build(new TicketReceipt(), ticketReceiptRsRow);
-            	ticketReceiptReturn = passengerBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
-            	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
-            	ticketReceiptReturn = passengerFareTaxFeeBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
-            	
-            	lastDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
-                		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
-            	firstDepartureDateTime = lastDepartureDateTime;
-            }
+
+            FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(
+                    ticketReceiptRsRow.getFopSeqId(), ticketReceiptRsRow.getFopTypeCd());
 
             currentDepartureDateTime = Objects.requireNonNull(ticketReceiptRsRow.getSegDeptDt().toString())
-            		.concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
-            
-        	// Building data from every row in the first segment.
+                    .concat(Objects.requireNonNull(ticketReceiptRsRow.getSegDeptTm()));
+
+            // Building data from first row.
+            if (rowCount == 0) {
+                ticketReceiptReturn = pnrHeaderBuilder.build(new TicketReceipt(), ticketReceiptRsRow);
+                ticketReceiptReturn = passengerBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+                ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
+                ticketReceiptReturn = passengerFareTaxFeeBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+                ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+                fopKeys.add(formOfPaymentKey);
+
+                lastDepartureDateTime = currentDepartureDateTime;
+                firstDepartureDateTime = lastDepartureDateTime;
+            }
+
+            // Building data from every row in the first segment.
             if (firstDepartureDateTime.equals(currentDepartureDateTime)) {
 
-            	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(
-	            		ticketReceiptRsRow.getFopSeqId(), ticketReceiptRsRow.getFopTypeCd());
-	            
+                // Build Passenger Ticket FOP if not already
                 if (!fopKeys.contains(formOfPaymentKey) && isMappingFormOfPayment(ticketReceiptRsRow.getFopTypeCd())) {
-                	
-                	ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
 
-                    this.adjustFormOfPaymentsIfExchanged(ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments());
-    	            fopKeys.add(formOfPaymentKey);
+                    ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+                    fopKeys.add(formOfPaymentKey);
+
+                    List<FormOfPayment> formOfPayments = this.adjustFormOfPaymentsIfExchanged(
+                            ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments());
+
+                    ticketReceiptReturn.getPassengerDetails().get(0).setFormOfPayments(formOfPayments);
                 }
-                
-            	// Build Tax Item (Set).
-            	// Build Ancillary (Set) -> Add to set anclryDocNums.add(anclryDocNbr);
-            	// if (anclryDocNbr not in anclryDocNums)
-            	//   Build Ancillary FOPs.
+
+                // Build Tax Item (Set).
+                ticketReceiptReturn = passengerTaxFeeItemBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+
+                // Build Passenger Ancillary FOP if not already
+//                if (!ticketReceiptRsRow.getAnclryDocNbr().isEmpty() &&
+//                		!anclryDocNums.contains(ticketReceiptRsRow.getAnclryDocNbr())) {
+//                	// call PassengerAncillaryFopBuilder
+//                		// call PassengerAncillaryBuilder from PassengerAncillaryFopBuilder?
+//
+//                    anclryDocNums.add(ticketReceiptRsRow.getAnclryDocNbr());
+//                }
             }
-           
-        	// Building data from the row when segment changed.
+
+            // Building data from the row when segment changed.
             if (!lastDepartureDateTime.equals(currentDepartureDateTime))
             {
-            	ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
+                ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
                 lastDepartureDateTime = currentDepartureDateTime;
             }
-            
+
             rowCount++;
         }
-        
+
         // One time adjustments, passing ticketReceiptReturn
-        
-        // PassengerFopAdjuster.adjust(ticketReceiptReturn);
+
         // PassengerTaxZPAdjuster.adjust(ticketReceiptReturn);
         // PassengerTaxXFAdjuster.adjust(ticketReceiptReturn);
         // passengerTotalAdjuster.adjust(ticketReceiptReturn);
-        
+
         return ticketReceiptReturn;
     }
-    
+
     // Move to PassengerFopBuilder
     private boolean isMappingFormOfPayment(String fopTypeCode) {
         return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
     }
-    
+
     private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
         boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
         if (isExchange) {
@@ -127,5 +137,5 @@ public class TicketReceiptMapper {
         }
 
         return formOfPayments;
-    }    
+    }
 }

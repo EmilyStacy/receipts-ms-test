@@ -64,6 +64,7 @@ public class Constants {
 	public static final String FOP_ACCOUNT_NUMBER_LAST4 = "0270";
 	public static final String FOP_AMOUNT = "452.80";
 	public static final String FOP_CURRENCY_CODE = "USD";
+	public static final String FOP_SEQ_ID = "1";
 	public static final String FOP_ACCOUNT_NUMBER_LAST4_Null= "";
 
 	public static final String ANCLRY_DOC_NBR = "619785952";
@@ -72,10 +73,10 @@ public class Constants {
 	public static final String ANCLRY_PROD_NAME = "MAIN CABIN EXTRA (PHL - LAX)";
 	public static final String ANCLRY_PRICE_CURRENCY_AMOUNT = "44.31";
 	public static final String ANCLRY_PRICE_CURRENCY_CODE = "USD";
-	public static final String ANCLRY_SALES_CURRENCY_AMOUNT = "USD";
+	public static final String ANCLRY_SALES_CURRENCY_AMOUNT = "100.00";
 	public static final String ANCLRY_SALES_CURRENCY_CODE = "USD";
-	public static final String ANCLRY_TAX_CURRENCY_AMOUNT = "0.00";
-	
+	public static final String ANCLRY_TAX_CURRENCY_AMOUNT = "55.69";
+
 	public static final String TAX_CODE_SEQUENCE_ID = "1";
 	public static final String TAX_CODE = "AY";
 	public static final String TAX_DESCRIPTION = "SECURITY SERVICE FEE";
@@ -84,4 +85,9 @@ public class Constants {
 	public static final String TAX_CURRENCY_CODE = "USD";
 
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	public static final String ANCLRY_FOP_AMOUNT = "400.80";
+	public static final String ANCLRY_FOP_TYPE_CODE = "CCBA";
+	public static final String ANCLRY_FOP_TYPE_DESCRIPTION = "Visa ending in 0352";
+	public static final String ANCLRY_FOP_ACCOUNT_NUMBER_LAST4 = "0352";
+	public static final String ANCLRY_FOP_CURRENCY_CODE = "USD";
 }
