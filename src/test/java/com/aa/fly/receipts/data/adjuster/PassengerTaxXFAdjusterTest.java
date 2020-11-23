@@ -123,7 +123,6 @@ public class PassengerTaxXFAdjusterTest {
 		assertThat(adjustedTax.getTaxCode()).isEqualTo("XF");
 		assertThat(adjustedTax.getTaxCurrencyCode()).isEqualTo("CAD");
 		assertThat(adjustedTax.getTaxAmount()).isEqualTo("116.20");
-
 	}
 
 	@Test
