@@ -1,7 +1,6 @@
 package com.aa.fly.receipts.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
@@ -9,16 +8,20 @@ import static org.mockito.Mockito.verify;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.aa.fly.receipts.data.adjuster.PassengerTaxZPAdjuster;
 import com.aa.fly.receipts.data.builder.*;
 
+import com.aa.fly.receipts.domain.Tax;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -59,7 +62,7 @@ public class TicketReceiptMapperTest {
     @Mock
     private PassengerFopBuilder passengerFopBuilder;
 
-    @Mock
+    @Spy
 	private PassengerTaxZPAdjuster passengerTaxZPAdjuster;
 
     @InjectMocks
@@ -385,15 +388,14 @@ public class TicketReceiptMapperTest {
 	@Test
 	public void testZPAdjuster_withZP() throws ParseException {
 		ticketReceiptMock = Utils.mockTicketReceipt();
-
-		/*Tax taxzp1 = Utils.addSpecificTaxItem("1","ZP","U.S. SEGMENT TAX","","4.2", "USD");
+		Tax taxzp1 = Utils.addSpecificTaxItem("1","ZP","U.S. SEGMENT TAX","","4.2", "USD");
 		Tax taxzp2 = Utils.addSpecificTaxItem("2","ZP","U.S. SEGMENT TAX","","4.2", "USD");
 		Tax taxzp3 = Utils.addSpecificTaxItem("3","ZP","U.S. SEGMENT TAX","","8.4", "USD");
 		Set<Tax> zpTaxes = new HashSet<>();
 		zpTaxes.add(taxzp1);
 		zpTaxes.add(taxzp2);
 		zpTaxes.add(taxzp3);
-		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setTaxes(zpTaxes);*/
+		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setTaxes(zpTaxes);
 		Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
@@ -402,10 +404,9 @@ public class TicketReceiptMapperTest {
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
 		ticketReceiptRsRowList.add(ticketReceiptRsRow);
-		//System.out.println("ticketReceipt size before is " + ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().size());
-		//TicketReceipt ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
 		ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
 		verify(passengerTaxZPAdjuster,times(1)).adjust(ticketReceiptMock);
-		//System.out.println("ticketReceipt size now is " + ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().size());
+		assertEquals(1, ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().size());
+		assertEquals("8.4",ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().iterator().next().getTaxAmount());
 	}
 }
