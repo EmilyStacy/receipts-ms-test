@@ -8,7 +8,9 @@ import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.Tax;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.DataAdjusterService;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PassengerTaxXFAdjuster implements DataAdjusterService {
 
 	@Override

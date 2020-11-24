@@ -101,7 +101,7 @@ public class CostDetailsMapper {
         }
         setShowPassengerTotal(passengerDetail);
         handleZPTaxes(passengerDetail.getFareTaxesFees());
-        return adjustTaxesWithOtherCurrencies(sumFopAmounts(passengerDetail));
+        return passengerDetail;
     }
 
     protected void handleZPTaxes(FareTaxesFees fareTaxesFees) {
@@ -301,36 +301,36 @@ public class CostDetailsMapper {
 //        return tax;
 //    }
 
-    public PassengerDetail adjustTaxesWithOtherCurrencies(PassengerDetail passengerDetail) {
-        if (passengerDetail == null || passengerDetail.getFareTaxesFees() == null)
-            return passengerDetail;
-
-        FareTaxesFees fareTaxesFees = passengerDetail.getFareTaxesFees();
-        String baseFareCurrencyCode = fareTaxesFees.getBaseFareCurrencyCode();
-        BigDecimal totalFareAmount = new BigDecimal(fareTaxesFees.getTotalFareAmount());
-        BigDecimal baseFareAmount = new BigDecimal(fareTaxesFees.getBaseFareAmount());
-        BigDecimal totalTaxAmount = totalFareAmount.subtract(baseFareAmount);
-        fareTaxesFees.setTaxFareAmount(totalTaxAmount.toString());
-
-        Set<Tax> taxes = passengerDetail.getFareTaxesFees().getTaxes();
-
-        // XF tax amount always comes as USD, even though baseFareCurrency is not USD. If baseFareCurrencyCode is not USD, merge all XFs into one entry
-        // calculate the XF amount by adding the base fare, taxes with baseFareCurrency and subtract the amount from totalFare.
-        // We need to do this so all the line items add up to the total amount on the receipt.
-        long count = taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode()) && "XF".equalsIgnoreCase(t.getTaxCode())).count();
-
-        if (count > 0) {
-            double nonXFTaxAmountDouble = taxes.stream().filter(t -> baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).mapToDouble(t -> Double.valueOf(t.getTaxAmount())).sum();
-            BigDecimal nonXFTaxAmount = BigDecimal.valueOf(nonXFTaxAmountDouble);
-            String xfAmount = (totalTaxAmount.subtract(nonXFTaxAmount)).setScale(2, RoundingMode.CEILING).toString();
-            Tax mergedXF = taxes.stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().orElse(new Tax());
-            mergedXF.setTaxAmount(xfAmount);
-            mergedXF.setTaxCurrencyCode(baseFareCurrencyCode);
-            taxes.removeIf(t -> "XF".equals(t.getTaxCode()));
-            taxes.add(mergedXF);
-        }
-        return passengerDetail;
-    }
+//    public PassengerDetail adjustTaxesWithOtherCurrencies(PassengerDetail passengerDetail) {
+//        if (passengerDetail == null || passengerDetail.getFareTaxesFees() == null)
+//            return passengerDetail;
+//
+//        FareTaxesFees fareTaxesFees = passengerDetail.getFareTaxesFees();
+//        String baseFareCurrencyCode = fareTaxesFees.getBaseFareCurrencyCode();
+//        BigDecimal totalFareAmount = new BigDecimal(fareTaxesFees.getTotalFareAmount());
+//        BigDecimal baseFareAmount = new BigDecimal(fareTaxesFees.getBaseFareAmount());
+//        BigDecimal totalTaxAmount = totalFareAmount.subtract(baseFareAmount);
+//        fareTaxesFees.setTaxFareAmount(totalTaxAmount.toString());
+//
+//        Set<Tax> taxes = passengerDetail.getFareTaxesFees().getTaxes();
+//
+//        // XF tax amount always comes as USD, even though baseFareCurrency is not USD. If baseFareCurrencyCode is not USD, merge all XFs into one entry
+//        // calculate the XF amount by adding the base fare, taxes with baseFareCurrency and subtract the amount from totalFare.
+//        // We need to do this so all the line items add up to the total amount on the receipt.
+//        long count = taxes.stream().filter(t -> !baseFareCurrencyCode.equals(t.getTaxCurrencyCode()) && "XF".equalsIgnoreCase(t.getTaxCode())).count();
+//
+//        if (count > 0) {
+//            double nonXFTaxAmountDouble = taxes.stream().filter(t -> baseFareCurrencyCode.equals(t.getTaxCurrencyCode())).mapToDouble(t -> Double.valueOf(t.getTaxAmount())).sum();
+//            BigDecimal nonXFTaxAmount = BigDecimal.valueOf(nonXFTaxAmountDouble);
+//            String xfAmount = (totalTaxAmount.subtract(nonXFTaxAmount)).setScale(2, RoundingMode.CEILING).toString();
+//            Tax mergedXF = taxes.stream().filter(t -> "XF".equals(t.getTaxCode())).findFirst().orElse(new Tax());
+//            mergedXF.setTaxAmount(xfAmount);
+//            mergedXF.setTaxCurrencyCode(baseFareCurrencyCode);
+//            taxes.removeIf(t -> "XF".equals(t.getTaxCode()));
+//            taxes.add(mergedXF);
+//        }
+//        return passengerDetail;
+//    }
 
     private String getFormOfPaymentDescription(String fopTypeCode, String last4) {
         String description = "";
