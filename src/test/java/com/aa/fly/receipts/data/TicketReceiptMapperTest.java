@@ -62,7 +62,7 @@ public class TicketReceiptMapperTest {
     @Mock
     private PassengerFopBuilder passengerFopBuilder;
 
-    @Spy
+    @Mock
 	private PassengerTaxZPAdjuster passengerTaxZPAdjuster;
 
     @InjectMocks
@@ -388,14 +388,6 @@ public class TicketReceiptMapperTest {
 	@Test
 	public void testZPAdjuster_withZP() throws ParseException {
 		ticketReceiptMock = Utils.mockTicketReceipt();
-		Tax taxzp1 = Utils.addSpecificTaxItem("1","ZP","U.S. SEGMENT TAX","","4.2", "USD");
-		Tax taxzp2 = Utils.addSpecificTaxItem("2","ZP","U.S. SEGMENT TAX","","4.2", "USD");
-		Tax taxzp3 = Utils.addSpecificTaxItem("3","ZP","U.S. SEGMENT TAX","","8.4", "USD");
-		Set<Tax> zpTaxes = new HashSet<>();
-		zpTaxes.add(taxzp1);
-		zpTaxes.add(taxzp2);
-		zpTaxes.add(taxzp3);
-		ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().setTaxes(zpTaxes);
 		Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
@@ -404,9 +396,9 @@ public class TicketReceiptMapperTest {
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
 		ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
 		ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+
 		verify(passengerTaxZPAdjuster,times(1)).adjust(ticketReceiptMock);
-		assertEquals(1, ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().size());
-		assertEquals("8.4",ticketReceiptMock.getPassengerDetails().get(0).getFareTaxesFees().getTaxes().iterator().next().getTaxAmount());
 	}
 }

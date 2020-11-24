@@ -119,9 +119,9 @@ public class TicketReceiptMapper {
 
         // One time adjustments, passing ticketReceiptReturn
 
-        passengerTaxZPAdjuster.adjust(ticketReceiptReturn);
-        // PassengerTaxXFAdjuster.adjust(ticketReceiptReturn);
-        // passengerTotalAdjuster.adjust(ticketReceiptReturn);
+        ticketReceiptReturn =  passengerTaxZPAdjuster.adjust(ticketReceiptReturn);
+        // ticketReceiptReturn = PassengerTaxXFAdjuster.adjust(ticketReceiptReturn);
+        //ticketReceiptReturn =  passengerTotalAdjuster.adjust(ticketReceiptReturn);
 
         return ticketReceiptReturn;
     }

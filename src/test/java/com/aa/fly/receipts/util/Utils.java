@@ -150,18 +150,6 @@ public class Utils {
         fareTaxesFees.getTaxes().add(tax);
     }
 
-    public static Tax addSpecificTaxItem(String taxCodeSequenceId, String taxCode, String taxDescription, String cityCode, String  taxAmount, String taxCurrencyCode )
-    {
-        Tax taxItem = new Tax();
-        taxItem.setTaxCodeSequenceId(taxCodeSequenceId);
-        taxItem.setTaxCode(taxCode);
-        taxItem.setTaxDescription(taxDescription);
-        taxItem.setCityCode(cityCode);
-        taxItem.setTaxAmount(taxAmount);
-        taxItem.setTaxCurrencyCode(taxCurrencyCode);
-        return taxItem;
-    }
-
     public static void addOneSegment(TicketReceipt ticketReceiptMock) throws ParseException {
         SegmentDetail segmentDetail = new SegmentDetail();
         segmentDetail.setSegmentDepartureDate(Constants.dateFormat.parse(Constants.SEG_DEPT_DT));
