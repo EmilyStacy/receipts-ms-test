@@ -114,7 +114,7 @@ public class Utils {
         formOfPayment.setFopAmount(Constants.FOP_AMOUNT);
         formOfPayment.setFopCurrencyCode(Constants.FOP_CURRENCY_CODE);
 
-        List<FormOfPayment> formOfPayments = new ArrayList<FormOfPayment>();
+        List<FormOfPayment> formOfPayments = new ArrayList<>();
         formOfPayments.add(formOfPayment);
 
         passengerDetail.setFormOfPayments(formOfPayments);
@@ -148,6 +148,18 @@ public class Utils {
         tax.setTaxCurrencyCode(Constants.TAX_CURRENCY_CODE);
 
         fareTaxesFees.getTaxes().add(tax);
+    }
+
+    public static Tax addSpecificTaxItem(String taxCodeSequenceId, String taxCode, String taxDescription, String cityCode, String  taxAmount, String taxCurrencyCode )
+    {
+        Tax taxItem = new Tax();
+        taxItem.setTaxCodeSequenceId(taxCodeSequenceId);
+        taxItem.setTaxCode(taxCode);
+        taxItem.setTaxDescription(taxDescription);
+        taxItem.setCityCode(cityCode);
+        taxItem.setTaxAmount(taxAmount);
+        taxItem.setTaxCurrencyCode(taxCurrencyCode);
+        return taxItem;
     }
 
     public static void addOneSegment(TicketReceipt ticketReceiptMock) throws ParseException {

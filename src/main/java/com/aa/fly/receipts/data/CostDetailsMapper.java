@@ -100,7 +100,7 @@ public class CostDetailsMapper {
             }
         }
         setShowPassengerTotal(passengerDetail);
-        handleZPTaxes(passengerDetail.getFareTaxesFees());
+//        handleZPTaxes(passengerDetail.getFareTaxesFees());
         return adjustTaxesWithOtherCurrencies(sumFopAmounts(passengerDetail));
     }
 
