@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.aa.fly.receipts.data.adjuster.PassengerTaxXFAdjuster;
+import com.aa.fly.receipts.data.adjuster.PassengerTaxZPAdjuster;
 import com.aa.fly.receipts.data.builder.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class TicketReceiptMapper {
     private PassengerTaxFeeItemBuilder passengerTaxFeeItemBuilder;
     @Autowired
     private PassengerTaxXFAdjuster passengerTaxXFAdjuster;
+    @Autowired
+    private PassengerTaxZPAdjuster passengerTaxZPAdjuster;
 //    @Autowired
 //    private PassengerTotalAdjuster passengerTotalAdjuster;
 
@@ -118,10 +121,9 @@ public class TicketReceiptMapper {
         }
 
         // One time adjustments, passing ticketReceiptReturn
-
-        // PassengerTaxZPAdjuster.adjust(ticketReceiptReturn);
         ticketReceiptReturn = passengerTaxXFAdjuster.adjust(ticketReceiptReturn);
-        // passengerTotalAdjuster.adjust(ticketReceiptReturn);
+        ticketReceiptReturn =  passengerTaxZPAdjuster.adjust(ticketReceiptReturn);
+        //ticketReceiptReturn =  passengerTotalAdjuster.adjust(ticketReceiptReturn);
 
         return ticketReceiptReturn;
     }

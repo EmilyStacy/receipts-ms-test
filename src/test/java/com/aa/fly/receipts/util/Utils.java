@@ -114,7 +114,7 @@ public class Utils {
         formOfPayment.setFopAmount(Constants.FOP_AMOUNT);
         formOfPayment.setFopCurrencyCode(Constants.FOP_CURRENCY_CODE);
 
-        List<FormOfPayment> formOfPayments = new ArrayList<FormOfPayment>();
+        List<FormOfPayment> formOfPayments = new ArrayList<>();
         formOfPayments.add(formOfPayment);
 
         passengerDetail.setFormOfPayments(formOfPayments);
