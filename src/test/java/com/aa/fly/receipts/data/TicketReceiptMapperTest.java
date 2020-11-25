@@ -1,15 +1,15 @@
 package com.aa.fly.receipts.data;
 
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.*;
+import com.aa.fly.receipts.data.adjuster.PassengerTaxXFAdjuster;
 import com.aa.fly.receipts.data.adjuster.PassengerTaxZPAdjuster;
 import com.aa.fly.receipts.data.builder.*;
 
@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -58,6 +57,9 @@ public class TicketReceiptMapperTest {
 
     @Mock
     private PassengerFopBuilder passengerFopBuilder;
+
+	@Mock
+	private PassengerTaxXFAdjuster passengerTaxXFAdjuster;
 
     @Mock
 	private PassengerTaxZPAdjuster passengerTaxZPAdjuster;
@@ -104,9 +106,9 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxZPAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
-
-		ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+    	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
     	ticketReceiptRsRow.setFopSeqId("2");
@@ -127,6 +129,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxZPAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
@@ -153,8 +156,9 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxZPAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
-    	
+
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
     	ticketReceiptRsRow.setFopTypeCd("EX");
     	ticketReceiptRsRow.setFopAmt("1.00");
@@ -179,6 +183,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxZPAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
@@ -202,6 +207,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxZPAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();        
@@ -260,6 +266,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxZPAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();        
@@ -325,6 +332,7 @@ public class TicketReceiptMapperTest {
     	Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
     	Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxZPAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
     	
     	ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();    
@@ -398,6 +406,7 @@ public class TicketReceiptMapperTest {
 		Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
 		ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
 		ticketReceiptRsRowList.add(ticketReceiptRsRow);
 
