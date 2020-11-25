@@ -406,6 +406,7 @@ public class TicketReceiptMapperTest {
 		Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
 		ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
 		ticketReceiptRsRowList.add(ticketReceiptRsRow);
 
