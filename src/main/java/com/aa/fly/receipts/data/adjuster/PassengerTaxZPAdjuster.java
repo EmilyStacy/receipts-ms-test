@@ -26,7 +26,7 @@ public class PassengerTaxZPAdjuster implements DataAdjusterService {
                 Double subTotal = zpTaxes.stream().filter(tax -> !tax.getTaxCodeSequenceId().equals(maxZPTaxLineItem.get().getTaxCodeSequenceId()))
                         .mapToDouble(Tax::getTaxAmountDouble).sum(); // calculate the sum of remaining items
                 
-                if (maxZPTaxLineItem.get().getTaxAmountDouble().equals(subTotal)) {
+                if (maxZPTaxLineItem.isPresent() && maxZPTaxLineItem.get().getTaxAmountDouble().equals(subTotal)) {
                 	
                     // maxZPTaxLineItem is the subtotal item of all remaining ZPs. Keep the subtotal item and remove all ZP line items.
                     Set<Tax> nonZPTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> !"ZP".equals(tax.getTaxCode())).collect(Collectors.toSet());
