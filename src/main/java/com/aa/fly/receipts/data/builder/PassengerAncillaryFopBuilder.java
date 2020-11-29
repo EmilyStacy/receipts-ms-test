@@ -35,8 +35,12 @@ public class PassengerAncillaryFopBuilder implements DataBuilderService {
         formOfPayment.setFopTypeCode(ticketReceiptRsRow.getAnclryFopTypeCd());
         formOfPayment.setFopTypeDescription(getFormOfPaymentDescription(ticketReceiptRsRow.getAnclryFopTypeCd(),ticketReceiptRsRow.getAnclryFopAcctNbrLast4()));
         formOfPayment.setFopAccountNumberLast4(ticketReceiptRsRow.getAnclryFopAcctNbrLast4());
-        formOfPayment.setFopAmount(ticketReceiptRsRow.getAnclryFopAmt());
-        formOfPayment.setFopCurrencyCode(ticketReceiptRsRow.getAnclryFopCurrTypeCd());
+
+        AmountAndCurrency fopAmountAndCurrency = new AmountAndCurrency(
+                ticketReceiptRsRow.getAnclryFopAmt(), ticketReceiptRsRow.getAnclryFopCurrTypeCd());
+
+        formOfPayment.setFopAmount(fopAmountAndCurrency.getAmount());
+        formOfPayment.setFopCurrencyCode(fopAmountAndCurrency.getCurrencyCode());
 
         Set<Ancillary> ancillaryList = passengerAncillaryBuilder.build(ticketReceiptRsRow);
 

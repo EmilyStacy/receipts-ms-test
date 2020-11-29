@@ -37,7 +37,7 @@ public class PassengerAncillaryBuilderTest {
         Ancillary actualAncillary = ancillaryList.iterator().next();
         assertEquals(Constants.ANCLRY_DOC_NBR, actualAncillary.getAnclryDocNbr());
         assertEquals(Constants.ANCLRY_ISSUE_DATE, actualAncillary.getAnclryIssueDate());
-        assertEquals(Constants.ANCLRY_PROD_NAME, actualAncillary.getAnclryProdName());
+        assertEquals("MAIN CABIN EXTRA (MCO - MIA)", actualAncillary.getAnclryProdName());
         assertEquals(Constants.ANCLRY_PROD_CODE, actualAncillary.getAnclryProdCode());
         assertEquals(Constants.ANCLRY_PRICE_CURRENCY_AMOUNT, actualAncillary.getAnclryPriceCurrencyAmount());
         assertEquals(Constants.ANCLRY_PRICE_CURRENCY_CODE, actualAncillary.getAnclryPriceCurrencyCode());

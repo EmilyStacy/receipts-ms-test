@@ -70,7 +70,7 @@ public class Constants {
 	public static final String ANCLRY_DOC_NBR = "619785952";
 	public static final String ANCLRY_ISSUE_DATE = "2020-10-12";
 	public static final String ANCLRY_PROD_CODE = "090";
-	public static final String ANCLRY_PROD_NAME = "MAIN CABIN EXTRA (PHL - LAX)";
+	public static final String ANCLRY_PROD_NAME = "MAIN CABIN EXTRA";
 	public static final String ANCLRY_PRICE_CURRENCY_AMOUNT = "44.31";
 	public static final String ANCLRY_PRICE_CURRENCY_CODE = "USD";
 	public static final String ANCLRY_SALES_CURRENCY_AMOUNT = "100.00";

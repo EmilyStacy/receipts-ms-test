@@ -29,7 +29,15 @@ public class PassengerAncillaryBuilder {
             ancillary.setAnclryDocNbr(ancillaryDocNumber);
             ancillary.setAnclryIssueDate(ticketReceiptRsRow.getAnclryIssueDt() != null ? dateFormat.format(ticketReceiptRsRow.getAnclryIssueDt()) : "");
             ancillary.setAnclryProdCode(ticketReceiptRsRow.getAnclryProdCd());
-            ancillary.setAnclryProdName(ticketReceiptRsRow.getAnclryProdNm());
+
+            String segDeptArprtCd = ticketReceiptRsRow.getSegDeptArprtCd();
+            String segArvlArprtCd = ticketReceiptRsRow.getSegArvlArprtCd();
+            String anclryProdName = ticketReceiptRsRow.getAnclryProdNm();
+            ancillary.setAnclryProdName(anclryProdName);
+
+            if (StringUtils.isNotBlank(anclryProdName) && StringUtils.isNotBlank(segDeptArprtCd) && StringUtils.isNotBlank(segArvlArprtCd)) {
+                ancillary.setAnclryProdName(anclryProdName + " (" + segDeptArprtCd + " - " + segArvlArprtCd + ")");
+            }
 
             String ancillaryPriceCurrencyAmount = ticketReceiptRsRow.getAnclryPriceLclCurncyAmt();
             ancillary.setAnclryPriceCurrencyAmount(ancillaryPriceCurrencyAmount);
