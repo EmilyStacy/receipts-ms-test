@@ -15,12 +15,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class PassengerAncillaryBuilder implements DataBuilderService {
+public class PassengerAncillaryBuilder {
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    @Override
-    public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
+    public Set<Ancillary> build( TicketReceiptRsRow ticketReceiptRsRow ) {
 
         String ancillaryDocNumber = ticketReceiptRsRow.getAnclryDocNbr();
         Set<Ancillary> ancillaryList = new HashSet<>();
@@ -42,13 +41,8 @@ public class PassengerAncillaryBuilder implements DataBuilderService {
 
             BigDecimal anclryTaxCurrencyAmount = new BigDecimal(anclrySalesCurrencyAmount).subtract(new BigDecimal(ancillaryPriceCurrencyAmount)).setScale(2, RoundingMode.CEILING);
             ancillary.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
-
             ancillaryList.add(ancillary);
-
-            FormOfPayment formOfPayment = new FormOfPayment();
-            formOfPayment.setAncillaries(ancillaryList);
-            ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).setAncillaries(ancillaryList);
         }
-        return ticketReceipt;
+        return ancillaryList;
     }
 }

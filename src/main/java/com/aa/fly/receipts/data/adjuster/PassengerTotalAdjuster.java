@@ -6,7 +6,9 @@ import java.math.RoundingMode;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.service.DataAdjusterService;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PassengerTotalAdjuster implements DataAdjusterService {
 
 	@Override

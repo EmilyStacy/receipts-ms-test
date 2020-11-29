@@ -39,9 +39,6 @@ public class TicketReceiptRepositoryTest {
     private TicketReceiptMapper ticketReceiptMapper;
 
     @Mock
-    private CostDetailsMapper costDetailsMapper;
-
-    @Mock
     private TicketReceiptRsExtracter ticketReceiptRsExtracter;
 
     @InjectMocks

@@ -31,8 +31,8 @@ public class TicketReceiptRepository {
     @Autowired
     private TicketReceiptMapper ticketReceiptMapper;
 
-    @Autowired
-    private CostDetailsMapper costDetailsMapper;
+//    @Autowired
+//    private CostDetailsMapper costDetailsMapper;
 
     public TicketReceipt findTicketReceiptByTicketNumber(SearchCriteria criteria) {
         String ticketNumber = criteria.getTicketNumber();
@@ -119,9 +119,9 @@ public class TicketReceiptRepository {
         } else {
             ticketReceipt = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
 
-            sqlRowSet.beforeFirst();
-            PassengerDetail passengerDetail = costDetailsMapper.mapCostDetails(sqlRowSet, ticketReceipt.getPassengerDetails().get(0));
-            ticketReceipt.getPassengerDetails().set(0, passengerDetail);
+//            sqlRowSet.beforeFirst();
+//            PassengerDetail passengerDetail = costDetailsMapper.mapCostDetails(sqlRowSet, ticketReceipt.getPassengerDetails().get(0));
+//            ticketReceipt.getPassengerDetails().set(0, passengerDetail);
         }
 
         return ticketReceipt;

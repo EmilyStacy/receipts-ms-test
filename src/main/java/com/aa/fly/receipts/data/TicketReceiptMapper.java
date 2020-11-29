@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.aa.fly.receipts.data.adjuster.PassengerTaxXFAdjuster;
 import com.aa.fly.receipts.data.adjuster.PassengerTaxZPAdjuster;
+import com.aa.fly.receipts.data.adjuster.PassengerTotalAdjuster;
 import com.aa.fly.receipts.data.builder.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,12 @@ public class TicketReceiptMapper {
     private PassengerTaxXFAdjuster passengerTaxXFAdjuster;
     @Autowired
     private PassengerTaxZPAdjuster passengerTaxZPAdjuster;
-//    @Autowired
-//    private PassengerTotalAdjuster passengerTotalAdjuster;
+    @Autowired
+    private PassengerTotalAdjuster passengerTotalAdjuster;
+    @Autowired
+    private PassengerAncillaryFopBuilder passengerAncillaryFopBuilder;
+
+
 
     public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
 
@@ -101,13 +106,13 @@ public class TicketReceiptMapper {
                 ticketReceiptReturn = passengerTaxFeeItemBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
 
                 // Build Passenger Ancillary FOP if not already
-//                if (!ticketReceiptRsRow.getAnclryDocNbr().isEmpty() &&
-//                		!anclryDocNums.contains(ticketReceiptRsRow.getAnclryDocNbr())) {
-//                	// call PassengerAncillaryFopBuilder
-//                		// call PassengerAncillaryBuilder from PassengerAncillaryFopBuilder?
-//
-//                    anclryDocNums.add(ticketReceiptRsRow.getAnclryDocNbr());
-//                }
+                if (!ticketReceiptRsRow.getAnclryDocNbr().isEmpty() &&
+                		!anclryDocNums.contains(ticketReceiptRsRow.getAnclryDocNbr())) {
+
+                    ticketReceiptReturn = passengerAncillaryFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+
+                    anclryDocNums.add(ticketReceiptRsRow.getAnclryDocNbr());
+                }
             }
 
             // Building data from the row when segment changed.
@@ -123,7 +128,7 @@ public class TicketReceiptMapper {
         // One time adjustments, passing ticketReceiptReturn
         ticketReceiptReturn = passengerTaxXFAdjuster.adjust(ticketReceiptReturn);
         ticketReceiptReturn =  passengerTaxZPAdjuster.adjust(ticketReceiptReturn);
-        //ticketReceiptReturn =  passengerTotalAdjuster.adjust(ticketReceiptReturn);
+        ticketReceiptReturn =  passengerTotalAdjuster.adjust(ticketReceiptReturn);
 
         return ticketReceiptReturn;
     }

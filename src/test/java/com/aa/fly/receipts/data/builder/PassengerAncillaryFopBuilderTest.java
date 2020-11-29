@@ -1,6 +1,7 @@
 package com.aa.fly.receipts.data.builder;
 
 import com.aa.fly.receipts.data.CreditCardAliasRepository;
+import com.aa.fly.receipts.domain.Ancillary;
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.domain.TicketReceiptRsRow;
@@ -14,10 +15,10 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.FieldSetter;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -26,6 +27,9 @@ public class PassengerAncillaryFopBuilderTest {
 
     @Mock
     private CreditCardAliasRepository creditCardAliasRepository;
+
+    @Mock
+    private PassengerAncillaryBuilder passengerAncillaryBuilder;
 
     @Mock
     private Map<String, String> fopTypeMap;
@@ -44,6 +48,22 @@ public class PassengerAncillaryFopBuilderTest {
         return fopTypeMap;
     }
 
+    public Set<Ancillary> createAncillaryListSet() {
+        Set<Ancillary> ancillaryListSet = new HashSet<>();
+        Ancillary ancillary = new Ancillary();
+        ancillary.setAnclryDocNbr(Constants.ANCLRY_DOC_NBR);
+        ancillary.setAnclryIssueDate(Constants.ANCLRY_ISSUE_DATE);
+        ancillary.setAnclryProdCode(Constants.ANCLRY_PROD_CODE);
+        ancillary.setAnclryProdName(Constants.ANCLRY_PROD_NAME);
+        ancillary.setAnclryPriceCurrencyAmount(Constants.ANCLRY_PRICE_CURRENCY_AMOUNT);
+        ancillary.setAnclryPriceCurrencyCode(Constants.ANCLRY_PRICE_CURRENCY_CODE);
+        ancillary.setAnclrySalesCurrencyAmount(Constants.ANCLRY_SALES_CURRENCY_AMOUNT);
+        ancillary.setAnclrySalesCurrencyCode(Constants.ANCLRY_SALES_CURRENCY_CODE);
+        ancillary.setAnclryTaxCurrencyAmount(Constants.ANCLRY_TAX_CURRENCY_AMOUNT);
+        ancillaryListSet.add(ancillary);
+        return ancillaryListSet;
+    }
+
 
     @Test
     public void testBuild_PassengerFOPBuilder() throws Exception {
@@ -51,10 +71,12 @@ public class PassengerAncillaryFopBuilderTest {
         this.ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
         //When
         Mockito.when(creditCardAliasRepository.getCreditCardAliasMap()).thenReturn(fopTypeMap());
+        Mockito.when(passengerAncillaryBuilder.build(this.ticketReceiptRsRow)).thenReturn(createAncillaryListSet());
         this.ticketReceipt = passengerAncillaryFopBuilder.build(mockTicketReceipt(), this.ticketReceiptRsRow);
         //Then
         assertNotNull(this.ticketReceipt);
         assertNotNull(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments());
+        assertNotNull(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getAncillaries());
         assertEquals(1, this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
         assertEquals(Constants.ANCLRY_ISSUE_DATE, Constants.dateFormat.format(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopIssueDate()));
         assertEquals(Constants.ANCLRY_FOP_AMOUNT, this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount());
@@ -72,10 +94,12 @@ public class PassengerAncillaryFopBuilderTest {
         FieldSetter.setField(passengerAncillaryFopBuilder, passengerAncillaryFopBuilder.getClass().getDeclaredField("fopTypeMap"), fopTypeMap);
         //When
         Mockito.when(creditCardAliasRepository.getCreditCardAliasMap()).thenReturn(fopTypeMap());
+        Mockito.when(passengerAncillaryBuilder.build(this.ticketReceiptRsRow)).thenReturn(createAncillaryListSet());
         this.ticketReceipt = passengerAncillaryFopBuilder.build(mockTicketReceipt(), this.ticketReceiptRsRow);
         //Then
         assertNotNull(this.ticketReceipt);
         assertNotNull(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments());
+        assertNotNull(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getAncillaries());
         assertEquals(1, this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
         assertNotEquals(Constants.FOP_TYPE_DESCRIPTION, this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
     }

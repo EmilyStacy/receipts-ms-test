@@ -1,23 +1,24 @@
 package com.aa.fly.receipts.data.builder;
 
 import com.aa.fly.receipts.data.CreditCardAliasRepository;
-import com.aa.fly.receipts.domain.AmountAndCurrency;
-import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.TicketReceipt;
-import com.aa.fly.receipts.domain.TicketReceiptRsRow;
+import com.aa.fly.receipts.domain.*;
 import com.aa.fly.receipts.service.DataBuilderService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Set;
 
-
+// call PassengerAncillaryBuilder from PassengerAncillaryFopBuilder?
 @Component
 public class PassengerAncillaryFopBuilder implements DataBuilderService {
 
     @Autowired
     private CreditCardAliasRepository creditCardAliasRepository;
+
+    @Autowired
+    private PassengerAncillaryBuilder passengerAncillaryBuilder;
 
     private Map<String, String> fopTypeMap;
 
@@ -37,8 +38,10 @@ public class PassengerAncillaryFopBuilder implements DataBuilderService {
         formOfPayment.setFopAmount(ticketReceiptRsRow.getAnclryFopAmt());
         formOfPayment.setFopCurrencyCode(ticketReceiptRsRow.getAnclryFopCurrTypeCd());
 
-        ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().add(formOfPayment);
+        Set<Ancillary> ancillaryList = passengerAncillaryBuilder.build(ticketReceiptRsRow);
 
+        formOfPayment.setAncillaries(ancillaryList);
+        ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().add(formOfPayment);
         return ticketReceipt;
     }
 
