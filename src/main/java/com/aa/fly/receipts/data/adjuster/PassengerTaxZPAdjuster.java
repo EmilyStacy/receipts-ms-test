@@ -1,5 +1,7 @@
 package com.aa.fly.receipts.data.adjuster;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.Set;
@@ -23,10 +25,12 @@ public class PassengerTaxZPAdjuster implements DataAdjusterService {
             Set<Tax> zpTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> "ZP".equals(tax.getTaxCode())).collect(Collectors.toSet()); // get all ZP tax line items
             if (zpTaxes.size() > 1) {
                 Optional<Tax> maxZPTaxLineItem = zpTaxes.stream().max(Comparator.comparing(Tax::getTaxAmountDouble)); // get the line item with maximum tax amount
-                Double subTotal = zpTaxes.stream().filter(tax -> !tax.getTaxCodeSequenceId().equals(maxZPTaxLineItem.get().getTaxCodeSequenceId()))
+                double subTotal = zpTaxes.stream().filter(tax -> !tax.getTaxCodeSequenceId().equals(maxZPTaxLineItem.get().getTaxCodeSequenceId()))
                         .mapToDouble(Tax::getTaxAmountDouble).sum(); // calculate the sum of remaining items
-                
-                if (maxZPTaxLineItem.isPresent() && maxZPTaxLineItem.get().getTaxAmountDouble().equals(subTotal)) {
+                BigDecimal bigSubtotal = new BigDecimal(Double.toString(subTotal));
+                bigSubtotal =bigSubtotal.setScale(2, RoundingMode.FLOOR); // avoid double precision
+                double doubleSubtotal = bigSubtotal.doubleValue();
+                if (maxZPTaxLineItem.isPresent() && Double.compare(maxZPTaxLineItem.get().getTaxAmountDouble(), doubleSubtotal)==0) {
                 	
                     // maxZPTaxLineItem is the subtotal item of all remaining ZPs. Keep the subtotal item and remove all ZP line items.
                     Set<Tax> nonZPTaxes = fareTaxesFees.getTaxes().stream().filter(tax -> !"ZP".equals(tax.getTaxCode())).collect(Collectors.toSet());
