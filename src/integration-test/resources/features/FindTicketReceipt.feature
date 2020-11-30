@@ -13,7 +13,7 @@ Feature: Search with ticket number should return ticket receipt
     Examples:
       | scenario                           | ticketNumber  | lastName | firstName | departureDate | originAirport | destinationAirport | pnr    | advantageNumber | loyaltyOwnerCode |
       | Other airline frequent flier       | 0012132029794 | HATTORI  | MAX       | 08/06/2020    | NRT           | SEA                | WLXRJB | 122099003       | AS               |
-      | One way with over night connection | 0012119066455 | RICHINS  | SHANNON   | 03/12/2020    | SGU           | VIE                | YYMFUN |                 | BA               |
+      | One way with over night connection | 0012119066455 | RICHINS  | SHANNON   | 03/12/2020    | SGU           | VIE                | YYMFUN |                 |                  |
 
   @OlderThan18Month
   Scenario: Search ticket with issued date older than 18 months from today
@@ -75,11 +75,14 @@ Feature: Search with ticket number should return ticket receipt
     Then I get a successful response with the correct taxamount "<taxesamount>" and zpamount "<zpstring>"
 
     Examples:
-      | scenario                          | ticketNumber  | lastName  | firstName         | departureDate | taxesamount | zpstring                                                                                                                            |
-      | Taxes-one ZP                      | 0012111159293 | BAMMIDI   | RAVINDRA          | 02/02/2020    | 18.03       | [Tax{taxCodeSequenceId='4', taxCode='ZP', taxDescription='U.S. SEGMENT TAX', cityCode='', taxAmount='4.30', taxCurrencyCode='USD'}] |
-      | Taxes- another ticket with one ZP | 0012110664024 | RUTT      | JANE              | 03/14/2020    | 24.05       | [Tax{taxCodeSequenceId='5', taxCode='ZP', taxDescription='U.S. SEGMENT TAX', cityCode='', taxAmount='4.30', taxCurrencyCode='USD'}] |
-      | Taxes- no ZP                      | 0012397883850 | VEMIREDDI | VISALI            | 02/21/2020    | 87.05       | []                                                                                                                                  |
-      | Taxes- another ticket with no ZP  | 0012120202036 | NEWMAN    | DONALD JACKSON MR | 03/07/2020    | 0           | []                                                                                                                                  |
+      | scenario                          | ticketNumber  | lastName  | firstName         | departureDate | taxesamount | zpstring                                                                                                                             |
+      | Taxes-one ZP                      | 0012111159293 | BAMMIDI   | RAVINDRA          | 02/02/2020    | 18.03       | [Tax{taxCodeSequenceId='4', taxCode='ZP', taxDescription='U.S. SEGMENT TAX', cityCode='', taxAmount='4.30', taxCurrencyCode='USD'}]  |
+      | Taxes- two ZPs, 2 same amts       | 0012124029632 | SHENOY    | RANA              | 05/25/2020    | 8.70        | [Tax{taxCodeSequenceId='2', taxCode='ZP', taxDescription='U.S. SEGMENT TAX', cityCode='', taxAmount='4.20', taxCurrencyCode='USD'}]  |
+      | Taxes- three ZPs, 2 same amts     | 0012123816763 | FOWLER    | WILLIAM           | 05/02/2020    | 39.96       | [Tax{taxCodeSequenceId='5', taxCode='ZP', taxDescription='U.S. SEGMENT TAX', cityCode='', taxAmount='8.60', taxCurrencyCode='USD'}]  |
+      | Taxes- four ZPs,3 same amts       | 0012123876533 | MULHERN   | KELLY             | 05/10/2020    | 151.61      | [Tax{taxCodeSequenceId='5', taxCode='ZP', taxDescription='U.S. SEGMENT TAX', cityCode='', taxAmount='12.60', taxCurrencyCode='USD'}] |
+      | Taxes- another ticket with one ZP | 0012110664024 | RUTT      | JANE              | 03/14/2020    | 24.05       | [Tax{taxCodeSequenceId='5', taxCode='ZP', taxDescription='U.S. SEGMENT TAX', cityCode='', taxAmount='4.30', taxCurrencyCode='USD'}]  |
+      | Taxes- no ZP                      | 0012397883850 | VEMIREDDI | VISALI            | 02/21/2020    | 87.05       | []                                                                                                                                   |
+      | Taxes- another ticket with no ZP  | 0012120202036 | NEWMAN    | DONALD JACKSON MR | 03/07/2020    | 0           | []                                                                                                                                   |
 
   Scenario Outline: Verify statusMessage when bulk ticket is found
     Given I want to retrieve a bulk ticket receipt for scenario "<scenario>"
@@ -210,5 +213,5 @@ Feature: Search with ticket number should return ticket receipt
     Then I get a successful response with pnr as "<PNR>", departSegmentString as "<departSegmentString>", returnSegmentString as "<returnSegmentString>"
 
     Examples:
-      | scenario                              | ticketNumber  | lastName    | firstName | departureDate | PNR    | departSegmentString                                                                                                                                                             | returnSegmentString                                                                                                                                                            |
-      | Round trip with same flight number    | 0012117384146 | WORKMAN     | DAVID     | 03/20/2020    | LFIGIU | CP6022 leaving XNA(Fayetteville, AR) to LAX(Los Angeles, CA) on 2020-03-20 at 13:53:00 and arriving on 2020-03-20 at 15:32:00 in class VVDWZNB1 and the flight status is EXCH.  | CP6022 leaving LAX(Los Angeles, CA) to XNA(Fayetteville, AR) on 2020-03-25 at 08:10:00 and arriving on 2020-03-25 at 13:23:00 in class QWAHZNB1 and the flight status is EXCH. |
+      | scenario                           | ticketNumber  | lastName | firstName | departureDate | PNR    | departSegmentString                                                                                                                                                            | returnSegmentString                                                                                                                                                            |
+      | Round trip with same flight number | 0012117384146 | WORKMAN  | DAVID     | 03/20/2020    | LFIGIU | CP6022 leaving XNA(Fayetteville, AR) to LAX(Los Angeles, CA) on 2020-03-20 at 13:53:00 and arriving on 2020-03-20 at 15:32:00 in class VVDWZNB1 and the flight status is EXCH. | CP6022 leaving LAX(Los Angeles, CA) to XNA(Fayetteville, AR) on 2020-03-25 at 08:10:00 and arriving on 2020-03-25 at 13:23:00 in class QWAHZNB1 and the flight status is EXCH. |
