@@ -161,7 +161,7 @@ pipeline {
             }
         }
         
-        /*
+
         stage('int tests Stage') {
             when {
                 branch 'master'
@@ -181,7 +181,7 @@ pipeline {
                 ]
             }
         }
-        */
+
 
         stage('deploy prod') {
             when {

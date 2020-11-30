@@ -42,7 +42,7 @@ public class PassengerFopBuilder implements DataBuilderService {
         formOfPayment.setFopTypeDescription(
         		getFormOfPaymentDescription(ticketReceiptRsRow.getFopTypeCd(), ticketReceiptRsRow.getFopAcctNbrLast4()));
         
-        ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().add(formOfPayment);
+        ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().add(0, formOfPayment);
         
         return ticketReceipt;
     }
