@@ -50,7 +50,7 @@ public class TicketReceiptRsExtracter {
 	                            sqlRowSet.getString("SEG_OPERAT_CARRIER_CD") : null)
 						.flightNbr(sqlRowSet.getString("FLIGHT_NBR"))
 						.bookingClass(StringUtils.isNotBlank(sqlRowSet.getString("BOOKING_CLASS")) ? 
-	                            sqlRowSet.getString("BOOKING_CLASS") : null)
+	                            sqlRowSet.getString("BOOKING_CLASS").trim() : null)
 						.fareBase(StringUtils.isNotBlank(sqlRowSet.getString("FARE_BASE")) ? 
 	                            sqlRowSet.getString("FARE_BASE").trim() : null)
 						.couponSeqNbr(sqlRowSet.getString("COUPON_SEQ_NBR"))
