@@ -1,16 +1,19 @@
 package com.aa.fly.receipts.data;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import com.aa.fly.receipts.domain.PassengerDetail;
 import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 
 @Repository
 @Transactional(readOnly = true)
@@ -23,10 +26,13 @@ public class TicketReceiptRepository {
     private String ticketSchemaName;
 
     @Autowired
+    private TicketReceiptRsExtracter ticketReceiptRsExtracter;
+    
+    @Autowired
     private TicketReceiptMapper ticketReceiptMapper;
 
-    @Autowired
-    private CostDetailsMapper costDetailsMapper;
+//    @Autowired
+//    private CostDetailsMapper costDetailsMapper;
 
     public TicketReceipt findTicketReceiptByTicketNumber(SearchCriteria criteria) {
         String ticketNumber = criteria.getTicketNumber();
@@ -99,16 +105,23 @@ public class TicketReceiptRepository {
                 .append("AND DEP_DT = to_date(?, 'MM/DD/YYYY') \n")
                 .append("AND UPPER(TRIM(FIRST_NM)) LIKE ? \n")
                 .append("AND UPPER(TRIM(LAST_NM)) = ? \n")
-                .append("ORDER BY SEG_DEPT_DT, SEG_DEPT_TM, FOP_SEQ_ID, TAX_CD_SEQ_ID, ANCLRY_ISSUE_DT, ANCLRY_DOC_NBR \n")
+                .append("ORDER BY SEG_DEPT_DT, SEG_DEPT_TM, FOP_SEQ_ID, TAX_CD_SEQ_ID, ANCLRY_ISSUE_DT, ANCLRY_DOC_NBR, ANCLRY_PRICE_LCL_CURNCY_AMT DESC \n")
                 .toString();
         
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate, firstName, lastName);
-        TicketReceipt ticketReceipt = ticketReceiptMapper.mapTicketReceipt(sqlRowSet);
+        
+        final List<TicketReceiptRsRow> ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
+        
+        TicketReceipt ticketReceipt = null;
+        
+        if (CollectionUtils.isEmpty(ticketReceiptRsRowList)) {
+        	ticketReceipt = new TicketReceipt();
+        } else {
+            ticketReceipt = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
 
-        if (ticketReceipt != null && StringUtils.hasText(ticketReceipt.getPnr())) {
-            sqlRowSet.beforeFirst();
-            PassengerDetail passengerDetail = costDetailsMapper.mapCostDetails(sqlRowSet, ticketReceipt.getPassengerDetails().get(0));
-            ticketReceipt.getPassengerDetails().set(0, passengerDetail);
+//            sqlRowSet.beforeFirst();
+//            PassengerDetail passengerDetail = costDetailsMapper.mapCostDetails(sqlRowSet, ticketReceipt.getPassengerDetails().get(0));
+//            ticketReceipt.getPassengerDetails().set(0, passengerDetail);
         }
 
         return ticketReceipt;

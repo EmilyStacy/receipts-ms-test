@@ -23,6 +23,7 @@
         <logging-lib-version>1.4.2</logging-lib-version>
         
         <sonar.sources>src/main/java</sonar.sources>
+        <sonar.coverage.exclusions>**/ReceiptsApplication.java</sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
@@ -67,6 +68,12 @@
             <version>16.20</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/terajdbc4-16.20.jar</systemPath>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

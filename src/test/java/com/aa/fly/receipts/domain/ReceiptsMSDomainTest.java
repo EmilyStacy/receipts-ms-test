@@ -1,5 +1,6 @@
 package com.aa.fly.receipts.domain;
 
+import com.aa.fly.receipts.util.Utils;
 import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
@@ -10,6 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.Assert.assertEquals;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,6 +48,54 @@ public class ReceiptsMSDomainTest {
         validateAccessors(FormOfPayment.class);
         validateAccessors(FareTaxesFees.class);
         validateAccessors(Ancillary.class);
+//        validateAccessors(AmountAndCurrency.class);
+        validateAccessors(FormOfPaymentKey.class);
+        validateAccessors(Tax.class);
+        validateAccessors(TaxCodeAndDescription.class);
+    }
+
+    @Test
+    public void testTicketFormOfPaymentKeyEquals() throws ParseException {
+    	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey("1", "XF");
+    	FormOfPaymentKey formOfPaymentKey2 = new FormOfPaymentKey("1", "XF");
+        assertEquals(true, formOfPaymentKey.equals(formOfPaymentKey2));
+    }
+
+    @Test
+    public void testTicketFormOfPaymentKeySameObject() throws ParseException {
+    	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey();
+    	FormOfPaymentKey formOfPaymentKey2 = formOfPaymentKey;
+        assertEquals(true, formOfPaymentKey.equals(formOfPaymentKey2));
+    }
+    
+    @Test
+    public void testTicketFormOfPaymentKeyEqualsNull() throws ParseException {
+    	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey();
+        assertEquals(false, formOfPaymentKey.equals(null));
+    }
+
+    @Test
+    public void testTicketAmountNull() throws ParseException {
+    	AmountAndCurrency amountAndCurrency = new AmountAndCurrency(null, "USD2");
+        Assert.assertEquals(
+                null,
+                amountAndCurrency.getAmount());
+    }
+    
+    @Test
+    public void testTicketAmountAndCurrencyToString() throws ParseException {
+    	AmountAndCurrency amountAndCurrency = new AmountAndCurrency("2000", "USD2");
+        Assert.assertEquals(
+                "AmountAndCurrency{amount='20.00', currency='USD'}",
+                amountAndCurrency.toString());
+    }
+
+    @Test
+    public void testTicketSearchCriteriaToString() throws ParseException {
+        SearchCriteria criteria = getSearchCriteriaWithTicketNumber();
+        Assert.assertEquals(
+                "SearchCriteria{ticketNumber='0012372187652', lastName='TEST', firstName='SIMON', departureDate=09/30/2019', pnr=null}",
+                criteria.toString());
     }
 
     @Test

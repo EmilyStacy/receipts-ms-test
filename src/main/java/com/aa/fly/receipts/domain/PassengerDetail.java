@@ -3,6 +3,7 @@
  */
 package com.aa.fly.receipts.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PassengerDetail {
@@ -14,7 +15,7 @@ public class PassengerDetail {
     private String passengerTotalAmount;
     private boolean showPassengerTotal;
     private FareTaxesFees fareTaxesFees;
-    private List<FormOfPayment> formOfPayments;
+    private List<FormOfPayment> formOfPayments = new ArrayList<>();
 
     public String getTicketNumber() {
         return ticketNumber;
