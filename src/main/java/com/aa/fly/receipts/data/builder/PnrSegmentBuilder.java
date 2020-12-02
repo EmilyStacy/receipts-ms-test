@@ -16,7 +16,7 @@ public class PnrSegmentBuilder implements DataBuilderService {
 	private AirportService airportService;
 
 	public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow, int rowIndex) {
-		TicketReceipt ticketReceiptOverload = build(ticketReceipt, ticketReceiptRsRow);
+		TicketReceipt ticketReceiptOverload = this.build(ticketReceipt, ticketReceiptRsRow);
 		
         String returnTrip = ("1").equals(ticketReceiptRsRow.getCouponSeqNbr()) && rowIndex != 0 ? "true" : "false";
         ticketReceiptOverload.getSegmentDetails().get(ticketReceiptOverload.getSegmentDetails().size() - 1).setReturnTrip(returnTrip);
@@ -28,18 +28,18 @@ public class PnrSegmentBuilder implements DataBuilderService {
 	public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
 		
         SegmentDetail segmentDetail = new SegmentDetail();
-
+        
         segmentDetail.setSegmentDepartureDate(ticketReceiptRsRow.getSegDeptDt());
         segmentDetail.setSegmentDepartureTime(ticketReceiptRsRow.getSegDeptTm());
-        segmentDetail.setDepartureAirport(airportService.getAirport(ticketReceiptRsRow.getSegDeptArprtCd()));
         segmentDetail.setSegmentArrivalDate(ticketReceiptRsRow.getSegArvltDt());
         segmentDetail.setSegmentArrivalTime(ticketReceiptRsRow.getSegArvlTm());
-        segmentDetail.setArrivalAirport(airportService.getAirport(ticketReceiptRsRow.getSegArvlArprtCd()));
         segmentDetail.setSegmentStatus(ticketReceiptRsRow.getSegCouponStatusCd());
         segmentDetail.setCarrierCode(ticketReceiptRsRow.getSegOperatCarrierCd());
         segmentDetail.setFlightNumber(ticketReceiptRsRow.getFlightNbr());
         segmentDetail.setBookingClass(ticketReceiptRsRow.getBookingClass());
         segmentDetail.setFareBasis(ticketReceiptRsRow.getFareBase());
+        segmentDetail.setDepartureAirport(airportService.getAirport(ticketReceiptRsRow.getSegDeptArprtCd()));
+        segmentDetail.setArrivalAirport(airportService.getAirport(ticketReceiptRsRow.getSegArvlArprtCd()));
         
         ticketReceipt.getSegmentDetails().add(segmentDetail);
         return ticketReceipt;
