@@ -93,6 +93,9 @@ public class Tax {
     }
 
     @Override public String toString() {
+
+        cityCode = cityCode == null ? "" : cityCode;
+
         return "Tax{" +
                 "taxCodeSequenceId='" + taxCodeSequenceId + '\'' +
                 ", taxCode='" + taxCode + '\'' +
