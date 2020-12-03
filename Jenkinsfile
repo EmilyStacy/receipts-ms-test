@@ -161,7 +161,6 @@ pipeline {
             }
         }
         
-
         stage('int tests Stage') {
             when {
                 branch 'master'
@@ -182,7 +181,6 @@ pipeline {
             }
         }
 
-/*
         stage('deploy prod') {
             when {
                 branch 'master'
@@ -238,7 +236,6 @@ pipeline {
                 sh "git tag ${pcfAppName}-$APPLICATION_VERSION"
                 sh "git push https://$GITHUB_USR:$GITHUB_PSW@$SCM_URL $pcfAppName-$APPLICATION_VERSION"
             }
-        }
-*/        
+        }    
     }
 }
