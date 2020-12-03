@@ -77,7 +77,7 @@ public class TicketReceiptMapper {
             // Building data from first row.
             if (rowCount == 0) {
                 ticketReceiptReturn = pnrHeaderBuilder.build(new TicketReceipt(), ticketReceiptRsRow);
-                ticketReceiptReturn = passengerBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
+                ticketReceiptReturn = passengerBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);                
                 ticketReceiptReturn = pnrSegmentBuilder.build(ticketReceiptReturn, ticketReceiptRsRow, rowCount);
                 ticketReceiptReturn = passengerFareTaxFeeBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
                 ticketReceiptReturn = passengerFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
