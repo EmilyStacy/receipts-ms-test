@@ -16,8 +16,8 @@ import java.util.Set;
 @Component
 public class PassengerAncillaryBuilder {
 
-    public static String ancillaryDocNumberCountNine = "0010";
-    public static String ancillaryDocNumberCountTen = "001";
+    private static String ancillaryDocNumberCountNine = "0010";
+    private static String ancillaryDocNumberCountTen = "001";
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -60,7 +60,7 @@ public class PassengerAncillaryBuilder {
             if (ancillaryPriceCurrencyAmount != null) {
                 BigDecimal anclryTaxCurrencyAmount = new BigDecimal(anclrySalesCurrencyAmount).subtract(new BigDecimal(ancillaryPriceCurrencyAmount)).setScale(2, RoundingMode.CEILING);
                 ancillary.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
-            }
+           }
 
 
             ancillaryList.add(ancillary);
