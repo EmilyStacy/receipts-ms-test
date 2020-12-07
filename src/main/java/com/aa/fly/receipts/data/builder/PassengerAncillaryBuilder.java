@@ -1,10 +1,7 @@
 package com.aa.fly.receipts.data.builder;
 
 import com.aa.fly.receipts.domain.Ancillary;
-import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.domain.TicketReceiptRsRow;
-import com.aa.fly.receipts.service.DataBuilderService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -17,16 +14,28 @@ import java.util.Set;
 @Component
 public class PassengerAncillaryBuilder {
 
+    private static String ancillaryDocNumberCountNine = "0010";
+    private static String ancillaryDocNumberCountTen = "001";
+
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    public Set<Ancillary> build( TicketReceiptRsRow ticketReceiptRsRow ) {
+
+    public Set<Ancillary> build(TicketReceiptRsRow ticketReceiptRsRow) {
 
         String ancillaryDocNumber = ticketReceiptRsRow.getAnclryDocNbr();
         Set<Ancillary> ancillaryList = new HashSet<>();
 
         if (StringUtils.isNotBlank(ancillaryDocNumber)) {
             Ancillary ancillary = new Ancillary();
-            ancillary.setAnclryDocNbr(ancillaryDocNumber);
+            int ancillaryDocNumberCount = ancillaryDocNumber.length();
+            if (ancillaryDocNumberCount == 9) {
+                ancillaryDocNumber = ancillaryDocNumberCountNine.concat(ancillaryDocNumber);
+                ancillary.setAnclryDocNbr(ancillaryDocNumber);
+            } else if (ancillaryDocNumberCount == 10) {
+                ancillaryDocNumber = ancillaryDocNumberCountTen.concat(ancillaryDocNumber);
+                ancillary.setAnclryDocNbr(ancillaryDocNumber);
+            }
+
             ancillary.setAnclryIssueDate(ticketReceiptRsRow.getAnclryIssueDt() != null ? dateFormat.format(ticketReceiptRsRow.getAnclryIssueDt()) : "");
             ancillary.setAnclryProdCode(ticketReceiptRsRow.getAnclryProdCd());
 
@@ -46,9 +55,10 @@ public class PassengerAncillaryBuilder {
             String anclrySalesCurrencyAmount = ticketReceiptRsRow.getAnclrySlsCurncyAmt();
             ancillary.setAnclrySalesCurrencyAmount(anclrySalesCurrencyAmount);
             ancillary.setAnclrySalesCurrencyCode(ticketReceiptRsRow.getAnclrySlsCurncyCd());
-
-            BigDecimal anclryTaxCurrencyAmount = new BigDecimal(anclrySalesCurrencyAmount).subtract(new BigDecimal(ancillaryPriceCurrencyAmount)).setScale(2, RoundingMode.CEILING);
-            ancillary.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
+            if (ancillaryPriceCurrencyAmount != null) {
+                BigDecimal anclryTaxCurrencyAmount = new BigDecimal(anclrySalesCurrencyAmount).subtract(new BigDecimal(ancillaryPriceCurrencyAmount)).setScale(2, RoundingMode.CEILING);
+                ancillary.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
+            }
             ancillaryList.add(ancillary);
         }
         return ancillaryList;
