@@ -1,7 +1,6 @@
 package com.aa.fly.receipts.data.builder;
 
 import com.aa.fly.receipts.domain.Ancillary;
-import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 import com.aa.fly.receipts.util.Constants;
 import com.aa.fly.receipts.util.Utils;
@@ -35,7 +34,7 @@ public class PassengerAncillaryBuilderTest {
         assertFalse(CollectionUtils.isEmpty(ancillaryList));
 
         Ancillary actualAncillary = ancillaryList.iterator().next();
-        assertEquals(Constants.ANCLRY_DOC_NBR, actualAncillary.getAnclryDocNbr());
+        assertEquals("0010619785952", actualAncillary.getAnclryDocNbr());
         assertEquals(Constants.ANCLRY_ISSUE_DATE, actualAncillary.getAnclryIssueDate());
         assertEquals("MAIN CABIN EXTRA (MCO - MIA)", actualAncillary.getAnclryProdName());
         assertEquals(Constants.ANCLRY_PROD_CODE, actualAncillary.getAnclryProdCode());
@@ -68,5 +67,100 @@ public class PassengerAncillaryBuilderTest {
         Set<Ancillary> ancillaryList = passengerAncillaryBuilder.build(ticketReceiptRsRow);
         assertTrue(CollectionUtils.isEmpty(ancillaryList));
     }
+
+    public static void addAncillaryDocNumberToTicketReceiptRowforExcessBaggage(final TicketReceiptRsRow ticketReceiptRsRow) throws ParseException {
+        // EXCESS_BAGGAGE
+        ticketReceiptRsRow.setAnclryDocNbr("0281234567");
+    }
+
+    @Test
+    public void testAncillaryDocNumberforExcessBaggage() throws ParseException {
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        addAncillaryDocNumberToTicketReceiptRowforExcessBaggage(ticketReceiptRsRow);
+        Set<Ancillary> ancillaryList = passengerAncillaryBuilder.build(ticketReceiptRsRow);
+        assertFalse(CollectionUtils.isEmpty(ancillaryList));
+        Ancillary actualAncillary = ancillaryList.iterator().next();
+        assertEquals("0010281234567", actualAncillary.getAnclryDocNbr());
+    }
+
+    public static void addAncillaryDocNumberToTicketReceiptRowforResFee065(final TicketReceiptRsRow ticketReceiptRsRow) throws ParseException {
+        // RES_FEE
+        ticketReceiptRsRow.setAnclryDocNbr("0651234567");
+
+    }
+
+    @Test
+    public void testAncillaryDocNumberforResFee065() throws ParseException {
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        addAncillaryDocNumberToTicketReceiptRowforResFee065(ticketReceiptRsRow);
+        Set<Ancillary> ancillaryList = passengerAncillaryBuilder.build(ticketReceiptRsRow);
+        assertFalse(CollectionUtils.isEmpty(ancillaryList));
+        Ancillary actualAncillary = ancillaryList.iterator().next();
+        assertEquals("0010651234567", actualAncillary.getAnclryDocNbr());
+    }
+
+
+    public static void addAncillaryDocNumberToTicketReceiptRowforMainExtraCabin(final TicketReceiptRsRow ticketReceiptRsRow) throws ParseException {
+        // MAIN_EXTRA_CABIN
+        ticketReceiptRsRow.setAnclryDocNbr("0621234567");
+    }
+
+    @Test
+    public void testAncillaryDocNumberforMainExtraCabin() throws ParseException {
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        addAncillaryDocNumberToTicketReceiptRowforMainExtraCabin(ticketReceiptRsRow);
+        Set<Ancillary> ancillaryList = passengerAncillaryBuilder.build(ticketReceiptRsRow);
+        assertFalse(CollectionUtils.isEmpty(ancillaryList));
+        Ancillary actualAncillary = ancillaryList.iterator().next();
+        assertEquals("0010621234567", actualAncillary.getAnclryDocNbr());
+    }
+
+    public static void addAncillaryDocNumberToTicketReceiptRowforStdPaidSeat(final TicketReceiptRsRow ticketReceiptRsRow) throws ParseException {
+        // STD_PAID_SEAT
+        ticketReceiptRsRow.setAnclryDocNbr("0651234567");
+
+    }
+
+    @Test
+    public void testAncillaryDocNumberforStdPaidSeat() throws ParseException {
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        addAncillaryDocNumberToTicketReceiptRowforStdPaidSeat(ticketReceiptRsRow);
+        Set<Ancillary> ancillaryList = passengerAncillaryBuilder.build(ticketReceiptRsRow);
+        assertFalse(CollectionUtils.isEmpty(ancillaryList));
+        Ancillary actualAncillary = ancillaryList.iterator().next();
+        assertEquals("0010651234567", actualAncillary.getAnclryDocNbr());
+    }
+
+    public static void addAncillaryDocNumberToTicketReceiptRowforPrefferredSeat(final TicketReceiptRsRow ticketReceiptRsRow) throws ParseException {
+        // PREFERRED_SEAT
+        ticketReceiptRsRow.setAnclryDocNbr("0611234567");
+
+    }
+
+    @Test
+    public void testAncillaryDocNumberforPrefferredSeat() throws ParseException {
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        addAncillaryDocNumberToTicketReceiptRowforPrefferredSeat(ticketReceiptRsRow);
+        Set<Ancillary> ancillaryList = passengerAncillaryBuilder.build(ticketReceiptRsRow);
+        assertFalse(CollectionUtils.isEmpty(ancillaryList));
+        Ancillary actualAncillary = ancillaryList.iterator().next();
+        assertEquals("0010611234567", actualAncillary.getAnclryDocNbr());
+    }
+
+    public static void addAncillaryDocNumberToTicketReceiptRowforResFee061(final TicketReceiptRsRow ticketReceiptRsRow) throws ParseException {
+        // RES_FEE
+        ticketReceiptRsRow.setAnclryDocNbr("0611234567");
+    }
+
+    @Test
+    public void testAncillaryDocNumberforResFee061() throws ParseException {
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        addAncillaryDocNumberToTicketReceiptRowforResFee061(ticketReceiptRsRow);
+        Set<Ancillary> ancillaryList = passengerAncillaryBuilder.build(ticketReceiptRsRow);
+        assertFalse(CollectionUtils.isEmpty(ancillaryList));
+        Ancillary actualAncillary = ancillaryList.iterator().next();
+        assertEquals("0010611234567", actualAncillary.getAnclryDocNbr());
+    }
+
 
 }
