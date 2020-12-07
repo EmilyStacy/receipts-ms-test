@@ -40,10 +40,10 @@ public class TicketReceiptRsExtracter {
 	                            sqlRowSet.getString("LYLTY_OWN_CD").trim() : null)
 						.segDeptDt(sqlRowSet.getDate("SEG_DEPT_DT"))
 						.segDeptTm(sqlRowSet.getString("SEG_DEPT_TM"))
-						.segDeptArprtCd(sqlRowSet.getString("SEG_DEPT_ARPRT_CD"))
+						.segDeptArprtCd(sqlRowSet.getString("SEG_DEPT_ARPRT_CD").trim())
 						.segArvltDt(sqlRowSet.getDate("SEG_ARVL_DT"))
 						.segArvlTm(sqlRowSet.getString("SEG_ARVL_TM"))
-						.segArvlArprtCd(sqlRowSet.getString("SEG_ARVL_ARPRT_CD"))
+						.segArvlArprtCd(sqlRowSet.getString("SEG_ARVL_ARPRT_CD").trim())
 						.segCouponStatusCd(StringUtils.isNotBlank(sqlRowSet.getString("SEG_COUPON_STATUS_CD")) ? 
 	                            sqlRowSet.getString("SEG_COUPON_STATUS_CD").trim() : null)
 						.segOperatCarrierCd(StringUtils.isNotBlank(sqlRowSet.getString("SEG_OPERAT_CARRIER_CD")) ? 
