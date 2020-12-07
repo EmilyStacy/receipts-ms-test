@@ -5,8 +5,6 @@ import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -60,9 +58,7 @@ public class PassengerAncillaryBuilder {
             if (ancillaryPriceCurrencyAmount != null) {
                 BigDecimal anclryTaxCurrencyAmount = new BigDecimal(anclrySalesCurrencyAmount).subtract(new BigDecimal(ancillaryPriceCurrencyAmount)).setScale(2, RoundingMode.CEILING);
                 ancillary.setAnclryTaxCurrencyAmount(anclryTaxCurrencyAmount.toString());
-           }
-
-
+            }
             ancillaryList.add(ancillary);
         }
         return ancillaryList;
