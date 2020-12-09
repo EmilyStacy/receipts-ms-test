@@ -15,9 +15,6 @@ import java.text.SimpleDateFormat;
 
 public class BulkTicketSteps extends SpringIntegrationSetup {
 
-    private SearchCriteria criteria = new SearchCriteria();
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
     @Given("^I want to retrieve a bulk ticket receipt for scenario \"([^\"]*)\"$")
     public void i_want_to_retrieve_a_bulk_ticket_receipt_for_scenario(String arg1) throws Throwable {
 

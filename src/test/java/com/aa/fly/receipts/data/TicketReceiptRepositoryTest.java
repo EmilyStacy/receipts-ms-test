@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.aa.fly.receipts.domain.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,10 +18,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
-import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.TicketReceipt;
-import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 import com.aa.fly.receipts.util.Utils;
 
 /**
@@ -65,6 +62,24 @@ public class TicketReceiptRepositoryTest {
     }
 
     @Test
+    public void findTicketReceiptByTicketNumberInSearchCriteriaApi2() throws ParseException {
+        SearchCriteriaApi2 criteria = ReceiptsMSDomainTest.getSearchCriteriaApi2WithTicketNumber();
+        TicketReceipt ticketReceipt = ReceiptsMSDomainTest.getTicketReceipt();
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString()))
+                .thenReturn(resultSet);
+        when(ticketReceiptRsExtracter.extract(resultSet))
+                .thenReturn(ticketReceiptRsRowList);
+        when(ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList))
+                .thenReturn(ticketReceipt);
+
+        assertEquals("MRYMPT", receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
+        assertEquals("USED", receiptRepository.findTicketReceiptByTicketNumber(criteria).getSegmentDetails().get(0).getSegmentStatus());
+    }
+
+    @Test
     public void findTicketReceiptByTicketNumberDataNotFound() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
         when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString()))
@@ -74,6 +89,19 @@ public class TicketReceiptRepositoryTest {
         when(ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList))
                 .thenReturn(new TicketReceipt());
         
+        assertNotNull(receiptRepository.findTicketReceiptByTicketNumber(criteria));
+    }
+
+    @Test
+    public void findTicketReceiptByTicketNumberDataNotFoundForSearchCriteriaApi2() throws ParseException {
+        SearchCriteriaApi2 criteria = ReceiptsMSDomainTest.getSearchCriteriaApi2WithTicketNumber();
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString()))
+                .thenReturn(resultSet);
+        when(ticketReceiptRsExtracter.extract(resultSet))
+                .thenReturn(ticketReceiptRsRowList);
+        when(ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList))
+                .thenReturn(new TicketReceipt());
+
         assertNotNull(receiptRepository.findTicketReceiptByTicketNumber(criteria));
     }
 }

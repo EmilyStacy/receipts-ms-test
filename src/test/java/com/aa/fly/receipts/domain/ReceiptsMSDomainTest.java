@@ -99,6 +99,14 @@ public class ReceiptsMSDomainTest {
     }
 
     @Test
+    public void testTicketSearchCriteriaApi2ToString() throws ParseException {
+        SearchCriteriaApi2 criteria = getSearchCriteriaApi2WithTicketNumber();
+        Assert.assertEquals(
+                "SearchCriteria{ticketNumber='0012372187652', lastName='TEST'}",
+                criteria.toString());
+    }
+
+    @Test
     public void testWifiSearchCriteriaToString() throws ParseException {
         WifiSearchCriteria criteria = getWifiSearchCriteria();
         Assert.assertEquals(
@@ -145,6 +153,13 @@ public class ReceiptsMSDomainTest {
         criteria.setFirstName("SIMON");
         criteria.setTicketNumber("0012372187652");
         criteria.setDepartureDate("09/30/2019");
+        return criteria;
+    }
+
+    public static SearchCriteriaApi2 getSearchCriteriaApi2WithTicketNumber() throws ParseException {
+        SearchCriteriaApi2 criteria = new SearchCriteriaApi2();
+        criteria.setLastName("TEST");
+        criteria.setTicketNumber("0012372187652");
         return criteria;
     }
 
