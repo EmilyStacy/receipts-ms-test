@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api2")
 public class TicketReceiptApi2Controller {
 
-    @Autowired
     private TicketReceiptApi2Service ticketReceiptApi2Service;
+
+    @Autowired
+    public TicketReceiptApi2Controller(TicketReceiptApi2Service ticketReceiptApi2Service) {
+        this.ticketReceiptApi2Service = ticketReceiptApi2Service;
+    }
 
     @MSLogger
     @ApiOperation(value = "Find ticket receipt by ticketNumber, lastName")
