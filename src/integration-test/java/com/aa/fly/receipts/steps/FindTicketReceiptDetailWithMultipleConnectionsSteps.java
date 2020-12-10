@@ -25,18 +25,6 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
 
     }
 
-//    @When("^I search for my trip with ticket number \"(.+)\", last name \"(.+)\", first name \"(.+)\", departure date \"(.+)\"$")
-//    public void the_client_enters_ticket_number(String ticketNumber, String lastName, String firstName, String departureDate) {
-//        String branchApplicationUrl = System.getProperty("branch.application.url");
-//
-//        criteria.setTicketNumber(ticketNumber);
-//        criteria.setLastName(lastName);
-//        criteria.setFirstName(firstName);
-//        criteria.setDepartureDate(departureDate);
-//
-//        executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
-//    }
-
     @Then("^I get a successful response with pnr as \"([^\"]*)\", departSegmentString as \"([^\"]*)\", returnSegmentString as \"([^\"]*)\"$")
     public void i_submit_my_request(String pnr, String departSegmentString, String returnSegmentString)
             throws Throwable {
@@ -52,8 +40,8 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
     }
 
     private String getSliceString(List<SegmentDetail> segmentDetails, boolean isReturn) {
-        String onwardSliceString = "";
-        String returnSliceString = "";
+        StringBuilder onwardSliceString = new StringBuilder();
+        StringBuilder returnSliceString = new StringBuilder();
         boolean newSlice = false;
         int segmentCount = 0;
         for (SegmentDetail segment : segmentDetails) {
@@ -61,13 +49,13 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
                 newSlice = true;
             }
             if (newSlice) {
-                returnSliceString = returnSliceString + buildSegmentString(segment) + ". ";
+                returnSliceString.append(buildSegmentString(segment)).append(". ");
             } else {
-                onwardSliceString = onwardSliceString + buildSegmentString(segment) + ". ";
+                onwardSliceString.append(buildSegmentString(segment)).append(". ");
             }
             segmentCount++;
         }
-        return isReturn ? returnSliceString.trim() : onwardSliceString.trim();
+        return isReturn ? returnSliceString.toString().trim() : onwardSliceString.toString().trim();
     }
 
     private String buildSegmentString(SegmentDetail segment) {
