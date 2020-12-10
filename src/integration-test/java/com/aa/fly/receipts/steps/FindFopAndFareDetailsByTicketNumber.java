@@ -24,7 +24,7 @@ import gherkin.deps.com.google.gson.GsonBuilder;
 
 public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup {
 
-    private SearchCriteria criteria = new SearchCriteria();
+//    private SearchCriteria criteria = new SearchCriteria();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Given("^I want to retrieve payment details for scenario \"([^\"]*)\"$")

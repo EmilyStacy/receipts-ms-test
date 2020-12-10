@@ -25,17 +25,17 @@ public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringI
 
     }
 
-    @When("^I search for my trip with ticket number \"(.+)\", last name \"(.+)\", first name \"(.+)\", departure date \"(.+)\"$")
-    public void the_client_enters_ticket_number(String ticketNumber, String lastName, String firstName, String departureDate) {
-        String branchApplicationUrl = System.getProperty("branch.application.url");
-
-        criteria.setTicketNumber(ticketNumber);
-        criteria.setLastName(lastName);
-        criteria.setFirstName(firstName);
-        criteria.setDepartureDate(departureDate);
-
-        executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
-    }
+//    @When("^I search for my trip with ticket number \"(.+)\", last name \"(.+)\", first name \"(.+)\", departure date \"(.+)\"$")
+//    public void the_client_enters_ticket_number(String ticketNumber, String lastName, String firstName, String departureDate) {
+//        String branchApplicationUrl = System.getProperty("branch.application.url");
+//
+//        criteria.setTicketNumber(ticketNumber);
+//        criteria.setLastName(lastName);
+//        criteria.setFirstName(firstName);
+//        criteria.setDepartureDate(departureDate);
+//
+//        executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
+//    }
 
     @Then("^I get a successful response with pnr as \"([^\"]*)\", departSegmentString as \"([^\"]*)\", returnSegmentString as \"([^\"]*)\"$")
     public void i_submit_my_request(String pnr, String departSegmentString, String returnSegmentString)

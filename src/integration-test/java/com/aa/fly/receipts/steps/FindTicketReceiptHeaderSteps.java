@@ -25,16 +25,14 @@ public class FindTicketReceiptHeaderSteps extends SpringIntegrationSetup {
 
     }
 
-    @When("^I search with ticket number \"(.+)\", last name \"(.+)\", first name \"(.+)\", departure date \"(.+)\"$")
-    public void the_client_enters_ticket_number(String ticketNumber, String lastName, String firstName, String departureDate) {
+    @When("^I search with ticket number \"([^\"]*)\", last name \"([^\"]*)\"$")
+    public void the_client_enters_ticket_number(String ticketNumber, String lastName) {
         String branchApplicationUrl = System.getProperty("branch.application.url");
 
         criteria.setTicketNumber(ticketNumber);
         criteria.setLastName(lastName);
-        criteria.setFirstName(firstName);
-        criteria.setDepartureDate(departureDate);
 
-        executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
+        executePost(branchApplicationUrl + "/api2/ticket-receipt", criteria);
     }
 
     @Then("^I get a successful response with origin airport \"([^\"]*)\", destinationAirport \"([^\"]*)\" and pnr \"([^\"]*)\" and advantageNumber \"([^\"]*)\" and loyaltyOwnerCode \"([^\"]*)\"$")
