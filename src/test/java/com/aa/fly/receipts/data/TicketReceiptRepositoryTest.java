@@ -53,7 +53,7 @@ public class TicketReceiptRepositoryTest {
         TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();        
     	ticketReceiptRsRowList.add(ticketReceiptRsRow);
 
-        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString()))
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString()))
                 .thenReturn(resultSet);
         when(ticketReceiptRsExtracter.extract(resultSet))
         .thenReturn(ticketReceiptRsRowList);
@@ -67,7 +67,7 @@ public class TicketReceiptRepositoryTest {
     @Test
     public void findTicketReceiptByTicketNumberDataNotFound() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
-        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString(), anyString(), anyString()))
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString()))
                 .thenReturn(resultSet);
         when(ticketReceiptRsExtracter.extract(resultSet))
         .thenReturn(ticketReceiptRsRowList);

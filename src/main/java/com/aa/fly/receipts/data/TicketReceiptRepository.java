@@ -37,8 +37,8 @@ public class TicketReceiptRepository {
     public TicketReceipt findTicketReceiptByTicketNumber(SearchCriteria criteria) {
         String ticketNumber = criteria.getTicketNumber();
         String lastName = criteria.getLastName().toUpperCase().trim();
-        String firstName = criteria.getFirstName().toUpperCase().trim() + '%';
-        String departureDate = criteria.getDepartureDate();
+//        String firstName = criteria.getFirstName().toUpperCase().trim() + '%';
+//        String departureDate = criteria.getDepartureDate();
 
         String sql = new StringBuilder("\nSELECT ")
                 // ================= header ==============================
@@ -102,13 +102,13 @@ public class TicketReceiptRepository {
                 .append("FROM ").append( ticketSchemaName ).append(".TCN_CUST_RCPT \n")
                 .append("WHERE \n")
                 .append("TICKET_NBR = ? \n")
-                .append("AND DEP_DT = to_date(?, 'MM/DD/YYYY') \n")
-                .append("AND UPPER(TRIM(FIRST_NM)) LIKE ? \n")
-                .append("AND UPPER(TRIM(LAST_NM)) = ? \n")
+//                .append("AND DEP_DT = to_date(?, 'MM/DD/YYYY') \n")
+//                .append("AND UPPER(TRIM(FIRST_NM)) LIKE ? \n")
+                .append("AND LAST_NM = ? \n")
                 .append("ORDER BY SEG_DEPT_DT, SEG_DEPT_TM, FOP_SEQ_ID, TAX_CD_SEQ_ID, ANCLRY_ISSUE_DT, ANCLRY_DOC_NBR, ANCLRY_PRICE_LCL_CURNCY_AMT DESC \n")
                 .toString();
         
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, departureDate, firstName, lastName);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, ticketNumber, lastName);
         
         final List<TicketReceiptRsRow> ticketReceiptRsRowList = ticketReceiptRsExtracter.extract(sqlRowSet);
         
