@@ -1,0 +1,17 @@
+type: maven
+integrationBranches:
+  - master
+pipelineAdministrators:
+  - 854495
+  - 243211
+env:
+  variables:
+#    ENV_NAME: ENV_VALUE
+#    OTHER_ENV_NAME: OTHER_ENV_VALUE
+notifications:
+  onlyOnIntegration: false
+  emails:
+    - DL_Ticketing_Intrepid@aa.com
+  slack:
+    channel: ticketing-intrepid
+    creds: ticketing-intrepid-slack-token
