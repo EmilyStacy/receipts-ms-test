@@ -167,7 +167,7 @@ pipeline {
             }
             steps {
                 sh """
-                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://receipts-bff-stage-south.mybluemix.net'
+                    mvn -s .settings.xml verify -Pintegration-tests -Dcucumber.options='--tags @TicketAndFees' -Dbranch.application.url='https://receipts-ms-stage.apps.aa.com/'
                   """
 
                 publishHTML target: [
