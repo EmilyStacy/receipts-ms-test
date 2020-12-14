@@ -19,7 +19,6 @@ import java.util.Set;
 public class FindAncillariesDetailsByTicketNumber extends SpringIntegrationSetup {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//    private SearchCriteria criteria = new SearchCriteria();
 
     @Then("^I get a successful response with the following ancillaries$")
     public void iGetASuccessfulResponseWithTheFollowingAncillaries(Map< String, String > testDataMap) throws Throwable {
