@@ -80,6 +80,24 @@ public class TicketReceiptRepositoryTest {
     }
 
     @Test
+    public void findTicketReceiptByTicketNumberInSearchCriteriaApi2_NOTTRIMMED() throws ParseException {
+        SearchCriteriaApi2 criteria = ReceiptsMSDomainTest.getSearchCriteriaApi2WithTicketNumberNOTTRIMMED();
+        TicketReceipt ticketReceipt = ReceiptsMSDomainTest.getTicketReceipt();
+        TicketReceiptRsRow ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+        ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+        when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString()))
+                .thenReturn(resultSet);
+        when(ticketReceiptRsExtracter.extract(resultSet))
+                .thenReturn(ticketReceiptRsRowList);
+        when(ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList))
+                .thenReturn(ticketReceipt);
+
+        assertEquals("MRYMPT", receiptRepository.findTicketReceiptByTicketNumber(criteria).getPnr());
+        assertEquals("USED", receiptRepository.findTicketReceiptByTicketNumber(criteria).getSegmentDetails().get(0).getSegmentStatus());
+    }
+
+    @Test
     public void findTicketReceiptByTicketNumberDataNotFound() throws ParseException {
         SearchCriteria criteria = ReceiptsMSDomainTest.getSearchCriteriaWithTicketNumber();
         when(jdbcTemplate.queryForRowSet(anyString(), anyString(), anyString()))

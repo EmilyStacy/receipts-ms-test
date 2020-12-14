@@ -12,14 +12,14 @@ import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertEquals;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DirtiesContext
@@ -58,28 +58,26 @@ public class ReceiptsMSDomainTest {
     public void testTicketFormOfPaymentKeyEquals() throws ParseException {
     	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey("1", "XF");
     	FormOfPaymentKey formOfPaymentKey2 = new FormOfPaymentKey("1", "XF");
-        assertEquals(true, formOfPaymentKey.equals(formOfPaymentKey2));
+        assertEquals(formOfPaymentKey, formOfPaymentKey2);
     }
 
     @Test
     public void testTicketFormOfPaymentKeySameObject() throws ParseException {
     	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey();
     	FormOfPaymentKey formOfPaymentKey2 = formOfPaymentKey;
-        assertEquals(true, formOfPaymentKey.equals(formOfPaymentKey2));
+        assertEquals(formOfPaymentKey, formOfPaymentKey2);
     }
     
     @Test
     public void testTicketFormOfPaymentKeyEqualsNull() throws ParseException {
     	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey();
-        assertEquals(false, formOfPaymentKey.equals(null));
+        assertNotEquals(null, formOfPaymentKey);
     }
 
     @Test
     public void testTicketAmountNull() throws ParseException {
     	AmountAndCurrency amountAndCurrency = new AmountAndCurrency(null, "USD2");
-        Assert.assertEquals(
-                null,
-                amountAndCurrency.getAmount());
+        assertNull(amountAndCurrency.getAmount());
     }
     
     @Test
@@ -160,6 +158,13 @@ public class ReceiptsMSDomainTest {
         SearchCriteriaApi2 criteria = new SearchCriteriaApi2();
         criteria.setLastName("TEST");
         criteria.setTicketNumber("0012372187652");
+        return criteria;
+    }
+
+    public static SearchCriteriaApi2 getSearchCriteriaApi2WithTicketNumberNOTTRIMMED() throws ParseException {
+        SearchCriteriaApi2 criteria = new SearchCriteriaApi2();
+        criteria.setLastName("TEST");
+        criteria.setTicketNumber(" 001 23721 8765 2 ");
         return criteria;
     }
 

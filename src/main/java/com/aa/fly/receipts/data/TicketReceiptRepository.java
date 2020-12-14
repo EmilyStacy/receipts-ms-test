@@ -121,7 +121,7 @@ public class TicketReceiptRepository {
     }
 
     public TicketReceipt findTicketReceiptByTicketNumber(SearchCriteriaApi2 criteria) {
-        String ticketNumber = criteria.getTicketNumber();
+        String ticketNumber = criteria.getTicketNumber().trim();
         String lastName = criteria.getLastName().toUpperCase().trim();
 
         String sql = new StringBuilder("\nSELECT ")
