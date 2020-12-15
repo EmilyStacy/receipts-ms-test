@@ -24,8 +24,13 @@ CI:
     APP_NAME: 'receipts-ms'
     CONFIG: ['java']
 
+#provider:
+#  azure:
+#    servicePrincipalCredJenkins: <Azure service principal credential variable name in Jenkins>
+
 deployInfra: yamlit_terraform
 deployApp: appservice
+#publishPath: <artifact path> # Files under this path will be published to the Artifactory and deployed to Azure
 
 CD:
   cherwell:
@@ -33,7 +38,6 @@ CD:
     cherwellTeamName: 'Fly - Ancillaries Receipts'
   deployments:
     dev:
-      #servicePrincipalCredJenkins: devops_sp
       app:
         - name: receipts-ms-dev
           resourceGroup: ct-n-zeaus-receipts-rg 
@@ -41,7 +45,6 @@ CD:
         - master
       subscription: aa-ct-nonprod-spoke
     #stage:
-      #servicePrincipalCredJenkins: devops_sp
       #app:
         #- name: receipts-ms-dev
           #region       : east
