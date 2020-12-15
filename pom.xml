@@ -188,7 +188,7 @@
           <includeSystemScope>true</includeSystemScope> 
         </configuration> 
       </plugin>  
-      <plugin> 
+      <!--  plugin> 
         <groupId>org.jacoco</groupId>  
         <artifactId>jacoco-maven-plugin</artifactId>  
         <version>0.8.3</version>  
@@ -227,7 +227,7 @@
             </goals> 
           </execution> 
         </executions> 
-      </plugin>  
+      </plugin-->  
       <plugin> 
         <groupId>org.codehaus.mojo</groupId>  
         <artifactId>build-helper-maven-plugin</artifactId>  
@@ -286,7 +286,7 @@
           <schemaVersion>v2</schemaVersion>
           <subscriptionId>0bc507f3-ad14-4edd-8f76-a91458390da2</subscriptionId>
           <resourceGroup>ct-n-zeaus-receipts-rg</resourceGroup>
-          <appName>receipts-ms</appName>
+          <appName>receipts-ms-dev</appName>
           <pricingTier>P1v2</pricingTier>
           <region>East US</region>
           <runtime>

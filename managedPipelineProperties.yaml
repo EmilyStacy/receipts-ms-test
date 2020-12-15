@@ -15,3 +15,37 @@ notifications:
   slack:
     channel: ticketing-intrepid
     creds: ticketing-intrepid-slack-token
+
+CI:
+  coverity:
+    APP_NAME: 'receipts-ms'
+    CONFIG: ['java']
+
+deployInfra: yamlit_terraform
+deployApp: appservice
+
+CD:
+  cherwell:
+    archerAppName: 'Receipts'
+    cherwellTeamName: 'Fly - Ancillaries Receipts'
+  deployments:
+    dev:
+      #servicePrincipalCredJenkins: devops_sp
+      app:
+        - name: receipts-ms-dev
+          resourceGroup: ct-n-zeaus-receipts-rg 
+      sourceBranches:
+        - master
+      subscription: aa-ct-nonprod-spoke
+    #stage:
+      #servicePrincipalCredJenkins: devops_sp
+      #app:
+        #- name: receipts-ms-dev
+          #region       : east
+          #resourceGroup: ct-n-zeaus-receipts-rg 
+        #- name: receipts-ms-dev
+          #region       : south
+          #resourceGroup: ct-n-zeaus-receipts-rg 
+      #sourceBranches:
+        #- master
+      #subscription: aa-ct-nonprod-spoke
