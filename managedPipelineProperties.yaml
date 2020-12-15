@@ -18,8 +18,8 @@ notifications:
     channel: ticketing-intrepid
     creds: ticketing-intrepid-slack-token
 
-provider:
-  azure:
+#provider:
+#  azure:
 #    servicePrincipalCredJenkins: <Azure service principal credential variable name in Jenkins>
 
 deployInfra: yamlit_terraform
