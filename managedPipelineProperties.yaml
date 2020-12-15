@@ -7,8 +7,8 @@ pipelineAdministrators:
 env:
   variables:
     # Default SonarQube project name w/o overwriting them below: managed-pipeline.receipts-ms-project
-    #SONARQUBE_PROJECT_KEY: tr.receipts-ms
-    #SONARQUBE_PROJECT_NAME: tr.receipts-ms
+    # SONARQUBE_PROJECT_KEY: tr.receipts-ms
+    # SONARQUBE_PROJECT_NAME: tr.receipts-ms
 
 notifications:
   onlyOnIntegration: false
@@ -18,18 +18,19 @@ notifications:
     channel: ticketing-intrepid
     creds: ticketing-intrepid-slack-token
 
-CI:
-  coverity:
-    APP_NAME: 'receipts-ms'
-    CONFIG: ['java']
-
-#provider:
-#  azure:
+provider:
+  azure:
 #    servicePrincipalCredJenkins: <Azure service principal credential variable name in Jenkins>
 
 deployInfra: yamlit_terraform
 deployApp: appservice
 #publishPath: <artifact path> # Files under this path will be published to the Artifactory and deployed to Azure
+
+CI:
+  coverity:
+    CONFIG: ['java']
+  xray:
+    reporting: true
 
 CD:
   cherwell:
