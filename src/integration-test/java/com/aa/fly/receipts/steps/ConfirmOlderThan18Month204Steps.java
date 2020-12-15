@@ -26,10 +26,8 @@ public class ConfirmOlderThan18Month204Steps extends SpringIntegrationSetup {
 
         criteria.setTicketNumber(testDataMap.get("ticketNumber"));
         criteria.setLastName(testDataMap.get("lastName"));
-        criteria.setFirstName(testDataMap.get("firstName"));
-        criteria.setDepartureDate(testDataMap.get("departureDate"));
 
-        executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
+        executePost(branchApplicationUrl + "/api2/ticket-receipt", criteria);
     }
 
     @Then("^I get a (\\d+) http status code response indicating no content$")

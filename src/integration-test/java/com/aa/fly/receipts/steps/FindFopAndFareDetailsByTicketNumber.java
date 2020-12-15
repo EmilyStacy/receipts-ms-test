@@ -24,7 +24,6 @@ import gherkin.deps.com.google.gson.GsonBuilder;
 
 public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup {
 
-    private SearchCriteria criteria = new SearchCriteria();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Given("^I want to retrieve payment details for scenario \"([^\"]*)\"$")
@@ -32,7 +31,7 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
 
     }
 
-    @Then("^I get a successful response with fopIssueDate \"([^\"]*)\", fopTypeCode \"([^\"]*)\",  fopTypeDescription \"([^\"]*)\",  fopAccountNumberLastFour \"([^\"]*)\", fopAmount \"([^\"]*)\", and fopCurrencyCode \"([^\"]*)\"$")
+    @Then("^I get a successful response with fopIssueDate \"([^\"]*)\", fopTypeCode \"([^\"]*)\", fopTypeDescription \"([^\"]*)\", fopAccountNumberLastFour \"([^\"]*)\", fopAmount \"([^\"]*)\", and fopCurrencyCode \"([^\"]*)\"$")
     public void i_get_a_successful_response_with_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(String fopIssueDate, String fopTypeCode,
             String fopTypeDescription, String fopAccountNumberLastFour, String fopAmount, String fopCurrencyCode) throws Throwable {
         HttpStatus currentStatusCode = latestResponse.getTheResponseEntity().getStatusCode();
@@ -87,12 +86,12 @@ public class FindFopAndFareDetailsByTicketNumber extends SpringIntegrationSetup 
                         && t.getTaxCode().equals(tax.getTaxCode()) && t.getTaxDescription().contains(tax.getTaxDescription()) && t.getTaxAmount().equals(tax.getTaxAmount()) && t.getTaxCurrencyCode().equals(tax.getTaxCurrencyCode())).collect(
                         Collectors.toList());
 
-                Assert.assertTrue(taxList.size() == 1l);
+                Assert.assertEquals(1, taxList.size());
 
                 if("USD".equals(baseFareCurrencyCode) && "XF".equals(tax.getTaxCode())) {
                     Assert.assertTrue(taxList.get(0).getTaxDescription().contains(tax.getCityCode()));
                 } else {
-                    Assert.assertTrue(taxList.get(0).getTaxDescription().equals(tax.getTaxDescription()));
+                    Assert.assertEquals(taxList.get(0).getTaxDescription(), tax.getTaxDescription());
                 }
             }
         }
