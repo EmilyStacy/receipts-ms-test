@@ -297,7 +297,7 @@
           <deployment>
             <resources>
               <resource>
-                <directory>${project.basedir}/target/azure-webapp</directory>
+                <directory>${project.basedir}/target</directory>
                 <includes>
                   <include>*.jar</include>
                 </includes>
