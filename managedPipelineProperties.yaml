@@ -8,8 +8,8 @@ env:
   variables:
 #    ENV_NAME: ENV_VALUE
 #    OTHER_ENV_NAME: OTHER_ENV_VALUE
-    SONARQUBE_PROJECT_KEY = 'tr.receipts-ms'
-    SONARQUBE_PROJECT_NAME = 'tr.receipts-ms'
+    SONARQUBE_PROJECT_KEY: tr.receipts-ms
+    SONARQUBE_PROJECT_NAME: tr.receipts-ms
 
 notifications:
   onlyOnIntegration: false
