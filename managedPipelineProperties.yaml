@@ -28,6 +28,7 @@ deployApp: appservice
 
 CI:
   coverity:
+    APP_NAME: receipts-ms
     CONFIG: ['java']
   xray:
     reporting: true
