@@ -24,12 +24,12 @@ notifications:
 
 deployInfra: yamlit_terraform
 deployApp: appservice
-#publishPath: <artifact path> # Files under this path will be published to the Artifactory and deployed to Azure
+publishPath: target/*.jar
 
 CI:
   coverity:
     APP_NAME: receipts-ms
-    CONFIG: ['java']
+    CONFIG: ['java','javascript']
   xray:
     reporting: true
 
