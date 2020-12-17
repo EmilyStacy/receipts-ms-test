@@ -1,6 +1,7 @@
 type: maven
 integrationBranches:
   - master
+  - mp
 pipelineAdministrators:
   - 854495
   - 243211
@@ -11,25 +12,25 @@ env:
     # SONARQUBE_PROJECT_NAME: tr.receipts-ms
 
 notifications:
-  onlyOnIntegration: false
+  onlyOnIntegration: true
   emails:
     - DL_Ticketing_Intrepid@aa.com
   slack:
     channel: ticketing-intrepid
     creds: ticketing-intrepid-slack-token
 
-#provider:
-#  azure:
-#    servicePrincipalCredJenkins: <Azure service principal credential variable name in Jenkins>
+provider:
+  azure:
+    servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
 
-deployInfra: yamlit_terraform
+deployInfra: terraform
+deployInfraPath: terraform
 deployApp: appservice
-publishPath: target/*.jar
 
 CI:
   coverity:
     APP_NAME: receipts-ms
-    CONFIG: ['java','javascript']
+    CONFIG: ['java']
   xray:
     reporting: true
 
@@ -44,6 +45,7 @@ CD:
           resourceGroup: ct-n-zeaus-receipts-rg 
       sourceBranches:
         - master
+        - mp
       subscription: aa-ct-nonprod-spoke
     #stage:
       #app:
