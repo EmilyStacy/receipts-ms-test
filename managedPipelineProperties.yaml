@@ -23,7 +23,7 @@ provider:
       storage_account_name: bttfstate
       container_name: delextfstate
 
-deployInfra: yamlit_terraform
+deployInfra: terraform
 deployApp: appservice
 
 CI:
