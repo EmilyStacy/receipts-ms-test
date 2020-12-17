@@ -37,7 +37,7 @@ CD:
     dev:
       app: receipts-ms-dev
       servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
-      subscription: aa-ct-nonprod-spoke
+      subscription: 0bc507f3-ad14-4edd-8f76-a91458390da2
       resourceGroup: ct-n-zeaus-receipts-rg 
       sourceBranches:
         - master
