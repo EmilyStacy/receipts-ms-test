@@ -23,8 +23,7 @@ provider:
   azure:
     servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
 
-deployInfra: terraform
-deployInfraPath: terraform
+deployInfra: yamlit_terraform
 deployApp: appservice
 
 CI:
