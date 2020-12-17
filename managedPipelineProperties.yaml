@@ -17,6 +17,11 @@ notifications:
 provider:
   azure:
     servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
+    subscription: aa-ct-nonprod-spoke
+    azurerm:
+      resource_group_name: tfstate
+      storage_account_name: bttfstate
+      container_name: delextfstate
 
 deployInfra: yamlit_terraform
 deployApp: appservice
