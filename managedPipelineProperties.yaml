@@ -13,11 +13,6 @@ env:
 
 notifications:
   onlyOnIntegration: true
-  emails:
-    - DL_Ticketing_Intrepid@aa.com
-  slack:
-    channel: ticketing-intrepid
-    creds: ticketing-intrepid-slack-token
 
 provider:
   azure:
@@ -45,7 +40,6 @@ CD:
       sourceBranches:
         - master
         - mp
-      subscription: aa-ct-nonprod-spoke
     #stage:
       #app:
         #- name: receipts-ms-dev
