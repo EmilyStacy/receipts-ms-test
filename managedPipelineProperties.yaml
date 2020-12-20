@@ -14,6 +14,9 @@ env:
 notifications:
   onlyOnIntegration: true
 
+container:
+  image: packages.aa.com/docker-prod/managed-pipeline-base:latest
+
 provider:
   azure:
     servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
@@ -25,6 +28,7 @@ provider:
 
 deployInfra: terraform
 deployApp: appservice
+publishPath: /target
 
 CI:
   coverity:
