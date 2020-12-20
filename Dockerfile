@@ -1,2 +1,3 @@
 FROM openjdk:8-jdk-alpine
-ADD target/*.jar *.jar
+VOLUME /tmp
+ADD target/*.jar app.jar
