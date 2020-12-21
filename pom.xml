@@ -17,7 +17,7 @@
     <coverage>0.85</coverage>  
     <cucumber-version>1.2.5</cucumber-version>  
     <openpojo.version>0.8.10</openpojo.version>  
-    <logging-lib-version>1.4.2</logging-lib-version> 
+    <logging-lib-version>1.4.2</logging-lib-version>  
     <sonar.sources>src/main/java</sonar.sources>  
     <sonar.coverage.exclusions>**/ReceiptsApplication.java</sonar.coverage.exclusions> 
   </properties>  
@@ -183,10 +183,6 @@
       <plugin> 
         <groupId>org.springframework.boot</groupId>  
         <artifactId>spring-boot-maven-plugin</artifactId>  
-        <configuration> 
-          <executable>true</executable>  
-          <includeSystemScope>true</includeSystemScope> 
-        </configuration> 
       </plugin>  
       <plugin> 
         <groupId>org.jacoco</groupId>  
@@ -210,10 +206,10 @@
           <execution> 
             <goals> 
               <goal>prepare-agent</goal> 
-            </goals>
-            <configuration>
-                <propertyName>surefireArgLine</propertyName>
-            </configuration>            
+            </goals>  
+            <configuration> 
+              <propertyName>surefireArgLine</propertyName> 
+            </configuration> 
           </execution>  
           <execution> 
             <id>report</id>  
@@ -270,7 +266,7 @@
       </plugin>  
       <plugin> 
         <groupId>org.apache.maven.plugins</groupId>  
-        <artifactId>maven-surefire-plugin</artifactId>
+        <artifactId>maven-surefire-plugin</artifactId>  
         <configuration> 
           <reuseForks>false</reuseForks>  
           <!-- Skips unit tests if the value of skip.unit.tests property is true -->  
@@ -281,34 +277,34 @@
           </excludes> 
         </configuration> 
       </plugin>  
-      <plugin>
-        <groupId>com.microsoft.azure</groupId>
-        <artifactId>azure-webapp-maven-plugin</artifactId>
-        <version>1.12.0</version>
-        <configuration>
-          <schemaVersion>v2</schemaVersion>
-          <subscriptionId>0bc507f3-ad14-4edd-8f76-a91458390da2</subscriptionId>
-          <resourceGroup>ct-n-zeaus-receipts-rg</resourceGroup>
-          <appName>receipts-ms-dev</appName>
-          <pricingTier>P1v2</pricingTier>
-          <region>East US</region>
-          <runtime>
+      <plugin> 
+        <groupId>com.microsoft.azure</groupId>  
+        <artifactId>azure-webapp-maven-plugin</artifactId>  
+        <version>1.12.0</version>  
+        <configuration> 
+          <schemaVersion>v2</schemaVersion>  
+          <subscriptionId>0bc507f3-ad14-4edd-8f76-a91458390da2</subscriptionId>  
+          <resourceGroup>ct-n-zeaus-receipts-rg</resourceGroup>  
+          <appName>receipts-ms</appName>  
+          <pricingTier>P1v2</pricingTier>  
+          <region>East US</region>  
+          <runtime> 
             <os>Linux</os>
             <javaVersion>Java 8</javaVersion>
             <webContainer>Java SE</webContainer>
-          </runtime>
-          <deployment>
-            <resources>
-              <resource>
+          </runtime>  
+          <deployment> 
+            <resources> 
+              <resource> 
                 <directory>${project.basedir}/target</directory>
-                <includes>
-                  <include>*.jar</include>
-                </includes>
-              </resource>
-            </resources>
-          </deployment>
-        </configuration>
-      </plugin>
+                <includes> 
+                  <include>*.jar</include> 
+                </includes> 
+              </resource> 
+            </resources> 
+          </deployment> 
+        </configuration> 
+      </plugin> 
     </plugins> 
   </build> 
 </project>
