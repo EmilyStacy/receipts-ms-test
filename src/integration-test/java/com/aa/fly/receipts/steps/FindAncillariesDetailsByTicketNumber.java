@@ -171,5 +171,15 @@ public class FindAncillariesDetailsByTicketNumber extends SpringIntegrationSetup
                 testDataMap.get("anclryFOP1AccountDescription"), testDataMap.get("anclryFOP1AccountNumLastFour"),testDataMap.get("anclryFOPAmt1"), testDataMap.get("anclryFOPAmt1CurrencyCode"), 2);
         Assert.assertEquals(testDataMap.get("anclryFOPName1"),getAncillaryItem(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments(),2,0).getAnclryProdName());
     }
+
+    @Then("^I get a successful response with no ancillaries$")
+    public void iGetASuccessfulResponseWithNoAncillaries(Map< String, String > testDataMap) {
+        Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
+
+        Assert.assertEquals(Integer.parseInt(testDataMap.get("fopSize")), ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
+        Assert.assertEquals(Integer.parseInt(testDataMap.get("fopAncillarySize")), ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getAncillaries().size());
+
+    }
 }
 

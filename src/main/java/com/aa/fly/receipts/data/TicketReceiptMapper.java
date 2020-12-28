@@ -107,7 +107,8 @@ public class TicketReceiptMapper {
 
                 // Build Passenger Ancillary FOP if not already
                 if (!ticketReceiptRsRow.getAnclryDocNbr().isEmpty() &&
-                		!anclryDocNums.contains(ticketReceiptRsRow.getAnclryDocNbr())) {
+                		!anclryDocNums.contains(ticketReceiptRsRow.getAnclryDocNbr()) &&
+                        checkAnclryAmt(ticketReceiptRsRow)) {
 
                     ticketReceiptReturn = passengerAncillaryFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
 
@@ -131,6 +132,10 @@ public class TicketReceiptMapper {
         ticketReceiptReturn =  passengerTotalAdjuster.adjust(ticketReceiptReturn);
 
         return ticketReceiptReturn;
+    }
+
+    private boolean checkAnclryAmt(TicketReceiptRsRow ts){
+        return ts.getAnclryFopAmt() != null && BigDecimal.valueOf(Double.parseDouble(ts.getAnclryFopAmt())).compareTo(BigDecimal.ZERO) > 0;
     }
 
     // Move to PassengerFopBuilder
