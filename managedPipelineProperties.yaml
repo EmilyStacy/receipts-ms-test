@@ -21,9 +21,9 @@ provider:
       storage_account_name: bttfstate
       container_name: delextfstate
 
-deployInfra: terraform
 deployApp: appservice
-publishPath: target
+deployInfra: terraform
+deployInfraPath: target
 
 CI:
   coverity:
