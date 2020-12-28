@@ -174,7 +174,6 @@ Feature: Search with ticket number should return ticket receipt
       | anclryFOPAmt3                | 44.10                            |
       | anclryFOPAmt3CurrencyCode    | USD                              |
 
-  @debug
   @ancillary-noFOP
   Scenario: Search ticket with ancillaries w/o FOP
     When I search ticket number with below criteria
@@ -184,6 +183,13 @@ Feature: Search with ticket number should return ticket receipt
       | fopSize          | 1 |
       | fopAncillarySize | 0 |
 
+  Scenario: Search ticket with ancillaries w/o FOP
+    When I search ticket number with below criteria
+      | ticketNumber | 0012150402346 |
+      | lastName     | Okazaki       |
+    Then I get a successful response with no ancillaries
+      | fopSize          | 1 |
+      | fopAncillarySize | 0 |
   Scenario: Search ticket with ancillary/ancillaries bought on the same date with tickets
     When I search ticket number with below criteria
       | ticketNumber | 0012120199665 |

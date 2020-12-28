@@ -1,8 +1,7 @@
 package com.aa.fly.receipts.data;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
@@ -14,6 +13,7 @@ import com.aa.fly.receipts.data.adjuster.PassengerTaxZPAdjuster;
 import com.aa.fly.receipts.data.adjuster.PassengerTotalAdjuster;
 import com.aa.fly.receipts.data.builder.*;
 
+import com.aa.fly.receipts.domain.FormOfPayment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -244,6 +244,9 @@ public class TicketReceiptMapperTest {
 		ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
 
 		assertNotNull(ticketReceiptReturn);
+		for(FormOfPayment fop: ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments()){
+			assertEquals(0, fop.getAncillaries().size());
+		}
 	}
 
 	@Test
@@ -262,14 +265,17 @@ public class TicketReceiptMapperTest {
 		ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
 		Utils.addAncillaryToTicketReceiptRow(ticketReceiptRsRow);
 		ticketReceiptRsRow.setAnclryFopAmt("00.00");
-		ticketReceiptRsRow.setAnclryFopCurrTypeCd(null);
-		ticketReceiptRsRow.setAnclryFopAcctNbrLast4(null);
-		ticketReceiptRsRow.setAnclryFopTypeCd(null);
+		ticketReceiptRsRow.setAnclryFopCurrTypeCd("USD2");
+		ticketReceiptRsRow.setAnclryFopAcctNbrLast4("0000");
+		ticketReceiptRsRow.setAnclryFopTypeCd("CCBA");
 		ticketReceiptRsRowList.add(ticketReceiptRsRow);
 
 		ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
 
 		assertNotNull(ticketReceiptReturn);
+		for(FormOfPayment fop: ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments()){
+			assertEquals(0, fop.getAncillaries().size());
+		}
 	}
 
     @Test
