@@ -109,9 +109,8 @@ Feature: Search with ticket number should return ticket receipt
     Then I get a successful response with one ancillary rowCount "<rowCount>", fopAmt "<fopAmt>", passengerTotalAmount "<passengerTotalAmount>", anclryFOPAmt1 "<anclryFOPAmt1>", anclryFOPAmt2 "<anclryFOPAmt2>", anclryFOPIssueDate "<anclryFOPIssueDate>", anclryFOPTypeCode "<anclryFOPTypeCode>", anclryFOPAccountNumberLast4 "<anclryFOPAccountNumberLast4>", anclryDocNbr "<anclryDocNbr>", anclryIssueDate "<anclryIssueDate>", anclryPriceCurrencyAmount "<anclryPriceCurrencyAmount>", anclrySalesCurrencyAmount "<anclrySalesCurrencyAmount>", anclryTaxCurrencyAmount "<anclryTaxCurrencyAmount>"
 
     Examples:
-      | scenario                                                                                                               | ticketNumber  | lastName   | rowCount | passengerTotalAmount | anclryFOPAmt1 | anclryFOPIssueDate | anclryFOPTypeCode | anclryFOPAccountNumberLast4 | anclryDocNbr  | anclryIssueDate | anclryPriceCurrencyAmount | anclrySalesCurrencyAmount | anclryTaxCurrencyAmount |
-      | One ancillary bought same date as ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amt                        | 0012120193738 | NEWLINHAUS | 2        | 245.20               | 35.00         | 2020-03-07         | CCB               | 5051                        | 0010617069698 | 2020-03-07      | 35.00                     | 35.00                     | 0.00                    |
-      | One charged ancillary bought on different dates, pax amt = ticket FOP amt + Ancillary FOP amt, ignore free ancillaries | 0012149355206 | BLAND      | 2        | 153.10               | 30.00         | 2020-12-24         | CCBA              | 4418                        | 0010262747645 | 2020-12-24      | 30.00                     | 30.00                     | 0.00                    |
+      | scenario                                                                                        | ticketNumber  | lastName   | rowCount | passengerTotalAmount | anclryFOPAmt1 | anclryFOPIssueDate | anclryFOPTypeCode | anclryFOPAccountNumberLast4 | anclryDocNbr  | anclryIssueDate | anclryPriceCurrencyAmount | anclrySalesCurrencyAmount | anclryTaxCurrencyAmount |
+      | One ancillary bought same date as ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amt | 0012120193738 | NEWLINHAUS | 2        | 245.20               | 35.00         | 2020-03-07         | CCB               | 5051                        | 0010617069698 | 2020-03-07      | 35.00                     | 35.00                     | 0.00                    |
 
   @1ancillaries-2fops
   Scenario Outline: One ancillaries bought with ticket (2 FOPs), pax amt = ticket FOP amt + Ancillary FOP amts
@@ -190,6 +189,33 @@ Feature: Search with ticket number should return ticket receipt
     Then I get a successful response with no ancillaries
       | fopSize          | 1 |
       | fopAncillarySize | 0 |
+
+  Scenario: Search ticket with ancillary/ancillaries bought but some with FOP and some w/o FOP
+    When I search ticket number with below criteria
+      | ticketNumber | 0012149355206 |
+      | lastName     | BLAND         |
+    Then I get a successful response with ancillaries that have FOP
+      | fopSize                      | 3                                    |
+      | fopAncillarySize             | 2                                    |
+      | ticketIssueDate              | 2020-12-12                           |
+      | ticketFOPTypeCode            | CCIK                                 |
+      | ticketFOPAccountDescription  | Exchange - Mastercard ending in 5841 |
+      | ticketFOPAccountNumLastFour  | 5841                                 |
+      | ticketFOPAmt                 | 123.10                               |
+      | ticketFOPAmtCurrencyCode     | USD                                  |
+      | anclryFOP1IssueDate          | 2020-12-24                           |
+      | anclryFOP1TypeCode           | CCBA                                 |
+      | anclryFOP1AccountDescription | Exchange - Visa ending in 4418       |
+      | anclryFOP1AccountNumLastFour | 4418                                 |
+      | anclryFOPAmt1                | 30.00                                |
+      | anclryFOPAmt1CurrencyCode    | USD                                  |
+      | anclryFOP2IssueDate          | 2020-12-27                           |
+      | anclryFOP2TypeCode           | CCBA                                 |
+      | anclryFOP2AccountDescription | Exchange - Visa ending in 4418       |
+      | anclryFOP2AccountNumLastFour | 4418                                 |
+      | anclryFOPAmt2                | 31.92                                |
+      | anclryFOPAmt2CurrencyCode    | USD                                  |
+
   Scenario: Search ticket with ancillary/ancillaries bought on the same date with tickets
     When I search ticket number with below criteria
       | ticketNumber | 0012120199665 |

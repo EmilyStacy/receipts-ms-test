@@ -9,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.context.request.WebRequest;
 
-
 import static org.mockito.Mockito.*;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RestResponseEntityExceptionHandlerTest {

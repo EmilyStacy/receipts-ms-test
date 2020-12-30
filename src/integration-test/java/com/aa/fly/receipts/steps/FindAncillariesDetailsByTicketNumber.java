@@ -181,5 +181,24 @@ public class FindAncillariesDetailsByTicketNumber extends SpringIntegrationSetup
         Assert.assertEquals(Integer.parseInt(testDataMap.get("fopAncillarySize")), ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getAncillaries().size());
 
     }
+
+    @Then("^I get a successful response with ancillaries that have FOP$")
+    public void iGetASuccessfulResponseWithAncillariesThatHaveFOP(Map< String, String > testDataMap) throws Throwable {
+        Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
+
+        int anclrySize = (int) ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().stream().filter(t -> t.getAncillaries().size() > 0).count();
+
+        i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(testDataMap.get("ticketIssueDate"), testDataMap.get("ticketFOPTypeCode"),
+                testDataMap.get("ticketFOPAccountDescription"), testDataMap.get("ticketFOPAccountNumLastFour"),testDataMap.get("ticketFOPAmt"), testDataMap.get("ticketFOPAmtCurrencyCode"), 0);
+        i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(testDataMap.get("anclryFOP1IssueDate"), testDataMap.get("anclryFOP1TypeCode"),
+                testDataMap.get("anclryFOP1AccountDescription"), testDataMap.get("anclryFOP1AccountNumLastFour"),testDataMap.get("anclryFOPAmt1"), testDataMap.get("anclryFOPAmt1CurrencyCode"), 1);
+        i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(testDataMap.get("anclryFOP2IssueDate"), testDataMap.get("anclryFOP2TypeCode"),
+                testDataMap.get("anclryFOP2AccountDescription"), testDataMap.get("anclryFOP2AccountNumLastFour"),testDataMap.get("anclryFOPAmt2"), testDataMap.get("anclryFOPAmt2CurrencyCode"), 2);
+        Assert.assertEquals(Integer.parseInt(testDataMap.get("fopSize")), ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
+        Assert.assertEquals(Integer.parseInt(testDataMap.get("fopAncillarySize")), anclrySize);
+
+
+    }
 }
 
