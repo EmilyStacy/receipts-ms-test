@@ -1,8 +1,7 @@
 package com.aa.fly.receipts.data;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
@@ -14,6 +13,7 @@ import com.aa.fly.receipts.data.adjuster.PassengerTaxZPAdjuster;
 import com.aa.fly.receipts.data.adjuster.PassengerTotalAdjuster;
 import com.aa.fly.receipts.data.builder.*;
 
+import com.aa.fly.receipts.domain.FormOfPayment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -219,7 +219,65 @@ public class TicketReceiptMapperTest {
     	assertNotNull(ticketReceiptReturn);
     	assertEquals("Exchange", ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
     }
-    
+
+    @Test
+	public void testMapTicketReceipt_Resultset_AnclryFop_Null() throws ParseException {
+		ticketReceiptMock = Utils.mockTicketReceipt();
+		Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxZPAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTotalAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
+
+		ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+		Utils.addAncillaryToTicketReceiptRow(ticketReceiptRsRow);
+		ticketReceiptRsRow.setAnclryFopAmt(null);
+		ticketReceiptRsRow.setAnclryFopCurrTypeCd(null);
+		ticketReceiptRsRow.setAnclryFopAcctNbrLast4(null);
+		ticketReceiptRsRow.setAnclryFopTypeCd(null);
+		ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+		ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+
+		assertNotNull(ticketReceiptReturn);
+		for(FormOfPayment fop: ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments()){
+			assertEquals(0, fop.getAncillaries().size());
+		}
+	}
+
+	@Test
+	public void testMapTicketReceipt_Resultset_AnclryFop_Zero() throws ParseException {
+		ticketReceiptMock = Utils.mockTicketReceipt();
+		Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxZPAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTotalAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
+
+		ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+		Utils.addAncillaryToTicketReceiptRow(ticketReceiptRsRow);
+		ticketReceiptRsRow.setAnclryFopAmt("00.00");
+		ticketReceiptRsRow.setAnclryFopCurrTypeCd("USD2");
+		ticketReceiptRsRow.setAnclryFopAcctNbrLast4("0000");
+		ticketReceiptRsRow.setAnclryFopTypeCd("CCBA");
+		ticketReceiptRsRowList.add(ticketReceiptRsRow);
+
+		ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+
+		assertNotNull(ticketReceiptReturn);
+		for(FormOfPayment fop: ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments()){
+			assertEquals(0, fop.getAncillaries().size());
+		}
+	}
+
     @Test
     public void testMapTicketReceipt_Resultset_One_Row() throws ParseException {
     	ticketReceiptMock = Utils.mockTicketReceipt();
