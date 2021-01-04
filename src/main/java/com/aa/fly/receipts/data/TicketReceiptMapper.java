@@ -21,6 +21,7 @@ import com.aa.fly.receipts.domain.FormOfPaymentKey;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 import com.aa.fly.receipts.exception.BulkTicketException;
+import com.aa.fly.receipts.exception.StatusMessage;
 
 @Component
 public class TicketReceiptMapper {
@@ -46,8 +47,6 @@ public class TicketReceiptMapper {
     @Autowired
     private PassengerAncillaryFopBuilder passengerAncillaryFopBuilder;
 
-
-
     public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
 
         int rowCount = 0;
@@ -65,7 +64,7 @@ public class TicketReceiptMapper {
             ticketReceiptRsRow = iterator.next();
 
             if (StringUtils.isNotBlank(ticketReceiptRsRow.getTcnBulkInd())) {
-                throw new BulkTicketException("BulkTicket");
+                throw new BulkTicketException(StatusMessage.BULK_TICKET.getStatusMessage());
             }
 
             FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(
