@@ -23,7 +23,7 @@ public class AgencyTicketManager {
 	}
 
 	public void check(String ticketNumber) {
-		String formCode = ticketNumber.substring(3).substring(0, 2);
+		String formCode = ticketNumber.substring(0, 2);
 		
 		if (!nonAgencyFormCodes.contains(formCode)) {
 	        throw new AgencyTicketException(StatusMessage.AGENCY_TICKET.getStatusMessage());			

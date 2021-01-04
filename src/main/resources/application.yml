@@ -59,7 +59,4 @@ loglib:
   requestHeadersToLog: X-Client-ID,X-Transaction-ID
   responseHeadersToLog: X-Client-ID,X-Transaction-ID
 
-nonAgencyFormCodes:
-  - 21
-  - 23
-  - 24
+nonAgencyFormCodes: 21, 23, 24
