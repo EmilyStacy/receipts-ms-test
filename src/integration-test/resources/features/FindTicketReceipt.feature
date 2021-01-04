@@ -176,44 +176,36 @@ Feature: Search with ticket number should return ticket receipt
   @ancillary-noFOP
   Scenario: Search ticket with ancillaries w/o FOP
     When I search ticket number with below criteria
-      | ticketNumber | 0012149535866 |
-      | lastName     | MERRILL       |
-    Then I get a successful response with no ancillaries
-      | fopSize          | 1 |
-      | fopAncillarySize | 0 |
-
-  Scenario: Search ticket with ancillaries w/o FOP
-    When I search ticket number with below criteria
-      | ticketNumber | 0012150402346 |
-      | lastName     | Okazaki       |
+      | ticketNumber | 0012139855627   |
+      | lastName     | HERNANDEZ REYES |
     Then I get a successful response with no ancillaries
       | fopSize          | 1 |
       | fopAncillarySize | 0 |
 
   Scenario: Search ticket with ancillary/ancillaries bought but some with FOP and some w/o FOP
     When I search ticket number with below criteria
-      | ticketNumber | 0012149355206 |
-      | lastName     | BLAND         |
+      | ticketNumber | 0012138597047 |
+      | lastName     | BRUNO         |
     Then I get a successful response with ancillaries that have FOP
       | fopSize                      | 3                                    |
       | fopAncillarySize             | 2                                    |
-      | ticketIssueDate              | 2020-12-12                           |
+      | ticketIssueDate              | 2020-09-11                           |
       | ticketFOPTypeCode            | CCIK                                 |
-      | ticketFOPAccountDescription  | Exchange - Mastercard ending in 5841 |
-      | ticketFOPAccountNumLastFour  | 5841                                 |
-      | ticketFOPAmt                 | 123.10                               |
+      | ticketFOPAccountDescription  | Exchange - Mastercard ending in 2048 |
+      | ticketFOPAccountNumLastFour  | 2048                                 |
+      | ticketFOPAmt                 | 39.00                                |
       | ticketFOPAmtCurrencyCode     | USD                                  |
-      | anclryFOP1IssueDate          | 2020-12-24                           |
-      | anclryFOP1TypeCode           | CCBA                                 |
-      | anclryFOP1AccountDescription | Exchange - Visa ending in 4418       |
-      | anclryFOP1AccountNumLastFour | 4418                                 |
-      | anclryFOPAmt1                | 30.00                                |
+      | anclryFOP1IssueDate          | 2020-09-11                           |
+      | anclryFOP1TypeCode           | CCIK                                 |
+      | anclryFOP1AccountDescription | Exchange - Mastercard ending in 2048       |
+      | anclryFOP1AccountNumLastFour | 2048                                 |
+      | anclryFOPAmt1                | 74.93                                |
       | anclryFOPAmt1CurrencyCode    | USD                                  |
-      | anclryFOP2IssueDate          | 2020-12-27                           |
-      | anclryFOP2TypeCode           | CCBA                                 |
-      | anclryFOP2AccountDescription | Exchange - Visa ending in 4418       |
-      | anclryFOP2AccountNumLastFour | 4418                                 |
-      | anclryFOPAmt2                | 31.92                                |
+      | anclryFOP2IssueDate          | 2020-10-02                           |
+      | anclryFOP2TypeCode           | CCIK                                 |
+      | anclryFOP2AccountDescription | Exchange - Mastercard ending in 2048       |
+      | anclryFOP2AccountNumLastFour | 2048                                 |
+      | anclryFOPAmt2                | 100.00                               |
       | anclryFOPAmt2CurrencyCode    | USD                                  |
 
   Scenario: Search ticket with ancillary/ancillaries bought on the same date with tickets
