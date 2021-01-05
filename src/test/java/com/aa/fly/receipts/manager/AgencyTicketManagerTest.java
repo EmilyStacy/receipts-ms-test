@@ -23,18 +23,23 @@ class AgencyTicketManagerTest {
 	}
 	
 	@Test
+	void testGetNonAgencyFormCodes() throws Exception {
+		Assertions.assertEquals("[21, 23, 24]", agencyTicketManager.getNonAgencyFormCodes().toString());
+	}
+	
+	@Test
 	void testCheckThrowsAgencyTicketException() throws Exception {
 		Assertions.assertThrows(AgencyTicketException.class, 
 				() -> {
-					agencyTicketManager.check("0010000000000");
+					agencyTicketManager.check("0000000000");
 				});
 		Assertions.assertThrows(AgencyTicketException.class, 
 				() -> {
-					agencyTicketManager.check("0012200000000");
+					agencyTicketManager.check("2200000000");
 				});
 		Assertions.assertThrows(AgencyTicketException.class, 
 				() -> {
-					agencyTicketManager.check("0012500000000");
+					agencyTicketManager.check("2500000000");
 				});
 	}
 
@@ -42,15 +47,15 @@ class AgencyTicketManagerTest {
 	void testCheckNotThrowsAgencyTicketException() throws Exception {
 		Assertions.assertDoesNotThrow( 
 				() -> {
-					agencyTicketManager.check("0012100000000");
+					agencyTicketManager.check("2100000000");
 				});
 		Assertions.assertDoesNotThrow( 
 				() -> {
-					agencyTicketManager.check("0012300000000");
+					agencyTicketManager.check("2300000000");
 				});
 		Assertions.assertDoesNotThrow(
 				() -> {
-					agencyTicketManager.check("0012400000000");
+					agencyTicketManager.check("2400000000");
 				});
 	}
 	
