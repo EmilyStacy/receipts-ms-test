@@ -82,15 +82,17 @@ Feature: Search with ticket number should return ticket receipt
       | Taxes- no ZP                      | 0012397883850 | VEMIREDDI | 87.05       | []                                                                                                                                   |
       | Taxes- another ticket with no ZP  | 0012120202036 | NEWMAN    | 0           | []                                                                                                                                   |
 
-  Scenario Outline: Verify statusMessage when bulk ticket is found
-    Given I want to retrieve a bulk ticket receipt for scenario "<scenario>"
+  Scenario Outline: Verify statusMessage when bulk or agency ticket is found
+    Given I want to retrieve a bulk or agency ticket receipt for scenario "<scenario>"
     When  I search with ticket number "<ticketNumber>", last name "<lastName>"
-    Then I get a response with bulk ticket found message "<statusMessage>"
+    Then I get a response with a status message "<statusMessage>"
 
     Examples:
       | scenario                                                  | ticketNumber  | lastName | statusMessage |
       | Ticket having trip details but not cost details in mosaic | 0012111527988 | COLLINS  | BulkTicket    |
       | Another bulk ticket                                       | 0012111006637 | SEYMOUR  | BulkTicket    |
+      | Agency ticket                                             | 0017539028415 | STECK    | AgencyTicket  |
+      | Another Agency ticket                                     | 0013710339456 | GUO      | AgencyTicket  |
 
   @0ancillaries-fops
   Scenario Outline: Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt
@@ -197,13 +199,13 @@ Feature: Search with ticket number should return ticket receipt
       | ticketFOPAmtCurrencyCode     | USD                                  |
       | anclryFOP1IssueDate          | 2020-09-11                           |
       | anclryFOP1TypeCode           | CCIK                                 |
-      | anclryFOP1AccountDescription | Exchange - Mastercard ending in 2048       |
+      | anclryFOP1AccountDescription | Exchange - Mastercard ending in 2048 |
       | anclryFOP1AccountNumLastFour | 2048                                 |
       | anclryFOPAmt1                | 74.93                                |
       | anclryFOPAmt1CurrencyCode    | USD                                  |
       | anclryFOP2IssueDate          | 2020-10-02                           |
       | anclryFOP2TypeCode           | CCIK                                 |
-      | anclryFOP2AccountDescription | Exchange - Mastercard ending in 2048       |
+      | anclryFOP2AccountDescription | Exchange - Mastercard ending in 2048 |
       | anclryFOP2AccountNumLastFour | 2048                                 |
       | anclryFOPAmt2                | 100.00                               |
       | anclryFOPAmt2CurrencyCode    | USD                                  |
