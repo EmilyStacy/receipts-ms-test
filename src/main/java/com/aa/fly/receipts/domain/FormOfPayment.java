@@ -16,7 +16,7 @@ public class FormOfPayment {
     private String fopAccountNumberLast4;
     private String fopAmount;
     private String fopCurrencyCode;
-    private boolean isTicketed = false;
+    private boolean isTicket = false;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private Set<Ancillary> ancillaries = new HashSet<>();
 
@@ -32,12 +32,12 @@ public class FormOfPayment {
         this.fopCurrencyCode = fopCurrencyCode;
     }
 
-    public boolean isTicketed() {
-        return isTicketed;
+    public boolean isTicket() {
+        return isTicket;
     }
 
-    public void setTicketed(boolean ticketed) {
-        isTicketed = ticketed;
+    public void setIsTicket(boolean isTicket) {
+        this.isTicket = isTicket;
     }
 
     public Date getFopIssueDate() {

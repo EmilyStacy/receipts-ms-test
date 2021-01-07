@@ -52,7 +52,7 @@ public class PassengerFopBuilderTest {
         this.ticketReceipt = passengerFopBuilder.build(mockTicketReceipt(), this.ticketReceiptRsRow);
         assertNotNull(this.ticketReceipt);
         assertNotNull(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments());
-        assertTrue(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).isTicketed());
+        assertTrue(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).isTicket());
         assertEquals(1, this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
         assertEquals(Constants.FOP_ISSUE_DATE, Constants.dateFormat.format(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopIssueDate()));
         assertEquals(Constants.FOP_AMOUNT, this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopAmount());

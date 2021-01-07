@@ -148,7 +148,7 @@ public class TicketReceiptMapper {
         if (isExchange) {
             formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.parseDouble(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
                     .collect(Collectors.toList());
-            formOfPayments.stream().filter(FormOfPayment::isTicketed).forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
+            formOfPayments.stream().filter(FormOfPayment::isTicket).forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
         }
 
         return formOfPayments;
