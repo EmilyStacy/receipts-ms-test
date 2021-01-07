@@ -43,10 +43,4 @@ public class WifiReceiptControllerTest {
 
     }
 
-    public static SearchCriteriaApi2 getSearchCriteria() {
-        SearchCriteriaApi2 searchCriteriaApi2 = new SearchCriteriaApi2();
-        searchCriteriaApi2.setLastName("last");
-        searchCriteriaApi2.setTicketNumber("1234");
-        return searchCriteriaApi2;
-    }
 }

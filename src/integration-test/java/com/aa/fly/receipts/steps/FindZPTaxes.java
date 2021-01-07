@@ -23,16 +23,6 @@ public class FindZPTaxes extends SpringIntegrationSetup {
 
     }
 
-    @When("^I search the passenger info with ticket number \"([^\"]*)\", last name \"([^\"]*)\", first name \"([^\"]*)\", departure date \"([^\"]*)\"$")
-    public void I_search_the_passenger_Info(String ticketNumber, String lastName, String firstName, String departureDate) throws Throwable {
-
-        String branchApplicationUrl = System.getProperty("branch.application.url");
-
-        criteriaApi2.setTicketNumber(ticketNumber);
-        criteriaApi2.setLastName(lastName);
-        executePost(branchApplicationUrl + "/api2/ticket-receipt", criteriaApi2);
-    }
-
     @Then("^I get a successful response with the correct taxamount \"([^\"]*)\" and zpamount \"([^\"]*)\"$")
     public void iGetASuccessfulResponseWithTheCorrectTaxamountAndZpamount(String taxamount, String zpamount) throws Throwable {
         Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
