@@ -2,11 +2,11 @@ package com.aa.fly.receipts.steps;
 
 import java.text.SimpleDateFormat;
 
+import com.aa.fly.receipts.domain.SearchCriteriaApi2;
 import org.junit.Assert;
 import org.springframework.http.HttpStatus;
 
 import com.aa.fly.receipts.SpringIntegrationSetup;
-import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
 
 import cucumber.api.java.en.Given;
@@ -17,7 +17,7 @@ import gherkin.deps.com.google.gson.GsonBuilder;
 
 public class FindTicketReceiptHeaderSteps extends SpringIntegrationSetup {
 
-    private SearchCriteria criteria = new SearchCriteria();
+    private SearchCriteriaApi2 criteriaApi2 = new SearchCriteriaApi2();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Given("^I want to find my ticket receipt header for scenario \"(.+)\"$")
@@ -29,10 +29,10 @@ public class FindTicketReceiptHeaderSteps extends SpringIntegrationSetup {
     public void the_client_enters_ticket_number(String ticketNumber, String lastName) {
         String branchApplicationUrl = System.getProperty("branch.application.url");
 
-        criteria.setTicketNumber(ticketNumber);
-        criteria.setLastName(lastName);
+        criteriaApi2.setTicketNumber(ticketNumber);
+        criteriaApi2.setLastName(lastName);
 
-        executePost(branchApplicationUrl + "/api2/ticket-receipt", criteria);
+        executePost(branchApplicationUrl + "/api2/ticket-receipt", criteriaApi2);
     }
 
     @Then("^I get a successful response with origin airport \"([^\"]*)\", destinationAirport \"([^\"]*)\" and pnr \"([^\"]*)\" and advantageNumber \"([^\"]*)\" and loyaltyOwnerCode \"([^\"]*)\"$")

@@ -1,20 +1,12 @@
 package com.aa.fly.receipts.steps;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
+import com.aa.fly.receipts.domain.SearchCriteriaApi2;
 import org.junit.Assert;
 import org.springframework.http.HttpStatus;
 
 import com.aa.fly.receipts.SpringIntegrationSetup;
-import com.aa.fly.receipts.domain.FareTaxesFees;
-import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.Tax;
 import com.aa.fly.receipts.domain.TicketReceipt;
 
 import cucumber.api.java.en.Given;
@@ -24,7 +16,7 @@ import gherkin.deps.com.google.gson.GsonBuilder;
 
 public class NoCostDetailsFoundSteps extends SpringIntegrationSetup {
 
-    private SearchCriteria criteria = new SearchCriteria();
+    private SearchCriteriaApi2 criteriaApi2 = new SearchCriteriaApi2();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Given("^I want to retrieve ticket receipt for scenario \"([^\"]*)\"$")

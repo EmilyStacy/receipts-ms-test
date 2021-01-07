@@ -2,7 +2,7 @@ package com.aa.fly.receipts.steps;
 
 import com.aa.fly.receipts.SpringIntegrationSetup;
 import com.aa.fly.receipts.domain.FareTaxesFees;
-import com.aa.fly.receipts.domain.SearchCriteria;
+import com.aa.fly.receipts.domain.SearchCriteriaApi2;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.stream.Collectors;
 
 public class FindZPTaxes extends SpringIntegrationSetup {
-    private SearchCriteria criteria = new SearchCriteria();
+    private SearchCriteriaApi2 criteriaApi2 = new SearchCriteriaApi2();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Given("^I want to retrieve ZP taxes details for scenario \"(.+)\"$")
@@ -28,12 +28,9 @@ public class FindZPTaxes extends SpringIntegrationSetup {
 
         String branchApplicationUrl = System.getProperty("branch.application.url");
 
-        criteria.setTicketNumber(ticketNumber);
-        criteria.setLastName(lastName);
-        criteria.setFirstName(firstName);
-        criteria.setDepartureDate(departureDate);
-
-        executePost(branchApplicationUrl + "/api/ticket-receipt", criteria);
+        criteriaApi2.setTicketNumber(ticketNumber);
+        criteriaApi2.setLastName(lastName);
+        executePost(branchApplicationUrl + "/api2/ticket-receipt", criteriaApi2);
     }
 
     @Then("^I get a successful response with the correct taxamount \"([^\"]*)\" and zpamount \"([^\"]*)\"$")

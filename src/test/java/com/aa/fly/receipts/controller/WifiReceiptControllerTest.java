@@ -1,20 +1,19 @@
 package com.aa.fly.receipts.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
+import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
+import com.aa.fly.receipts.domain.SearchCriteriaApi2;
+import com.aa.fly.receipts.domain.WifiReceipt;
+import com.aa.fly.receipts.domain.WifiSearchCriteria;
+import com.aa.fly.receipts.service.WifiReceiptService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
-import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.WifiReceipt;
-import com.aa.fly.receipts.domain.WifiSearchCriteria;
-import com.aa.fly.receipts.service.WifiReceiptService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by 629874 on 5/17/2019.
@@ -44,12 +43,10 @@ public class WifiReceiptControllerTest {
 
     }
 
-    public static SearchCriteria getSearchCriteria() {
-        SearchCriteria searchCriteria = new SearchCriteria();
-        searchCriteria.setDepartureDate("09/30/2019");
-        searchCriteria.setFirstName("first");
-        searchCriteria.setLastName("last");
-        searchCriteria.setTicketNumber("1234");
-        return searchCriteria;
+    public static SearchCriteriaApi2 getSearchCriteria() {
+        SearchCriteriaApi2 searchCriteriaApi2 = new SearchCriteriaApi2();
+        searchCriteriaApi2.setLastName("last");
+        searchCriteriaApi2.setTicketNumber("1234");
+        return searchCriteriaApi2;
     }
 }

@@ -1,7 +1,6 @@
 package com.aa.fly.receipts.steps;
 
 import com.aa.fly.receipts.SpringIntegrationSetup;
-import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.exception.StatusMessage;
 import cucumber.api.java.en.Given;
@@ -10,8 +9,6 @@ import gherkin.deps.com.google.gson.Gson;
 import gherkin.deps.com.google.gson.GsonBuilder;
 import org.junit.Assert;
 import org.springframework.http.HttpStatus;
-
-import java.text.SimpleDateFormat;
 
 public class BulkTicketSteps extends SpringIntegrationSetup {
 
