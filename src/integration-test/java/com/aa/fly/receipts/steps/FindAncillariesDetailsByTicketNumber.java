@@ -200,5 +200,27 @@ public class FindAncillariesDetailsByTicketNumber extends SpringIntegrationSetup
 
 
     }
+
+
+
+    @Then("^I got a response with expected \"([^\"]*)\", \"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\"$")
+    public void iGotAResponseWithExpected(String fopSize, String anclryFopSize, String ticketFopDesc, String anclryFopDesc) throws Throwable {
+        Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
+
+        int anclrySize = (int) ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().stream().filter(t -> t.getAncillaries().size() > 0).count();
+        String ticketReceiptFopDesc = ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription();
+        FormOfPayment anclryFOP = ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().stream().filter(t -> t.getAncillaries().size() > 0).findFirst().orElse(null);
+
+        Assert.assertTrue(ticketReceiptFopDesc.equalsIgnoreCase(ticketFopDesc));
+        Assert.assertEquals(Integer.parseInt(anclryFopSize), anclrySize);
+        Assert.assertEquals(Integer.parseInt(fopSize), ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
+        if(anclryFOP != null){
+            Assert.assertFalse(anclryFOP.getFopTypeDescription().contains("Exchange"));
+            Assert.assertTrue(anclryFOP.getFopTypeDescription().equalsIgnoreCase(anclryFopDesc));
+        }else {
+            Assert.assertTrue(anclryFopDesc.contains("no ancillary"));
+        }
+    }
 }
 
