@@ -189,6 +189,47 @@ public class TicketReceiptMapperTest {
     	assertNotNull(ticketReceiptReturn);
     	assertEquals("Exchange", ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
     }
+
+	@Test
+	public void testAdjustadjustFormOfPaymentsIfExchanged_Two_Rows_oneTicketFOP_oneAnclryFOP() throws ParseException {
+		ticketReceiptMock = Utils.mockTicketReceipt();
+		Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(pnrSegmentBuilder.build(any(), any(), anyInt())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerFareTaxFeeBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxFeeItemBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTaxXFAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerAncillaryFopBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
+		Mockito.when(passengerTotalAdjuster.adjust(any())).thenReturn(ticketReceiptMock);
+
+		ticketReceiptRsRow = Utils.mockTicketReceiptRsRow();
+		Utils.addAncillaryToTicketReceiptRow(ticketReceiptRsRow);
+		FormOfPayment anclryFOP = new FormOfPayment();
+		anclryFOP.setFopAmount("100.00");
+		anclryFOP.setFopCurrencyCode("USD");
+		anclryFOP.setFopAccountNumberLast4("0000");
+		anclryFOP.setFopTypeDescription("VISA ends in 0000");
+		anclryFOP.setFopTypeCode("CCIK");
+		Utils.addOneAncillary(anclryFOP);
+		anclryFOP.setFopIssueDate(Constants.dateFormat.parse(Constants.ANCLRY_ISSUE_DATE));
+		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().add(anclryFOP);
+		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeCode("EX");
+		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopAmount("1.00");
+		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeDescription("Exchange");
+
+		ticketReceiptRsRowList.add(ticketReceiptRsRow);
+		TicketReceiptRsRow ticketReceiptRsRow2 = Utils.mockTicketReceiptRsRow();
+		Utils.addAncillaryToTicketReceiptRow(ticketReceiptRsRow2);
+		ticketReceiptRsRow2.setFopSeqId("3");
+		ticketReceiptRsRow2.setAnclryFopTypeCd("test");
+		ticketReceiptRsRowList.add(ticketReceiptRsRow2);
+
+		ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
+
+		assertEquals("Exchange",ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
+		assertEquals("VISA ends in 0000",ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(1).getFopTypeDescription() );
+	}
     
     @Test
     public void testMapTicketReceipt_Resultset_One_Row_FOP_EF() throws ParseException {

@@ -99,6 +99,7 @@ public class PassengerAncillaryFopBuilderTest {
         //Then
         assertNotNull(this.ticketReceipt);
         assertNotNull(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments());
+        assertFalse(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).isTicket());
         assertNotNull(this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getAncillaries());
         assertEquals(1, this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
         assertNotEquals(Constants.FOP_TYPE_DESCRIPTION, this.ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());

@@ -3,6 +3,7 @@ package com.aa.fly.receipts.steps;
 import com.aa.fly.receipts.SpringIntegrationSetup;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.exception.StatusMessage;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import gherkin.deps.com.google.gson.Gson;
@@ -14,8 +15,7 @@ import org.springframework.http.HttpStatus;
 public class AgencyAndBulkTicketSteps extends SpringIntegrationSetup {
 
     @Given("^I want to retrieve a bulk or agency ticket receipt for scenario \"([^\"]*)\"$")
-    public void i_want_to_retrieve_a_bulk_ticket_receipt_for_scenario(String arg1) throws Throwable {
-
+    public void iWantToRetrieveABulkOrAgencyTicketReceiptForScenario(String arg0) throws Throwable {
     }
 
     @Then("^I get a response with a status message \"([^\"]*)\"$")

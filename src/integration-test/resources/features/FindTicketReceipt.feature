@@ -199,13 +199,13 @@ Feature: Search with ticket number should return ticket receipt
       | ticketFOPAmtCurrencyCode     | USD                                  |
       | anclryFOP1IssueDate          | 2020-09-11                           |
       | anclryFOP1TypeCode           | CCIK                                 |
-      | anclryFOP1AccountDescription | Exchange - Mastercard ending in 2048 |
+      | anclryFOP1AccountDescription | Mastercard ending in 2048            |
       | anclryFOP1AccountNumLastFour | 2048                                 |
       | anclryFOPAmt1                | 74.93                                |
       | anclryFOPAmt1CurrencyCode    | USD                                  |
       | anclryFOP2IssueDate          | 2020-10-02                           |
       | anclryFOP2TypeCode           | CCIK                                 |
-      | anclryFOP2AccountDescription | Exchange - Mastercard ending in 2048 |
+      | anclryFOP2AccountDescription | Mastercard ending in 2048            |
       | anclryFOP2AccountNumLastFour | 2048                                 |
       | anclryFOPAmt2                | 100.00                               |
       | anclryFOPAmt2CurrencyCode    | USD                                  |
