@@ -191,7 +191,7 @@ public class TicketReceiptMapperTest {
     }
 
 	@Test
-	public void testAdjustadjustFormOfPaymentsIfExchanged_Two_Rows_oneTicketFOP_oneAnclryFOP() throws ParseException {
+	public void testAdjustadjustFormOfPaymentsIfExchanged_Two_Rows_threeTicketFOP_oneAnclryFOP() throws ParseException {
 		ticketReceiptMock = Utils.mockTicketReceipt();
 		Mockito.when(pnrHeaderBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
 		Mockito.when(passengerBuilder.build(any(), any())).thenReturn(ticketReceiptMock);
@@ -211,9 +211,25 @@ public class TicketReceiptMapperTest {
 		anclryFOP.setFopAccountNumberLast4("0000");
 		anclryFOP.setFopTypeDescription("VISA ends in 0000");
 		anclryFOP.setFopTypeCode("CCIK");
+		FormOfPayment nullAmtFop = new FormOfPayment();
+		nullAmtFop.setFopAmount(null);
+		nullAmtFop.setFopCurrencyCode("USD");
+		nullAmtFop.setFopAccountNumberLast4("0000");
+		nullAmtFop.setFopTypeDescription("VISA ends in 0000");
+		nullAmtFop.setFopTypeCode("CCIK");
+		FormOfPayment zeroAmtFop = new FormOfPayment();
+		zeroAmtFop.setFopAmount("0.00");
+		zeroAmtFop.setFopCurrencyCode("USD");
+		zeroAmtFop.setFopAccountNumberLast4("0000");
+		zeroAmtFop.setFopTypeDescription("VISA ends in 0000");
+		zeroAmtFop.setFopTypeCode("CCIK");
 		Utils.addOneAncillary(anclryFOP);
 		anclryFOP.setFopIssueDate(Constants.dateFormat.parse(Constants.ANCLRY_ISSUE_DATE));
+		nullAmtFop.setFopIssueDate(Constants.dateFormat.parse(Constants.ANCLRY_ISSUE_DATE));
+		zeroAmtFop.setFopIssueDate(Constants.dateFormat.parse(Constants.ANCLRY_ISSUE_DATE));
 		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().add(anclryFOP);
+		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().add(nullAmtFop);
+		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().add(zeroAmtFop);
 		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeCode("EX");
 		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopAmount("1.00");
 		ticketReceiptMock.getPassengerDetails().get(0).getFormOfPayments().get(0).setFopTypeDescription("Exchange");
@@ -226,7 +242,6 @@ public class TicketReceiptMapperTest {
 		ticketReceiptRsRowList.add(ticketReceiptRsRow2);
 
 		ticketReceiptReturn = ticketReceiptMapper.mapTicketReceipt(ticketReceiptRsRowList);
-
 		assertEquals("Exchange",ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription());
 		assertEquals("VISA ends in 0000",ticketReceiptReturn.getPassengerDetails().get(0).getFormOfPayments().get(1).getFopTypeDescription() );
 	}
