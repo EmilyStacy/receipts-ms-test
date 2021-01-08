@@ -94,6 +94,16 @@ Feature: Search with ticket number should return ticket receipt
       | Agency ticket                                             | 0017539028415 | STECK    | AgencyTicket  |
       | Another Agency ticket                                     | 0013710339456 | GUO      | AgencyTicket  |
 
+  Scenario Outline: Ignore Exchange keyword for ancillary fops
+    Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
+    When  I search with ticket number "<ticketNumber>", last name "<lastName>"
+    Then I got a response with expected "<fopSize>", "<anclryFopSize>","<ticketFopDesc>","<anclryFopDesc>"
+
+    Examples:
+      | scenario                                  | ticketNumber  | lastName | fopSize | anclryFopSize | ticketFopDesc                        | anclryFopDesc             |
+      | Ticket fop EX or EF amount greater than 0 | 0012133010036 | KRIVIN   | 3       | 2             | Exchange - Mastercard ending in 6795 | Mastercard ending in 6795 |
+      | multiple anclry fops                      | 0012149355206 | BLAND    | 4       | 3             | Exchange - Mastercard ending in 5841 | Visa ending in 3494       |
+
   @0ancillaries-fops
   Scenario Outline: Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt
     Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
