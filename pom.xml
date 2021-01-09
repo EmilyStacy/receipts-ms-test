@@ -20,7 +20,8 @@
     <logging-lib-version>1.4.2</logging-lib-version>  
     <sonar.sources>src/main/java</sonar.sources>  
     <sonar.coverage.exclusions>**/ReceiptsApplication.java</sonar.coverage.exclusions> 
-  </properties>  
+  </properties>
+    
   <dependencies> 
     <dependency> 
       <groupId>org.springframework.boot</groupId>  
@@ -47,16 +48,12 @@
     <dependency> 
       <groupId>com.teradata.jdbc</groupId>  
       <artifactId>tdgssconfig</artifactId>  
-      <version>16.20</version>  
-      <scope>system</scope>  
-      <systemPath>${project.basedir}/lib/tdgssconfig-16.20.jar</systemPath> 
+      <version>16.20.00.08</version>  
     </dependency>  
     <dependency> 
       <groupId>com.teradata.jdbc</groupId>  
       <artifactId>terajdbc4</artifactId>  
-      <version>16.20</version>  
-      <scope>system</scope>  
-      <systemPath>${project.basedir}/lib/terajdbc4-16.20.jar</systemPath> 
+      <version>16.20.00.08</version>  
     </dependency>  
     <dependency> 
       <groupId>org.projectlombok</groupId>  
@@ -179,7 +176,7 @@
     </profile> 
   </profiles>  
   <build> 
-    <plugins> 
+    <plugins>
       <plugin> 
         <groupId>org.springframework.boot</groupId>  
         <artifactId>spring-boot-maven-plugin</artifactId>  
