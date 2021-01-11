@@ -82,18 +82,20 @@ Feature: Search with ticket number should return ticket receipt
       | Taxes- no ZP                      | 0012397883850 | VEMIREDDI | 87.05       | []                                                                                                                                   |
       | Taxes- another ticket with no ZP  | 0012120202036 | NEWMAN    | 0           | []                                                                                                                                   |
 
-  Scenario Outline: Verify statusMessage when bulk ticket is found
-    Given I want to retrieve a bulk ticket receipt for scenario "<scenario>"
+  Scenario Outline: Verify statusMessage when bulk or agency ticket is found
+    Given I want to retrieve a bulk or agency ticket receipt for scenario "<scenario>"
     When  I search with ticket number "<ticketNumber>", last name "<lastName>"
-    Then I get a response with bulk ticket found message "<statusMessage>"
+    Then I get a response with a status message "<statusMessage>"
 
     Examples:
       | scenario                                                  | ticketNumber  | lastName | statusMessage |
       | Ticket having trip details but not cost details in mosaic | 0012111527988 | COLLINS  | BulkTicket    |
       | Another bulk ticket                                       | 0012111006637 | SEYMOUR  | BulkTicket    |
+      | Agency ticket                                             | 0017539028415 | STECK    | AgencyTicket  |
+      | Another Agency ticket                                     | 0013710339456 | GUO      | AgencyTicket  |
 
   Scenario Outline: Ignore Exchange keyword for ancillary fops
-    Given I want to retrieve a bulk ticket receipt for scenario "<scenario>"
+    Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
     When  I search with ticket number "<ticketNumber>", last name "<lastName>"
     Then I got a response with expected "<fopSize>", "<anclryFopSize>","<ticketFopDesc>","<anclryFopDesc>"
 
