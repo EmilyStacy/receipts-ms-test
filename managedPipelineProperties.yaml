@@ -39,14 +39,13 @@ CD:
       servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
       subscription: aa-ct-nonprod-spoke
       app:
-          ## name must be appservice name, functionapp name or staorage account name
-        - name: 'receipts-ms'
-          resourceGroup: 'ct-n-zeaus-receipts-rg'
-          region: 'East US' 
-
+      ## name must be appservice name, functionapp name or staorage account name
+      - name: 'receipts-ms'
+        resourceGroup: 'ct-n-zeaus-receipts-rg'
+        region: 'East US'
       sourceBranches:
-        - master
-        - mp
+      - master
+      - mp
 
     #stage:
       #app:
