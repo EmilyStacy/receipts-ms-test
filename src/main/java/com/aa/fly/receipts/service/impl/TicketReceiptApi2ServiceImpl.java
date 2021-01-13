@@ -33,13 +33,13 @@ public class TicketReceiptApi2ServiceImpl implements TicketReceiptApi2Service {
 
         if (StringUtils.hasText(criteria.getTicketNumber())) {
             try {
-            	agencyTicketManager.check(criteria.getTicketNumber());
-            	
                 ticketReceipt = repository.findTicketReceiptByTicketNumber(criteria);
 
                 if (ticketReceipt != null && StringUtils.hasText(ticketReceipt.getPnr())) {
                     ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
                 } else {
+                	agencyTicketManager.check(criteria.getTicketNumber());
+                	                	
                     ticketReceiptResponse = ResponseEntity.status(HttpStatus.NO_CONTENT).body(ticketReceipt);
                 }
             }
