@@ -20,7 +20,7 @@ provider:
     subscription: 'aa-ct-nonprod-spoke' ##Optional
 
 deployApp: 'appservice' ## you can use appservice, functionapp or storage
-publishPath: 'target'
+#publishPath: 'target'
 
 CI:
   coverity:
