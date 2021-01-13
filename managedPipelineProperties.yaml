@@ -16,14 +16,11 @@ notifications:
 
 provider:
   azure:
-    azurerm:
-      resource_group_name: tfstate
-      storage_account_name: bttfstate
-      container_name: delextfstate
+    servicePrincipalCredJenkins: 'ct-np-receipts-as-server-sp'
+    subscription: 'aa-ct-nonprod-spoke' ##Optional
 
-deployApp: appservice
-deployInfra: terraform
-deployInfraPath: target
+deployApp: 'appservice' ## you can use appservice, functionapp or storage
+publishPath: 'target'
 
 CI:
   coverity:
@@ -33,23 +30,23 @@ CI:
     reporting: true
 
 CD:
-  cherwell:
-    archerAppName: 'Receipts'
-    cherwellTeamName: 'Fly - Ancillaries Receipts'
+  #cherwell:
+    #archerAppName: 'Receipts'
+    #cherwellTeamName: 'Fly - Ancillaries Receipts'
 
   deployments:
     dev:
-      app: receipts-ms
       servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
       subscription: aa-ct-nonprod-spoke
-      resourceGroup: ct-n-zeaus-receipts-rg 
+      app:
+          ## name must be appservice name, functionapp name or staorage account name
+        - name: 'receipts-ms'
+          resourceGroup: 'ct-n-zeaus-receipts-rg'
+          region: 'East US' 
+
       sourceBranches:
         - master
         - mp
-      actions:
-        - name: 'azure-webapp-maven-plugin'
-          steps: |
-            sh 'mvn azure-webapp:deploy'
 
     #stage:
       #app:
