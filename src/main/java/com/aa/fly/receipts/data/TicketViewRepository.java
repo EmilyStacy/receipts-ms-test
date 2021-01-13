@@ -21,7 +21,7 @@ public class TicketViewRepository {
 
         String sql = new StringBuilder("\nSELECT ")
         .append("    TICKET_NBR \n")
-        .append("FROM ").append(ticketSchemaName).append(".TCN_CUST_RCPT \n")
+        .append("FROM ").append(ticketSchemaName).append(".TICKET \n")
         .append("WHERE \n")
         .append("TICKET_NBR = ? \n")
         .toString();
