@@ -11,6 +11,7 @@
   </parent>  
   <groupId>com.aa.fly.receipts</groupId>  
   <artifactId>receipts-ms</artifactId>  
+  <name>receipts-ms</name>  
   <version>2.0.0-SNAPSHOT</version>  
   <properties> 
     <java.version>1.8</java.version>  
