@@ -11,6 +11,10 @@ env:
     # SONARQUBE_PROJECT_KEY: tr.receipts-ms
     # SONARQUBE_PROJECT_NAME: tr.receipts-ms
 
+container:
+  image: packages.aa.com/docker-prod/edots-base:3.11.12
+  # edots-azure:2.2.1
+
 notifications:
   onlyOnIntegration: true
 
