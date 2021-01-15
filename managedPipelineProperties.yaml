@@ -12,7 +12,7 @@ env:
     # SONARQUBE_PROJECT_NAME: tr.receipts-ms
 
 container:
-  image: packages.aa.com/docker-prod/edots-azure:2.2.1
+  image: packages.aa.com/docker-prod/edots-maven:3.6.3
   # edots-azure:2.2.1
 
 notifications:
