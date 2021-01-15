@@ -13,7 +13,6 @@ env:
 
 container:
   image: packages.aa.com/docker-prod/edots-azure:2.2.1
-  # edots-azure:2.2.1
 
 notifications:
   onlyOnIntegration: true
