@@ -1,5 +1,19 @@
 package com.aa.fly.receipts.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.text.ParseException;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import com.aa.fly.receipts.data.TicketReceiptRepository;
 import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
 import com.aa.fly.receipts.domain.SearchCriteriaApi2;
@@ -9,21 +23,6 @@ import com.aa.fly.receipts.exception.BulkTicketException;
 import com.aa.fly.receipts.exception.StatusMessage;
 import com.aa.fly.receipts.manager.AgencyTicketManager;
 import com.aa.fly.receipts.service.impl.TicketReceiptApi2ServiceImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TicketReceiptApi2ServiceTest {
