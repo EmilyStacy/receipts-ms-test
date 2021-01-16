@@ -19,8 +19,7 @@ notifications:
 
 provider:
   azure:
-    servicePrincipalCredJenkins: 'ct-np-receipts-as-server-sp'
-    subscription: 'aa-ct-nonprod-spoke' ##Optional
+    servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
 
 deployApp: 'appservice' ## you can use appservice, functionapp or storage
 #publishPath: 'target'
@@ -39,8 +38,6 @@ CD:
 
   deployments:
     dev:
-      servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
-      subscription: aa-ct-nonprod-spoke
       app:
       ## name must be appservice name, functionapp name or staorage account name
         - name: 'receipts-ms'
