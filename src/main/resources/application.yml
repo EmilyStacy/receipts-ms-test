@@ -40,6 +40,9 @@ mosaic:
   ticket:
     schema:
       name: PROD_TCN_RECPT_VW
+  data:
+    history:
+      month: 18
 
 airport:
   service:

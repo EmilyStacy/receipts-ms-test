@@ -8,6 +8,9 @@ import com.aa.fly.receipts.exception.BulkTicketException;
 import com.aa.fly.receipts.exception.StatusMessage;
 import com.aa.fly.receipts.manager.AgencyTicketManager;
 import com.aa.fly.receipts.service.TicketReceiptApi2Service;
+
+import java.text.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +27,7 @@ public class TicketReceiptApi2ServiceImpl implements TicketReceiptApi2Service {
     private AgencyTicketManager agencyTicketManager;
 
     @Override
-    public ResponseEntity<TicketReceipt> findTicketReceipt(SearchCriteriaApi2 criteria) {
+    public ResponseEntity<TicketReceipt> findTicketReceipt(SearchCriteriaApi2 criteria) throws ParseException {
 
         verifyTicketAirlineCode(criteria);
 

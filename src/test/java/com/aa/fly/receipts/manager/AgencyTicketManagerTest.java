@@ -1,6 +1,7 @@
 package com.aa.fly.receipts.manager;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,8 +24,12 @@ class AgencyTicketManagerTest {
     @InjectMocks
     private AgencyTicketManager agencyTicketManager;
 	
+    @BeforeEach void setup() {
+		agencyTicketManager.setHistory("18");    	
+    }
+    
 	@Test
-	void testCheckThrowsAgencyTicketException() throws Exception {
+	void testCheckTicketFoundThrowsAgencyTicketException() throws Exception {
 		
 		Mockito.when(ticketViewRepository.findTicketViewByTicketNumber(Mockito.anyString()))
         .thenReturn(sqlRowSet);
@@ -32,14 +37,35 @@ class AgencyTicketManagerTest {
 		Mockito.when(sqlRowSet.next())
         .thenReturn(true);
 		
-		Assertions.assertThrows(AgencyTicketException.class, 
+		Mockito.when(sqlRowSet.getString("TICKET_ISSUE_DT"))
+        .thenReturn("2021-1-1");
+		
+		Assertions.assertThrows(AgencyTicketException.class,
+				() -> {
+					agencyTicketManager.check("");
+				});
+	}
+    
+	@Test
+	void testCheckTicketFoundNotThrowsAgencyTicketExceptionBeyondHistory() throws Exception {
+		
+		Mockito.when(ticketViewRepository.findTicketViewByTicketNumber(Mockito.anyString()))
+        .thenReturn(sqlRowSet);
+		
+		Mockito.when(sqlRowSet.next())
+        .thenReturn(true);
+		
+		Mockito.when(sqlRowSet.getString("TICKET_ISSUE_DT"))
+        .thenReturn("2010-1-1");
+		
+		Assertions.assertDoesNotThrow(
 				() -> {
 					agencyTicketManager.check("");
 				});
 	}
 
 	@Test
-	void testCheckNotThrowsAgencyTicketException() throws Exception {
+	void testCheckTicketNotFoundNotThrowsAgencyTicketException() throws Exception {
 		
 		Mockito.when(ticketViewRepository.findTicketViewByTicketNumber(Mockito.anyString()))
         .thenReturn(sqlRowSet);
