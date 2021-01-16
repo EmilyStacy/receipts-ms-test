@@ -20,12 +20,13 @@ public class TicketViewRepository {
     public SqlRowSet findTicketViewByTicketNumber(String ticketNumber) {
 
         String sql = new StringBuilder("\nSELECT ")
-        .append("    TICKET_NBR \n")
+        .append("    TICKET_NBR, \n")
+        .append("    TICKET_ISSUE_DT \n")
         .append("FROM ").append(ticketSchemaName).append(".TICKET \n")
         .append("WHERE \n")
         .append("TICKET_NBR = ? \n")
         .toString();
-
+        
         return jdbcTemplate.queryForRowSet(sql, ticketNumber);
     }
 }
