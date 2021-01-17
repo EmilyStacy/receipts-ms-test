@@ -17,6 +17,11 @@ container:
 notifications:
   onlyOnIntegration: true
 
+provider:
+  azure:
+    servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
+    subscription: aa-ct-nonprod-spoke 
+
 deployApp: 'appservice' ## you can use appservice, functionapp or storage
 #publishPath: 'target'
 
@@ -36,15 +41,7 @@ CD:
     dev:
       servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
       subscription: aa-ct-nonprod-spoke
-
-      azurerm: ## For terraform deployment
-        storage_account_name: 'aa-ct-nonprod-spoke'
-        resource_group_name: 'ct-n-zeaus-receipts-rg'
-       #container_name: 'container name for state file'
-        subscription_id: '0bc507f3-ad14-4edd-8f76-a91458390da2'
-
       app:
-      ## name must be appservice name, functionapp name or staorage account name
         - name: 'receipts-ms'
           resourceGroup: 'ct-n-zeaus-receipts-rg'
           region: 'East US'
