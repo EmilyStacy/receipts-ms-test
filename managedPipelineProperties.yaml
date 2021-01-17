@@ -17,20 +17,21 @@ container:
 notifications:
   onlyOnIntegration: true
 
-provider:
-  azure:
-    servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
-    subscription: aa-ct-nonprod-spoke 
-
-deployApp: 'appservice' ## you can use appservice, functionapp or storage
-#publishPath: 'target'
-
 CI:
   coverity:
     APP_NAME: receipts-ms
     CONFIG: ['java']
   xray:
     reporting: true
+
+provider:
+  azure:
+    servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
+
+deployApp: appservice ## you can use appservice, functionapp or storage
+publishPath: target
+deployInfra: terraform
+deployInfraPath: terraform
 
 CD:
   #cherwell:
@@ -39,8 +40,6 @@ CD:
 
   deployments:
     dev:
-      servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
-      subscription: aa-ct-nonprod-spoke
       app:
         - name: 'receipts-ms'
           resourceGroup: 'ct-n-zeaus-receipts-rg'
