@@ -30,7 +30,7 @@ provider:
 
 deployApp: appservice ## you can use appservice, functionapp or storage
 publishPath: target
-deployInfra: terraform
+deployInfra: yamlit_terraform
 #deployInfraPath: terraform
 
 CD:
