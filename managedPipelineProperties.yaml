@@ -43,6 +43,8 @@ CD:
 
   deployments:
     dev:
+      servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
+      subscription: aa-ct-nonprod-spoke
       app:
         - name: 'receipts-ms'
           resourceGroup: 'ct-n-zeaus-receipts-rg'
