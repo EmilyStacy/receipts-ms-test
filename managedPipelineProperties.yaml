@@ -31,7 +31,7 @@ provider:
 deployApp: appservice ## you can use appservice, functionapp or storage
 publishPath: target
 deployInfra: terraform
-deployInfraPath: terraform
+#deployInfraPath: terraform
 
 CD:
   #cherwell:
