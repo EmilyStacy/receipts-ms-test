@@ -28,10 +28,8 @@ provider:
   azure:
     servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
 
-deployApp: appservice ## you can use appservice, functionapp or storage
+deployApp: appservice
 publishPath: target
-deployInfra: yamlit_terraform
-#deployInfraPath: terraform
 
 CD:
   #cherwell:
