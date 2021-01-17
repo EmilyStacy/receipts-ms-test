@@ -27,6 +27,13 @@ CI:
 provider:
   azure:
     servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
+    subscription: aa-ct-nonprod-spoke
+    azurerm:
+      resource_group_name: tfstate
+      storage_account_name: bttfstate
+      container_name: delextfstate
+
+apiVersion: azureBuildDeployMerge1Test
 
 deployApp: appservice
 publishPath: target
