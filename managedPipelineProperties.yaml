@@ -33,7 +33,7 @@ provider:
       storage_account_name: bttfstate
       container_name: delextfstate
 
-apiVersion: azureBuildDeployMerge1Test
+apiVersion: v2
 
 deployApp: appservice
 publishPath: target
