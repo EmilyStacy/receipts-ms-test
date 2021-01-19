@@ -256,3 +256,16 @@ Feature: Search with ticket number should return ticket receipt
     Examples:
       | scenario                           | ticketNumber  | lastName | PNR    | departSegmentString                                                                                                                                                            | returnSegmentString                                                                                                                                                            |
       | Round trip with same flight number | 0012117384146 | WORKMAN  | LFIGIU | CP6022 leaving XNA(Fayetteville, AR) to LAX(Los Angeles, CA) on 2020-03-20 at 13:53:00 and arriving on 2020-03-20 at 15:32:00 in class VVDWZNB1 and the flight status is EXCH. | CP6022 leaving LAX(Los Angeles, CA) to XNA(Fayetteville, AR) on 2020-03-25 at 08:10:00 and arriving on 2020-03-25 at 13:23:00 in class QWAHZNB1 and the flight status is EXCH. |
+
+
+  Scenario Outline: Verify ticket fare details and currencyCodes
+    Given I want to retrieve payment details for scenario "<scenario>"
+    When I search with ticket number "<ticketNumber>", last name "<lastName>"
+    Then I get a successful response with baseFareAmount "<baseFareAmount>", baseFareCurrencyCode "<baseFareCurrencyCode>", totalFareAmount "<totalFareAmount>", taxFareAmount "<taxFareAmount>", showPassangerTotal "<showPassangerTotal>"
+    Examples:
+      | scenario     | ticketNumber  | lastName | baseFareAmount | baseFareCurrencyCode | totalFareAmount | taxFareAmount | showPassangerTotal |
+      | JPY currency | 0012131648126 | KIMURA   | 0.00           | JPY                  | 6410.00         | 6410.00       | true               |
+      | KRW currency | 0012124872311 | KWON     | 1379200.00     | KRW                  | 1412400.00      | 33200.00      | true               |
+      | GBP currency | 0012151697777 | Carr     | 123.00         | GBP                  | 414.94          | 291.94        | true               |
+
+

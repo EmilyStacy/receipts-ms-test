@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @Component
 public class PassengerFareTaxFeeBuilder implements DataBuilderService {
 
+
     @Override
     public TicketReceipt build(TicketReceipt ticketReceipt, TicketReceiptRsRow ticketReceiptRsRow) {
 
@@ -21,15 +22,15 @@ public class PassengerFareTaxFeeBuilder implements DataBuilderService {
         String baseFareAmount;
         String baseFareCurrencyCode;
 
-        if (StringUtils.isBlank(ticketReceiptRsRow.getEqfnFareAmt()) || ticketReceiptRsRow.getEqfnFareAmt().equals("0") ) {
 
+        if ((ticketReceiptRsRow.getEqfnFareAmt().equals("0") && !ticketReceiptRsRow.getFnumFareAmt().equals("0")) || ticketReceiptRsRow.getEqfnFareCurrTypeCd().isEmpty()) {
             baseFareAmount = ticketReceiptRsRow.getFnumFareAmt();
             baseFareCurrencyCode = ticketReceiptRsRow.getFnumFareCurrTypeCd();
-        }
-        else {
+        } else {
             baseFareAmount = ticketReceiptRsRow.getEqfnFareAmt();
             baseFareCurrencyCode = ticketReceiptRsRow.getEqfnFareCurrTypeCd();
         }
+
 
         AmountAndCurrency baseFareAmountAndCurrency = new AmountAndCurrency(baseFareAmount, baseFareCurrencyCode);
         AmountAndCurrency totalFareAmountAndCurrency = new AmountAndCurrency(ticketReceiptRsRow.getFareTdamAmt(), baseFareCurrencyCode);
@@ -46,4 +47,6 @@ public class PassengerFareTaxFeeBuilder implements DataBuilderService {
         ticketReceipt.getPassengerDetails().get(0).setFareTaxesFees(fareTaxesFees);
         return ticketReceipt;
     }
+
+
 }
