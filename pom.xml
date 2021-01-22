@@ -283,7 +283,7 @@
           <schemaVersion>v2</schemaVersion>  
           <subscriptionId>0bc507f3-ad14-4edd-8f76-a91458390da2</subscriptionId>  
           <resourceGroup>ct-n-zeaus-receipts-rg</resourceGroup>  
-          <appName>receipts-ms</appName>  
+          <appName>receipts-ms-dev</appName>  
           <pricingTier>P1v2</pricingTier>  
           <region>East US</region>  
           <runtime> 

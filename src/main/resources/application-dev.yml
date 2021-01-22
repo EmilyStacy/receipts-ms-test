@@ -1,0 +1,57 @@
+spring:
+  datasource:
+    driver-class-name: com.teradata.jdbc.TeraDriver
+    jdbcUrl: jdbc:teradata://EDTDC.aa.com/
+    username: ${vcap.services.mosaic.receipts.credentials.username}
+    password: '${vcap.services.mosaic.receipts.credentials.password}'
+
+    hikari:
+      minimumIdle: 15
+      maximumPoolSize: 20
+      idleTimeout: 0
+      connectionTimeout: 20000
+      max-lifetime: 1800000
+      health-check-properties:
+        expected99thPercentileMs: 0
+        connectivityCheckTimeoutMs: 600000
+
+  datasource-wifi:
+    driver-class-name: com.teradata.jdbc.TeraDriver
+    jdbcUrl: jdbc:teradata://EDTDC.aa.com/
+    username: ${vcap.services.mosaic.receipts-wifi.credentials.username}
+    password: '${vcap.services.mosaic.receipts-wifi.credentials.password}'
+
+# Disabled actuator DB health check which sends [SELECT 1] to Teradata.
+management:
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+  health:
+    db:
+      enabled: true
+
+mosaic:
+  inflight:
+    schema:
+      name: CERT_INFLIGHT_SRVCS_VW
+  ticket:
+    schema:
+      name: CERT_TCN_RECPT_VW
+
+airport:
+  service:
+    url: https://cdn.flyaa.aa.com/api/places/airports/v1.0?Client-Id=Receipts-MS
+
+logging:
+  level:
+    root: ERROR
+    com.aa.fly.receipts: INFO
+    org.springframework.jdbc: TRACE
+    com.zaxxer.hikari: TRACE
+
+  pattern:
+    console: '%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger.%M %.36X{XTransactionID} - %msg%n'
+    
+loglib:
+  requestHeadersToLog: X-Client-ID,X-Transaction-ID
+  responseHeadersToLog: X-Client-ID,X-Transaction-ID
