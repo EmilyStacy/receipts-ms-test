@@ -10,6 +10,9 @@ management:
   endpoint:
     health:
       show-details: "NEVER"
+  health:
+    db:
+      enabled: false
       
 spring:
   jdbc:
