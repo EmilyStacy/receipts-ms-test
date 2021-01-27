@@ -5,10 +5,10 @@
       "webAppName": {
         "value": "receipts-ms-dev"
       },
-      "servicePlanName": {
+      "existingServicePlanName": {
         "value": "6da57503-404d-4638"
       },
-        "newOrExisting": {
+      "newOrExisting": {
         "value": "existing"
       },
       "environment": {

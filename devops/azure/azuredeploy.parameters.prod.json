@@ -2,23 +2,17 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "storagePrefix": {
-        "value": "contosodata"
-      },
-      "storageSKU": {
-        "value": "Standard_GRS"
-      },
-      "appServicePlanName": {
-        "value": "contosoplan"
-      },
       "webAppName": {
-        "value": "contosowebapp"
+        "value": "receipts-ms"
       },
-      "resourceTags": {
-        "value": {
-          "Environment": "Production",
-          "Project": "Tutorial"
-        }
+      "existingServicePlanName": {
+        "value": "6da57503-404d-4638"
+      },
+      "newOrExisting": {
+        "value": "new"
+      },
+      "environment": {
+        "value": "prod"
       }
     }
 }
