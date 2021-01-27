@@ -46,21 +46,30 @@ CD:
       servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
       subscription: aa-ct-nonprod-spoke
       app:
-        - name: 'receipts-ms'
+        - name: 'receipts-ms-dev'
           resourceGroup: 'ct-n-zeaus-receipts-rg'
           region: 'East US'
       sourceBranches:
         - master
         - mp
-
-    #stage:
+      #actions:
+      #  - name: 'ARM template dev deployment'
+      #    action: 'az deployment group create \
+      #             --name devDeplolyment \
+      #             --resource-group ct-n-zeaus-receipts-rg \
+      #             --template-file "devops/azure/azuredeploy.json" \
+      #             --parameters "devops/azure/azuredeploy.parameters.dev.json"'
+    #prod:
+      #servicePrincipalCredJenkins: ct-p-receipts-as-server-sp
+      #subscription: aa-ct-prod-spoke
       #app:
-        #- name: receipts-ms-dev
-          #region       : east
-          #resourceGroup: ct-n-zeaus-receipts-rg 
-        #- name: receipts-ms-dev
-          #region       : south
-          #resourceGroup: ct-n-zeaus-receipts-rg 
+        #- name: receipts-ms
+          #region       : 'East US'
+          #resourceGroup: ct-p-zeaus-receipts-rg 
+          ## slot: 'Staging' ##Optional to deploy to Production/Staging slot
+        #- name: receipts-ms
+          #region       : 'West US'
+          ## slot: 'Staging' ##Optional to deploy to Production/Staging slot
+          #resourceGroup: ct-p-zweus-receipts-rg 
       #sourceBranches:
         #- master
-      #subscription: aa-ct-nonprod-spoke
