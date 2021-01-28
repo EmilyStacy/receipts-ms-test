@@ -93,6 +93,7 @@ Feature: Search with ticket number should return ticket receipt
       | Another bulk ticket                                       | 0012111006637 | SEYMOUR  | BulkTicket    |
       | Agency ticket                                             | 0017539028415 | STECK    | AgencyTicket  |
       | Another Agency ticket                                     | 0013710339456 | GUO      | AgencyTicket  |
+      | Agency ticket with multiple re-used                       | 0017533684839 | BLAIS    | AgencyTicket  |
 
   Scenario Outline: Ignore Exchange keyword for ancillary fops
     Given I want to retrieve payment details - ancillaries for scenario "<scenario>"

@@ -25,6 +25,7 @@ public class TicketViewRepository {
         .append("FROM ").append(ticketSchemaName).append(".TICKET \n")
         .append("WHERE \n")
         .append("TICKET_NBR = ? \n")
+        .append("ORDER BY TICKET_ISSUE_DT DESC \n")
         .toString();
         
         return jdbcTemplate.queryForRowSet(sql, ticketNumber);
