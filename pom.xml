@@ -283,8 +283,12 @@
           <schemaVersion>v2</schemaVersion>  
           <subscriptionId>0bc507f3-ad14-4edd-8f76-a91458390da2</subscriptionId>  
           <resourceGroup>ct-n-zeaus-receipts-rg</resourceGroup>  
-          <appName>receipts-ms-dev</appName>  
-          <pricingTier>P1v2</pricingTier>  
+          <appName>receipts-ms-dev</appName>
+          
+          <!-- Deploy Web App to an existing Service Plan -->
+          <!-- appServicePlanResourceGroup>your-existing-plan-group</appServicePlanResourceGroup -->
+          <appServicePlanName>ServicePlan6da57503-404d-4638</appServicePlanName>
+          
           <region>East US</region>  
           <runtime> 
             <os>Linux</os>
