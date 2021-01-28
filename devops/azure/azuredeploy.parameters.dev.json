@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "webAppName": {
-        "value": "receipts-ms-dev"
+        "value": "receipts-ms-new"
+      },
+      "newOrExistingServicePlan": {
+        "value": "existing"
       },
       "existingServicePlanName": {
         "value": "6da57503-404d-4638"
-      },
-      "newOrExisting": {
-        "value": "existing"
       },
       "environment": {
         "value": "dev"

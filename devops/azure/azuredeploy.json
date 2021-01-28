@@ -38,7 +38,7 @@
         "description": "The Runtime stack of current web app"
       }
     },
-    "newOrExisting": {
+    "newOrExistingServicePlan": {
       "type": "string",
       "defaultValue": "existing",
       "metadata": {
@@ -59,10 +59,24 @@
   },
   "resources": [
     {
-      "condition": "[equals(parameters('newOrExisting'),'new')]",
+      "condition": "[equals(parameters('newOrExistingServicePlan'),'new')]",
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2018-02-01",
       "name": "[variables('newAppServicePlanPortalName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('sku')]"
+      },
+      "kind": "linux",
+      "properties": {
+        "reserved": true
+      }
+    },
+    {
+      "condition": "[equals(parameters('newOrExistingServicePlan'),'existing')]",
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "name": "[variables('existingAppServicePlanPortalName')]",
       "location": "[parameters('location')]",
       "sku": {
         "name": "[parameters('sku')]"

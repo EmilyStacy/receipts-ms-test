@@ -5,11 +5,11 @@
       "webAppName": {
         "value": "receipts-ms"
       },
+      "newOrExistingServicePlan": {
+        "value": "new"
+      },
       "existingServicePlanName": {
         "value": "6da57503-404d-4638"
-      },
-      "newOrExisting": {
-        "value": "new"
       },
       "environment": {
         "value": "prod"
