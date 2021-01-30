@@ -278,7 +278,7 @@
       <plugin>
       	<!-- Plugin to deploy local code to Azure App Service with MVN, execute below commands,
       		 az login (Azure CLI to login to Azure)
-      		 mvn package azure_webapp:deploy (Execute from local repo folder to deploy)
+      		 mvn package azure-webapp:deploy (Execute from local repo folder to deploy)
       	-->
         <groupId>com.microsoft.azure</groupId>  
         <artifactId>azure-webapp-maven-plugin</artifactId>  
