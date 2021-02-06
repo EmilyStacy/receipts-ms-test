@@ -66,7 +66,7 @@ CD:
       #  - name: 'azure deployment'
       #    action: 'azuredeploy'
       #  - name: 'Post-deployment action'
-      #    action: '...' ## Like smoke test
+      #    action: 'mvn -P azure-dev package azure-webapp:deploy' ## Run Mvn deployment
 
     #prod:
       #servicePrincipalCredJenkins: ct-p-receipts-as-server-sp
@@ -76,6 +76,11 @@ CD:
           #region       : 'East US'
           #resourceGroup: ct-p-zeaus-receipts-rg 
           ## slot: 'Staging' ##Optional to deploy to Production/Staging slot
+
+          #actions:
+          #  - name: 'Post-deployment action'
+          #    action: 'mvn -P azure-prod-east package azure-webapp:deploy' ## Run Mvn deployment
+
         #- name: receipts-ms
           #region       : 'West US'
           ## slot: 'Staging' ##Optional to deploy to Production/Staging slot
