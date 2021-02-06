@@ -24,6 +24,13 @@ CI:
   xray:
     reporting: true
 
+  #post:
+  #  - name: 'step name'
+  #    steps: |
+  #      sh 'command'
+  #  - name: 'other step name'
+  #    stepsFile: fileName.groovy
+
 provider:
   azure:
     servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
@@ -52,16 +59,14 @@ CD:
       sourceBranches:
         - mp # Consider adding develop branch to the repo and change this to develop so only develop and master will deploy
         - master
-      actions:
-        - name: 'step name'
-          steps: |
-            sh 'command'
-        - name: 'other step name'
-          stepsFile: fileName.groovy
-        - name: 'using defined action'
-          action: 'deployUsingSSH'
-        - name: 'using global action'
-          action: 'cfBlueGreenDeploy'
+
+      #actions:
+      #  - name: 'Pre-deployment action'
+      #    action: '...' ## Like pre build
+      #  - name: 'azure deployment'
+      #    action: 'azuredeploy'
+      #  - name: 'Post-deployment action'
+      #    action: '...' ## Like smoke test
 
     #prod:
       #servicePrincipalCredJenkins: ct-p-receipts-as-server-sp
