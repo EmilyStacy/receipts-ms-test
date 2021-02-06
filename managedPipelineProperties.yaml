@@ -50,15 +50,19 @@ CD:
           resourceGroup: 'ct-n-zeaus-receipts-rg'
           region: 'East US'
       sourceBranches:
+        - mp # Consider adding develop branch to the repo and change this to develop so only develop and master will deploy
         - master
-        - mp
-      #actions:
-      #  - name: 'ARM template dev deployment'
-      #    action: 'az deployment group create \
-      #             --name devDeplolyment \
-      #             --resource-group ct-n-zeaus-receipts-rg \
-      #             --template-file "devops/azure/azuredeploy.json" \
-      #             --parameters "devops/azure/azuredeploy.parameters.dev.json"'
+      actions:
+        - name: 'step name'
+          steps: |
+            sh 'command'
+        - name: 'other step name'
+          stepsFile: fileName.groovy
+        - name: 'using defined action'
+          action: 'deployUsingSSH'
+        - name: 'using global action'
+          action: 'cfBlueGreenDeploy'
+
     #prod:
       #servicePrincipalCredJenkins: ct-p-receipts-as-server-sp
       #subscription: aa-ct-prod-spoke
