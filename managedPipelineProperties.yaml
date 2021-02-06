@@ -60,13 +60,13 @@ CD:
         - mp # Consider adding develop branch to the repo and change this to develop so only develop and master will deploy
         - master
 
-      #actions:
+      actions:
       #  - name: 'Pre-deployment action'
       #    action: '...' ## Like pre build
       #  - name: 'azure deployment'
       #    action: 'azuredeploy'
-      #  - name: 'Post-deployment action'
-      #    action: 'mvn -P azure-dev package azure-webapp:deploy' ## Run Mvn deployment
+        - name: 'Post-deployment action'
+          action: 'mvn -P azure-dev azure-webapp:deploy' ## Run Mvn deployment
 
     #prod:
       #servicePrincipalCredJenkins: ct-p-receipts-as-server-sp
@@ -79,7 +79,7 @@ CD:
 
           #actions:
           #  - name: 'Post-deployment action'
-          #    action: 'mvn -P azure-prod-east package azure-webapp:deploy' ## Run Mvn deployment
+          #    action: 'mvn -P azure-prod-east azure-webapp:deploy' ## Run Mvn deployment
 
         #- name: receipts-ms
           #region       : 'West US'
