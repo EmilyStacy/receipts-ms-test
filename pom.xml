@@ -156,7 +156,132 @@
       <url>https://artifacts.aa.com/artifactory/maven-public</url> 
     </pluginRepository> 
   </pluginRepositories>  
-  <profiles> 
+  <profiles>
+    <profile> 
+      <id>azure-dev</id>  
+      <build> 
+        <plugins> 
+	      <plugin>
+	      	<!-- Plugin to deploy local code to Azure App Service with MVN, execute below commands,
+	      		 az login (Azure CLI to login to Azure)
+	      		 mvn package azure-webapp:deploy (Execute from local repo folder to deploy)
+	      	-->
+	        <groupId>com.microsoft.azure</groupId>  
+	        <artifactId>azure-webapp-maven-plugin</artifactId>  
+	        <version>1.12.0</version>  
+	        <configuration> 
+	          <schemaVersion>v2</schemaVersion>  
+	          <subscriptionId>0bc507f3-ad14-4edd-8f76-a91458390da2</subscriptionId>  
+	          <resourceGroup>ct-n-zeaus-receipts-rg</resourceGroup>  
+	          <appName>receipts-ms-dev</appName>
+	          
+	          <!-- Deploy Web App to an existing Service Plan -->
+	          <!-- appServicePlanResourceGroup>your-existing-plan-group</appServicePlanResourceGroup -->
+	          <appServicePlanName>ServicePlan6da57503-404d-4638</appServicePlanName>
+	          
+	          <region>East US</region>  
+	          <runtime> 
+	            <os>Linux</os>
+	            <javaVersion>Java 8</javaVersion>
+	            <webContainer>Java SE</webContainer>
+	          </runtime>  
+	          <deployment> 
+	            <resources> 
+	              <resource> 
+	                <directory>${project.basedir}/target</directory>
+	                <includes> 
+	                  <include>*.jar</include> 
+	                </includes> 
+	              </resource> 
+	            </resources> 
+	          </deployment> 
+	        </configuration> 
+	      </plugin> 
+        </plugins> 
+      </build> 
+    </profile> 
+  
+    <profile> 
+      <id>azure-prod-east</id>  
+      <build> 
+        <plugins> 
+	      <plugin>
+	        <groupId>com.microsoft.azure</groupId>  
+	        <artifactId>azure-webapp-maven-plugin</artifactId>  
+	        <version>1.12.0</version>  
+	        <configuration> 
+	          <schemaVersion>v2</schemaVersion>  
+	          <subscriptionId>d468b5ca-4400-4521-8115-2bba3467f651</subscriptionId>  
+	          <resourceGroup>ct-p-zeaus-receipts-rg</resourceGroup>  
+	          <appName>receipts-ms</appName>
+	          <appServicePlanName>ServicePlan-Prod-East</appServicePlanName>
+			  <!-- Deployment Slot Setting -->              
+			  <deploymentSlotSetting>
+			  	<name>staging</name>
+				<configurationSource>parent</configurationSource>
+			  </deploymentSlotSetting>	          
+	          <region>East US</region>  
+	          <runtime> 
+	            <os>Linux</os>
+	            <javaVersion>Java 8</javaVersion>
+	            <webContainer>Java SE</webContainer>
+	          </runtime>  
+	          <deployment> 
+	            <resources> 
+	              <resource> 
+	                <directory>${project.basedir}/target</directory>
+	                <includes> 
+	                  <include>*.jar</include> 
+	                </includes> 
+	              </resource> 
+	            </resources> 
+	          </deployment> 
+	        </configuration> 
+	      </plugin> 
+        </plugins> 
+      </build> 
+    </profile> 
+
+    <profile> 
+      <id>azure-prod-west</id>  
+      <build> 
+        <plugins> 
+	      <plugin>
+	        <groupId>com.microsoft.azure</groupId>  
+	        <artifactId>azure-webapp-maven-plugin</artifactId>  
+	        <version>1.12.0</version>  
+	        <configuration> 
+	          <schemaVersion>v2</schemaVersion>  
+	          <subscriptionId>xxx-xxx-xxx-xxx</subscriptionId>  
+	          <resourceGroup>ct-p-zweus-receipts-rg</resourceGroup>  
+	          <appName>receipts-ms</appName>
+	          <appServicePlanName>ServicePlan-Prod-West</appServicePlanName>
+			  <deploymentSlotSetting>
+			  	<name>staging</name>
+				<configurationSource>parent</configurationSource>
+			  </deploymentSlotSetting>	          
+	          <region>West US</region>  
+	          <runtime> 
+	            <os>Linux</os>
+	            <javaVersion>Java 8</javaVersion>
+	            <webContainer>Java SE</webContainer>
+	          </runtime>  
+	          <deployment> 
+	            <resources> 
+	              <resource> 
+	                <directory>${project.basedir}/target</directory>
+	                <includes> 
+	                  <include>*.jar</include> 
+	                </includes> 
+	              </resource> 
+	            </resources> 
+	          </deployment> 
+	        </configuration> 
+	      </plugin> 
+        </plugins> 
+      </build> 
+    </profile> 
+  
     <profile> 
       <id>integration-tests</id>  
       <build> 
@@ -275,42 +400,6 @@
           </excludes> 
         </configuration> 
       </plugin>  
-      <plugin>
-      	<!-- Plugin to deploy local code to Azure App Service with MVN, execute below commands,
-      		 az login (Azure CLI to login to Azure)
-      		 mvn package azure-webapp:deploy (Execute from local repo folder to deploy)
-      	-->
-        <groupId>com.microsoft.azure</groupId>  
-        <artifactId>azure-webapp-maven-plugin</artifactId>  
-        <version>1.12.0</version>  
-        <configuration> 
-          <schemaVersion>v2</schemaVersion>  
-          <subscriptionId>0bc507f3-ad14-4edd-8f76-a91458390da2</subscriptionId>  
-          <resourceGroup>ct-n-zeaus-receipts-rg</resourceGroup>  
-          <appName>receipts-ms-dev</appName>
-          
-          <!-- Deploy Web App to an existing Service Plan -->
-          <!-- appServicePlanResourceGroup>your-existing-plan-group</appServicePlanResourceGroup -->
-          <appServicePlanName>ServicePlan6da57503-404d-4638</appServicePlanName>
-          
-          <region>East US</region>  
-          <runtime> 
-            <os>Linux</os>
-            <javaVersion>Java 8</javaVersion>
-            <webContainer>Java SE</webContainer>
-          </runtime>  
-          <deployment> 
-            <resources> 
-              <resource> 
-                <directory>${project.basedir}/target</directory>
-                <includes> 
-                  <include>*.jar</include> 
-                </includes> 
-              </resource> 
-            </resources> 
-          </deployment> 
-        </configuration> 
-      </plugin> 
     </plugins> 
   </build> 
 </project>
