@@ -4,6 +4,7 @@ integrationBranches:
   - mp
 pipelineAdministrators:
   - 854495
+  - 629874
   - 243211
 env:
   variables:
@@ -33,8 +34,6 @@ CI:
 
 provider:
   azure:
-    servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
-    subscription: aa-ct-nonprod-spoke
     azurerm:
       resource_group_name: tfstate
       storage_account_name: bttfstate
@@ -66,19 +65,16 @@ CD:
       #  - name: 'azure deployment'
       #    action: 'azuredeploy'
       #  - name: 'Post-deployment action'
-      #    action: 'mvn -P azure-dev azure-webapp:deploy' ## Run Mvn deployment
-        - name: 'azure-webapp-deploy'
-          steps: |
-            sh 'mvn -P azure-dev azure-webapp:deploy'
+      #    action: '...' ## Run post deployment actions
 
     #prod:
-      #servicePrincipalCredJenkins: ct-p-receipts-as-server-sp
+      #servicePrincipalCredJenkins: ct-p-Receipts-receipts-5060-sp
       #subscription: aa-ct-prod-spoke
       #app:
         #- name: receipts-ms
           #region       : 'East US'
           #resourceGroup: ct-p-zeaus-receipts-rg 
-          ## slot: 'Staging' ##Optional to deploy to Production/Staging slot
+          ## slot: 'staging' ##Optional to deploy to Production/Staging slot
 
           #actions:
           #  - name: 'Post-deployment action'
