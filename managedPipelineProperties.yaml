@@ -32,12 +32,12 @@ CI:
   #  - name: 'other step name'
   #    stepsFile: fileName.groovy
 
-provider:
-  azure:
-    azurerm:
-      resource_group_name: tfstate
-      storage_account_name: bttfstate
-      container_name: delextfstate
+#provider:
+#  azure:
+#    azurerm:
+#      resource_group_name: tfstate
+#      storage_account_name: bttfstate
+#      container_name: delextfstate
 
 deployApp: appservice
 publishPath: target
