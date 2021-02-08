@@ -1,14 +1,15 @@
 type: maven
 integrationBranches:
   - master
-  - mp
+  - develop # Consider adding develop branch to the repo so it deploys to Azure dev
+  - mp # Remove this entry once this MP yaml works.
 pipelineAdministrators:
   - 854495
   - 629874
   - 243211
 env:
   variables:
-    # Default SonarQube project name w/o overwriting them below: managed-pipeline.receipts-ms-project
+    # Overwrite SonarQueue project name and key with below. Uncomment when ready.
     # SONARQUBE_PROJECT_KEY: tr.receipts-ms
     # SONARQUBE_PROJECT_NAME: tr.receipts-ms
 
@@ -25,25 +26,18 @@ CI:
   xray:
     reporting: true
 
-  #post:
+  #post: # post CI steps if any
   #  - name: 'step name'
   #    steps: |
   #      sh 'command'
   #  - name: 'other step name'
   #    stepsFile: fileName.groovy
 
-#provider:
-#  azure:
-#    azurerm:
-#      resource_group_name: tfstate
-#      storage_account_name: bttfstate
-#      container_name: delextfstate
-
 deployApp: appservice
 publishPath: target
 
 CD:
-  #cherwell:
+  #cherwell: # Uncomment when ready.
     #archerAppName: 'Receipts'
     #cherwellTeamName: 'Fly - Ancillaries Receipts'
 
@@ -56,10 +50,10 @@ CD:
           resourceGroup: 'ct-n-zeaus-receipts-rg'
           region: 'East US'
       sourceBranches:
-        - mp # Consider adding develop branch to the repo and change this to develop so only develop and master will deploy
-        - master
+        - mp # Remove this entry once this MP yaml works.
+        - develop
 
-      actions:
+      #actions:
       #  - name: 'Pre-deployment action'
       #    action: '...' ## Like pre build
       #  - name: 'azure deployment'
