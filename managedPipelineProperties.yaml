@@ -76,7 +76,7 @@ CD:
 
         #- name: receipts-ms
           #region       : 'West US'
-          ## slot: 'Staging' ##Optional to deploy to Production/Staging slot
+          ## slot: 'staging' ##Optional to deploy to Production/Staging slot
           #resourceGroup: ct-p-zweus-receipts-rg 
       #sourceBranches:
         #- master
