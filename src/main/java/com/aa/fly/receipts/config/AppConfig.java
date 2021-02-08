@@ -59,7 +59,7 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean(name = "wifi")
-    @ConfigurationProperties(prefix = "spring.datasource-wifi")
+    @ConfigurationProperties(prefix = "spring.datasourcewifi")
     public DataSource dataSourceWifi() {
         return DataSourceBuilder.create().build();
     }
