@@ -1,6 +1,5 @@
 package com.aa.fly.receipts.domain;
 
-import com.aa.fly.receipts.util.Utils;
 import com.openpojo.reflection.impl.PojoClassFactory;
 import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
@@ -35,7 +34,7 @@ public class ReceiptsMSDomainTest {
 
     @Test
     public void testAccesorShouldAccessProperField() {
-        validateAccessors(SearchCriteria.class);
+        validateAccessors(SearchCriteriaApi2.class);
         validateAccessors(WifiReceipt.class);
         validateAccessors(WifiSearchCriteria.class);
         validateAccessors(WifiLineItem.class);
@@ -56,44 +55,36 @@ public class ReceiptsMSDomainTest {
 
     @Test
     public void testTicketFormOfPaymentKeyEquals() throws ParseException {
-    	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey("1", "XF");
-    	FormOfPaymentKey formOfPaymentKey2 = new FormOfPaymentKey("1", "XF");
+        FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey("1", "XF");
+        FormOfPaymentKey formOfPaymentKey2 = new FormOfPaymentKey("1", "XF");
         assertEquals(formOfPaymentKey, formOfPaymentKey2);
     }
 
     @Test
     public void testTicketFormOfPaymentKeySameObject() throws ParseException {
-    	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey();
-    	FormOfPaymentKey formOfPaymentKey2 = formOfPaymentKey;
+        FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey();
+        FormOfPaymentKey formOfPaymentKey2 = formOfPaymentKey;
         assertEquals(formOfPaymentKey, formOfPaymentKey2);
     }
-    
+
     @Test
     public void testTicketFormOfPaymentKeyEqualsNull() throws ParseException {
-    	FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey();
+        FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey();
         assertNotEquals(null, formOfPaymentKey);
     }
 
     @Test
     public void testTicketAmountNull() throws ParseException {
-    	AmountAndCurrency amountAndCurrency = new AmountAndCurrency(null, "USD2");
+        AmountAndCurrency amountAndCurrency = new AmountAndCurrency(null, "USD2");
         assertNull(amountAndCurrency.getAmount());
-    }
-    
-    @Test
-    public void testTicketAmountAndCurrencyToString() throws ParseException {
-    	AmountAndCurrency amountAndCurrency = new AmountAndCurrency("2000", "USD2");
-        Assert.assertEquals(
-                "AmountAndCurrency{amount='20.00', currency='USD'}",
-                amountAndCurrency.toString());
     }
 
     @Test
-    public void testTicketSearchCriteriaToString() throws ParseException {
-        SearchCriteria criteria = getSearchCriteriaWithTicketNumber();
+    public void testTicketAmountAndCurrencyToString() throws ParseException {
+        AmountAndCurrency amountAndCurrency = new AmountAndCurrency("2000", "USD2");
         Assert.assertEquals(
-                "SearchCriteria{ticketNumber='0012372187652', lastName='TEST', firstName='SIMON', departureDate=09/30/2019', pnr=null}",
-                criteria.toString());
+                "AmountAndCurrency{amount='20.00', currency='USD'}",
+                amountAndCurrency.toString());
     }
 
     @Test
@@ -142,15 +133,6 @@ public class ReceiptsMSDomainTest {
         criteria.setCcLastFour("1234");
         criteria.setStartDate(dateFormat.parse("01/01/2017"));
         criteria.setEndDate(dateFormat.parse("06/01/2019"));
-        return criteria;
-    }
-
-    public static SearchCriteria getSearchCriteriaWithTicketNumber() throws ParseException {
-        SearchCriteria criteria = new SearchCriteria();
-        criteria.setLastName("TEST");
-        criteria.setFirstName("SIMON");
-        criteria.setTicketNumber("0012372187652");
-        criteria.setDepartureDate("09/30/2019");
         return criteria;
     }
 

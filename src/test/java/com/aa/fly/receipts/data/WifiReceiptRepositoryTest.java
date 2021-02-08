@@ -1,13 +1,8 @@
 package com.aa.fly.receipts.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-
-import java.text.ParseException;
-
+import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
+import com.aa.fly.receipts.domain.WifiReceipt;
+import com.aa.fly.receipts.domain.WifiSearchCriteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,10 +10,12 @@ import org.mockito.Mock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
-import com.aa.fly.receipts.domain.SearchCriteria;
-import com.aa.fly.receipts.domain.WifiReceipt;
-import com.aa.fly.receipts.domain.WifiSearchCriteria;
+import java.text.ParseException;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by 629874 on 5/17/2019.

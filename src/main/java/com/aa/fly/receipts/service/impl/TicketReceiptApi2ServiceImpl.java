@@ -3,9 +3,14 @@ package com.aa.fly.receipts.service.impl;
 import com.aa.fly.receipts.data.TicketReceiptRepository;
 import com.aa.fly.receipts.domain.SearchCriteriaApi2;
 import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.exception.AgencyTicketException;
 import com.aa.fly.receipts.exception.BulkTicketException;
 import com.aa.fly.receipts.exception.StatusMessage;
+import com.aa.fly.receipts.manager.AgencyTicketManager;
 import com.aa.fly.receipts.service.TicketReceiptApi2Service;
+
+import java.text.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +22,12 @@ public class TicketReceiptApi2ServiceImpl implements TicketReceiptApi2Service {
 
     @Autowired
     private TicketReceiptRepository repository;
+    
+    @Autowired
+    private AgencyTicketManager agencyTicketManager;
 
     @Override
-    public ResponseEntity<TicketReceipt> findTicketReceipt(SearchCriteriaApi2 criteria) {
+    public ResponseEntity<TicketReceipt> findTicketReceipt(SearchCriteriaApi2 criteria) throws ParseException {
 
         verifyTicketAirlineCode(criteria);
 
@@ -33,14 +41,21 @@ public class TicketReceiptApi2ServiceImpl implements TicketReceiptApi2Service {
                 if (ticketReceipt != null && StringUtils.hasText(ticketReceipt.getPnr())) {
                     ticketReceiptResponse = ResponseEntity.ok().body(ticketReceipt);
                 } else {
+                	agencyTicketManager.check(criteria.getTicketNumber());
+                	                	
                     ticketReceiptResponse = ResponseEntity.status(HttpStatus.NO_CONTENT).body(ticketReceipt);
                 }
             }
-            catch( BulkTicketException e) {
-                if (ticketReceipt == null) {
-                    ticketReceipt = new TicketReceipt();
-                }
+            catch( BulkTicketException e ) {
+                ticketReceipt = new TicketReceipt();
+
                 ticketReceipt.setStatusMessage(StatusMessage.BULK_TICKET.getStatusMessage());
+                ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);
+            }
+            catch( AgencyTicketException e ) {
+                ticketReceipt = new TicketReceipt();
+                
+                ticketReceipt.setStatusMessage(StatusMessage.AGENCY_TICKET.getStatusMessage());
                 ticketReceiptResponse = ResponseEntity.status(HttpStatus.OK).body(ticketReceipt);
             }
         }

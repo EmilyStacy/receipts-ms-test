@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import com.aa.fly.receipts.SpringIntegrationSetup;
 import com.aa.fly.receipts.domain.FareTaxesFees;
 import com.aa.fly.receipts.domain.FormOfPayment;
-import com.aa.fly.receipts.domain.SearchCriteria;
 import com.aa.fly.receipts.domain.Tax;
 import com.aa.fly.receipts.domain.TicketReceipt;
 

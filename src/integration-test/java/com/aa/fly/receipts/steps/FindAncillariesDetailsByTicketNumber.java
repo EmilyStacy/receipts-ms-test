@@ -171,5 +171,44 @@ public class FindAncillariesDetailsByTicketNumber extends SpringIntegrationSetup
                 testDataMap.get("anclryFOP1AccountDescription"), testDataMap.get("anclryFOP1AccountNumLastFour"),testDataMap.get("anclryFOPAmt1"), testDataMap.get("anclryFOPAmt1CurrencyCode"), 2);
         Assert.assertEquals(testDataMap.get("anclryFOPName1"),getAncillaryItem(ticketReceipt.getPassengerDetails().get(0).getFormOfPayments(),2,0).getAnclryProdName());
     }
+
+    @Then("^I get a successful response with ancillaries that have FOP$")
+    public void iGetASuccessfulResponseWithAncillariesThatHaveFOP(Map< String, String > testDataMap) throws Throwable {
+        Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
+
+        int anclrySize = (int) ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().stream().filter(t -> t.getAncillaries().size() > 0).count();
+
+        i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(testDataMap.get("ticketIssueDate"), testDataMap.get("ticketFOPTypeCode"),
+                testDataMap.get("ticketFOPAccountDescription"), testDataMap.get("ticketFOPAccountNumLastFour"),testDataMap.get("ticketFOPAmt"), testDataMap.get("ticketFOPAmtCurrencyCode"), 0);
+        i_get_a_successful_response_with_ancillaries_and_fop_details_fopIssueDate_fopTypeCode_fopTypeDescription_fopAccountNumberLast_fopAmount_and_fopCurrencyCode(testDataMap.get("anclryFOP1IssueDate"), testDataMap.get("anclryFOP1TypeCode"),
+                testDataMap.get("anclryFOP1AccountDescription"), testDataMap.get("anclryFOP1AccountNumLastFour"),testDataMap.get("anclryFOPAmt1"), testDataMap.get("anclryFOPAmt1CurrencyCode"), 1);
+        Assert.assertEquals(Integer.parseInt(testDataMap.get("fopSize")), ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
+        Assert.assertEquals(Integer.parseInt(testDataMap.get("fopAncillarySize")), anclrySize);
+
+
+    }
+
+
+
+    @Then("^I got a response with expected \"([^\"]*)\", \"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\"$")
+    public void iGotAResponseWithExpected(String fopSize, String anclryFopSize, String ticketFopDesc, String anclryFopDesc) throws Throwable {
+        Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        TicketReceipt ticketReceipt = g.fromJson(latestResponse.getBody(), TicketReceipt.class);
+
+        int anclrySize = (int) ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().stream().filter(t -> t.getAncillaries().size() > 0).count();
+        String ticketReceiptFopDesc = ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().get(0).getFopTypeDescription();
+        FormOfPayment anclryFOP = ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().stream().filter(t -> t.getAncillaries().size() > 0).findFirst().orElse(null);
+
+        Assert.assertTrue(ticketReceiptFopDesc.equalsIgnoreCase(ticketFopDesc));
+        Assert.assertEquals(Integer.parseInt(anclryFopSize), anclrySize);
+        Assert.assertEquals(Integer.parseInt(fopSize), ticketReceipt.getPassengerDetails().get(0).getFormOfPayments().size());
+        if(anclryFOP != null){
+            Assert.assertFalse(anclryFOP.getFopTypeDescription().contains("Exchange"));
+            Assert.assertTrue(anclryFOP.getFopTypeDescription().equalsIgnoreCase(anclryFopDesc));
+        }else {
+            Assert.assertTrue(anclryFopDesc.contains("no ancillary"));
+        }
+    }
 }
 

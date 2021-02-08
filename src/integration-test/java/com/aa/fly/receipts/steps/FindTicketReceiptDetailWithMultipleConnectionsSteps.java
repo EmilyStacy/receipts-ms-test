@@ -1,12 +1,11 @@
 package com.aa.fly.receipts.steps;
 
 import com.aa.fly.receipts.SpringIntegrationSetup;
-import com.aa.fly.receipts.domain.SearchCriteria;
+import com.aa.fly.receipts.domain.SearchCriteriaApi2;
 import com.aa.fly.receipts.domain.SegmentDetail;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import gherkin.deps.com.google.gson.Gson;
 import gherkin.deps.com.google.gson.GsonBuilder;
 import org.junit.Assert;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class FindTicketReceiptDetailWithMultipleConnectionsSteps extends SpringIntegrationSetup {
 
-    private SearchCriteria criteria = new SearchCriteria();
+    private SearchCriteriaApi2 criteriaApi2 = new SearchCriteriaApi2();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Given("^I want to find trip details for scenario \"(.+)\"$")

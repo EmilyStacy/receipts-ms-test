@@ -82,15 +82,28 @@ Feature: Search with ticket number should return ticket receipt
       | Taxes- no ZP                      | 0012397883850 | VEMIREDDI | 87.05       | []                                                                                                                                   |
       | Taxes- another ticket with no ZP  | 0012120202036 | NEWMAN    | 0           | []                                                                                                                                   |
 
-  Scenario Outline: Verify statusMessage when bulk ticket is found
-    Given I want to retrieve a bulk ticket receipt for scenario "<scenario>"
+  Scenario Outline: Verify statusMessage when bulk or agency ticket is found
+    Given I want to retrieve a bulk or agency ticket receipt for scenario "<scenario>"
     When  I search with ticket number "<ticketNumber>", last name "<lastName>"
-    Then I get a response with bulk ticket found message "<statusMessage>"
+    Then I get a response with a status message "<statusMessage>"
 
     Examples:
       | scenario                                                  | ticketNumber  | lastName | statusMessage |
       | Ticket having trip details but not cost details in mosaic | 0012111527988 | COLLINS  | BulkTicket    |
       | Another bulk ticket                                       | 0012111006637 | SEYMOUR  | BulkTicket    |
+      | Agency ticket                                             | 0017539028415 | STECK    | AgencyTicket  |
+      | Another Agency ticket                                     | 0013710339456 | GUO      | AgencyTicket  |
+      | Agency ticket with multiple re-used                       | 0017533684839 | BLAIS    | AgencyTicket  |
+
+  Scenario Outline: Ignore Exchange keyword for ancillary fops
+    Given I want to retrieve payment details - ancillaries for scenario "<scenario>"
+    When  I search with ticket number "<ticketNumber>", last name "<lastName>"
+    Then I got a response with expected "<fopSize>", "<anclryFopSize>","<ticketFopDesc>","<anclryFopDesc>"
+
+    Examples:
+      | scenario                                  | ticketNumber  | lastName | fopSize | anclryFopSize | ticketFopDesc                        | anclryFopDesc             |
+      | Ticket fop EX or EF amount greater than 0 | 0012133010036 | KRIVIN   | 3       | 2             | Exchange - Mastercard ending in 6795 | Mastercard ending in 6795 |
+      | multiple anclry fops                      | 0012149355206 | BLAND    | 4       | 3             | Exchange - Mastercard ending in 5841 | Visa ending in 3494       |
 
   @0ancillaries-fops
   Scenario Outline: Zero ancillaries with FOP amt = ticket total amt, FOP amt = passenger amt
@@ -173,6 +186,27 @@ Feature: Search with ticket number should return ticket receipt
       | anclryFOPAmt3                | 44.10                            |
       | anclryFOPAmt3CurrencyCode    | USD                              |
 
+  @ancillary-noFOP
+  Scenario: Search ticket with ancillary/ancillaries bought but some with FOP and some w/o FOP
+    When I search ticket number with below criteria
+      | ticketNumber | 0012132202478 |
+      | lastName     | MARTINELLI         |
+    Then I get a successful response with ancillaries that have FOP
+      | fopSize                      | 2                                    |
+      | fopAncillarySize             | 1                                    |
+      | ticketIssueDate              | 2020-07-09                           |
+      | ticketFOPTypeCode            | CCIK                                 |
+      | ticketFOPAccountDescription  | Mastercard ending in 0619            |
+      | ticketFOPAccountNumLastFour  | 0619                                 |
+      | ticketFOPAmt                 | 112.60                               |
+      | ticketFOPAmtCurrencyCode     | USD                                  |
+      | anclryFOP1IssueDate          | 2020-07-09                           |
+      | anclryFOP1TypeCode           | CCIK                                 |
+      | anclryFOP1AccountDescription | Mastercard ending in 0619            |
+      | anclryFOP1AccountNumLastFour | 0619                                 |
+      | anclryFOPAmt1                | 35.00                                |
+      | anclryFOPAmt1CurrencyCode    | USD                                  |
+
   Scenario: Search ticket with ancillary/ancillaries bought on the same date with tickets
     When I search ticket number with below criteria
       | ticketNumber | 0012120199665 |
@@ -209,3 +243,16 @@ Feature: Search with ticket number should return ticket receipt
     Examples:
       | scenario                           | ticketNumber  | lastName | PNR    | departSegmentString                                                                                                                                                            | returnSegmentString                                                                                                                                                            |
       | Round trip with same flight number | 0012117384146 | WORKMAN  | LFIGIU | CP6022 leaving XNA(Fayetteville, AR) to LAX(Los Angeles, CA) on 2020-03-20 at 13:53:00 and arriving on 2020-03-20 at 15:32:00 in class VVDWZNB1 and the flight status is EXCH. | CP6022 leaving LAX(Los Angeles, CA) to XNA(Fayetteville, AR) on 2020-03-25 at 08:10:00 and arriving on 2020-03-25 at 13:23:00 in class QWAHZNB1 and the flight status is EXCH. |
+
+
+  Scenario Outline: Verify ticket fare details and currencyCodes
+    Given I want to retrieve payment details for scenario "<scenario>"
+    When I search with ticket number "<ticketNumber>", last name "<lastName>"
+    Then I get a successful response with baseFareAmount "<baseFareAmount>", baseFareCurrencyCode "<baseFareCurrencyCode>", totalFareAmount "<totalFareAmount>", taxFareAmount "<taxFareAmount>", showPassangerTotal "<showPassangerTotal>"
+    Examples:
+      | scenario     | ticketNumber  | lastName | baseFareAmount | baseFareCurrencyCode | totalFareAmount | taxFareAmount | showPassangerTotal |
+      | JPY currency | 0012131648126 | KIMURA   | 0.00           | JPY                  | 6410.00         | 6410.00       | true               |
+      | KRW currency | 0012124872311 | KWON     | 1379200.00     | KRW                  | 1412400.00      | 33200.00      | true               |
+      | GBP currency | 0012151697777 | Carr     | 123.00         | GBP                  | 414.94          | 291.94        | true               |
+
+

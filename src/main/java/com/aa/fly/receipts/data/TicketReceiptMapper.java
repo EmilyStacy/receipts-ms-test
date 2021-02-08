@@ -21,6 +21,7 @@ import com.aa.fly.receipts.domain.FormOfPaymentKey;
 import com.aa.fly.receipts.domain.TicketReceipt;
 import com.aa.fly.receipts.domain.TicketReceiptRsRow;
 import com.aa.fly.receipts.exception.BulkTicketException;
+import com.aa.fly.receipts.exception.StatusMessage;
 
 @Component
 public class TicketReceiptMapper {
@@ -46,8 +47,6 @@ public class TicketReceiptMapper {
     @Autowired
     private PassengerAncillaryFopBuilder passengerAncillaryFopBuilder;
 
-
-
     public TicketReceipt mapTicketReceipt(List<TicketReceiptRsRow> ticketReceiptRsRowList) {
 
         int rowCount = 0;
@@ -65,7 +64,7 @@ public class TicketReceiptMapper {
             ticketReceiptRsRow = iterator.next();
 
             if (StringUtils.isNotBlank(ticketReceiptRsRow.getTcnBulkInd())) {
-                throw new BulkTicketException("BulkTicket");
+                throw new BulkTicketException(StatusMessage.BULK_TICKET.getStatusMessage());
             }
 
             FormOfPaymentKey formOfPaymentKey = new FormOfPaymentKey(
@@ -107,7 +106,8 @@ public class TicketReceiptMapper {
 
                 // Build Passenger Ancillary FOP if not already
                 if (!ticketReceiptRsRow.getAnclryDocNbr().isEmpty() &&
-                		!anclryDocNums.contains(ticketReceiptRsRow.getAnclryDocNbr())) {
+                		!anclryDocNums.contains(ticketReceiptRsRow.getAnclryDocNbr()) &&
+                        isAnclryAmtGreaterThanZero(ticketReceiptRsRow.getAnclryFopAmt())) {
 
                     ticketReceiptReturn = passengerAncillaryFopBuilder.build(ticketReceiptReturn, ticketReceiptRsRow);
 
@@ -133,6 +133,10 @@ public class TicketReceiptMapper {
         return ticketReceiptReturn;
     }
 
+    private boolean isAnclryAmtGreaterThanZero(String anclryFopAmt){
+        return anclryFopAmt != null && BigDecimal.valueOf(Double.parseDouble(anclryFopAmt)).compareTo(BigDecimal.ZERO) > 0;
+    }
+
     // Move to PassengerFopBuilder
     private boolean isMappingFormOfPayment(String fopTypeCode) {
         return fopTypeCode.startsWith("CC") || fopTypeCode.startsWith("CA");
@@ -141,9 +145,9 @@ public class TicketReceiptMapper {
     private List<FormOfPayment> adjustFormOfPaymentsIfExchanged(List<FormOfPayment> formOfPayments) {
         boolean isExchange = formOfPayments.stream().anyMatch(f -> "EF".equals(f.getFopTypeCode()) || "EX".equals(f.getFopTypeCode()));
         if (isExchange) {
-            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.valueOf(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
+            formOfPayments = formOfPayments.stream().filter(f -> f.getFopAmount() != null && BigDecimal.valueOf(Double.parseDouble(f.getFopAmount())).compareTo(BigDecimal.ZERO) > 0)
                     .collect(Collectors.toList());
-            formOfPayments.stream().forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
+            formOfPayments.stream().filter(FormOfPayment::isTicket).forEach(f -> f.setFopTypeDescription("Exchange - " + f.getFopTypeDescription()));
         }
 
         return formOfPayments;

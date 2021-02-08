@@ -54,8 +54,8 @@ public class PassengerFareTaxFeeBuilderTest {
     public void testBuild_PassengerFareTaxFee_EqfnFareAmt_Null() throws Exception {
         this.mockTicketReceipt();
 
-        Mockito.when(ticketReceiptRsRow.getEqfnFareAmt()).thenReturn(null);
-        Mockito.when(ticketReceiptRsRow.getEqfnFareCurrTypeCd()).thenReturn(null);
+        Mockito.when(ticketReceiptRsRow.getEqfnFareAmt()).thenReturn("");
+        Mockito.when(ticketReceiptRsRow.getEqfnFareCurrTypeCd()).thenReturn("");
         Mockito.when(ticketReceiptRsRow.getFnumFareAmt()).thenReturn("39442");
         Mockito.when(ticketReceiptRsRow.getFnumFareCurrTypeCd()).thenReturn("USD2");
         Mockito.when(ticketReceiptRsRow.getFareTdamAmt()).thenReturn("45280");
@@ -107,4 +107,84 @@ public class PassengerFareTaxFeeBuilderTest {
 
         ticketReceiptMock.getPassengerDetails().add(passengerDetail);
     }
+
+    @Test
+    public void testBuild_PassengerFareTaxFee_EQFN_FARE_AMT_And_FNUM_FARE_AMT_Zero() throws Exception {
+
+        ticketReceiptMock = new TicketReceipt();
+        PassengerDetail passengerDetail = new PassengerDetail();
+        passengerDetail.setTicketNumber("2131648126");
+        passengerDetail.setLastName("KIMURA");
+        ticketReceiptMock.getPassengerDetails().add(passengerDetail);
+        Mockito.when(ticketReceiptRsRow.getFnumFareAmt()).thenReturn("0");
+        Mockito.when(ticketReceiptRsRow.getFnumFareCurrTypeCd()).thenReturn("USD2");
+        Mockito.when(ticketReceiptRsRow.getEqfnFareAmt()).thenReturn("0");
+        Mockito.when(ticketReceiptRsRow.getEqfnFareCurrTypeCd()).thenReturn("JPY0");
+        Mockito.when(ticketReceiptRsRow.getFareTdamAmt()).thenReturn("6410");
+
+        this.ticketReceiptReturn = passengerFareTaxFeeBuilder.build(ticketReceiptMock, ticketReceiptRsRow);
+
+        assertNotNull(ticketReceiptReturn);
+        assertNotNull(ticketReceiptReturn.getPassengerDetails());
+        assertEquals(1, ticketReceiptReturn.getPassengerDetails().size());
+        assertNotNull(ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees());
+        assertEquals("0.00", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareAmount());
+        assertEquals("JPY", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
+        assertEquals("6410.00", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
+        assertEquals("6410.00", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());
+    }
+
+    @Test
+    public void testBuild_PassengerFareTaxFee_EQFN_FARE_AMT_And_FNUM_FARE_AMT_NotZero() throws Exception {
+
+        ticketReceiptMock = new TicketReceipt();
+        PassengerDetail passengerDetail = new PassengerDetail();
+        passengerDetail.setTicketNumber("2124872311");
+        passengerDetail.setLastName("KWON");
+        ticketReceiptMock.getPassengerDetails().add(passengerDetail);
+        Mockito.when(ticketReceiptRsRow.getFnumFareAmt()).thenReturn("113300");
+        Mockito.when(ticketReceiptRsRow.getFnumFareCurrTypeCd()).thenReturn("USD2");
+        Mockito.when(ticketReceiptRsRow.getEqfnFareAmt()).thenReturn("1379200");
+        Mockito.when(ticketReceiptRsRow.getEqfnFareCurrTypeCd()).thenReturn("KRW0");
+        Mockito.when(ticketReceiptRsRow.getFareTdamAmt()).thenReturn("1412400");
+
+        this.ticketReceiptReturn = passengerFareTaxFeeBuilder.build(ticketReceiptMock, ticketReceiptRsRow);
+
+        assertNotNull(ticketReceiptReturn);
+        assertNotNull(ticketReceiptReturn.getPassengerDetails());
+        assertEquals(1, ticketReceiptReturn.getPassengerDetails().size());
+        assertNotNull(ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees());
+        assertEquals("1379200.00", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareAmount());
+        assertEquals("KRW", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
+        assertEquals("1412400.00", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
+        assertEquals("33200.00", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());
+    }
+
+    @Test
+    public void testBuild_PassengerFareTaxFee_EQFN_FARE_AMT_Zero_AND_FNUM_FARE_AMT_NotZero_OR_EQFN_FARE_CURR_TYPE_CD_Null() throws Exception {
+
+        ticketReceiptMock = new TicketReceipt();
+        PassengerDetail passengerDetail = new PassengerDetail();
+        passengerDetail.setTicketNumber("2151697777");
+        passengerDetail.setLastName("CARR");
+        ticketReceiptMock.getPassengerDetails().add(passengerDetail);
+        Mockito.when(ticketReceiptRsRow.getFnumFareAmt()).thenReturn("12300");
+        Mockito.when(ticketReceiptRsRow.getFnumFareCurrTypeCd()).thenReturn("GBP2");
+        Mockito.when(ticketReceiptRsRow.getEqfnFareAmt()).thenReturn("0");
+        Mockito.when(ticketReceiptRsRow.getEqfnFareCurrTypeCd()).thenReturn("");
+        Mockito.when(ticketReceiptRsRow.getFareTdamAmt()).thenReturn("41494");
+
+        this.ticketReceiptReturn = passengerFareTaxFeeBuilder.build(ticketReceiptMock, ticketReceiptRsRow);
+
+        assertNotNull(ticketReceiptReturn);
+        assertNotNull(ticketReceiptReturn.getPassengerDetails());
+        assertEquals(1, ticketReceiptReturn.getPassengerDetails().size());
+        assertNotNull(ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees());
+        assertEquals("123.00", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareAmount());
+        assertEquals("GBP", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getBaseFareCurrencyCode());
+        assertEquals("414.94", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTotalFareAmount());
+        assertEquals("291.94", ticketReceiptReturn.getPassengerDetails().get(0).getFareTaxesFees().getTaxFareAmount());
+    }
+
+
 }

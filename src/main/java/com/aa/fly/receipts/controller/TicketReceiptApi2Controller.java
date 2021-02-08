@@ -7,6 +7,9 @@ import com.aa.fly.receipts.service.TicketReceiptApi2Service;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
+import java.text.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +34,7 @@ public class TicketReceiptApi2Controller {
             message = "Unexpected Error",
             response = TicketReceipt.class) })
     @PostMapping("/ticket-receipt")
-    public ResponseEntity<TicketReceipt> getTicketReceipt(@RequestBody SearchCriteriaApi2 searchCriteriaApi2)
+    public ResponseEntity<TicketReceipt> getTicketReceipt(@RequestBody SearchCriteriaApi2 searchCriteriaApi2) throws ParseException
 
     {
         return ticketReceiptApi2Service.findTicketReceipt(searchCriteriaApi2);

@@ -1,23 +1,28 @@
 package com.aa.fly.receipts.service;
 
-import com.aa.fly.receipts.data.TicketReceiptRepository;
-import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
-import com.aa.fly.receipts.domain.SearchCriteriaApi2;
-import com.aa.fly.receipts.domain.TicketReceipt;
-import com.aa.fly.receipts.exception.BulkTicketException;
-import com.aa.fly.receipts.service.impl.TicketReceiptApi2ServiceImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import com.aa.fly.receipts.data.TicketReceiptRepository;
+import com.aa.fly.receipts.domain.ReceiptsMSDomainTest;
+import com.aa.fly.receipts.domain.SearchCriteriaApi2;
+import com.aa.fly.receipts.domain.TicketReceipt;
+import com.aa.fly.receipts.exception.AgencyTicketException;
+import com.aa.fly.receipts.exception.BulkTicketException;
+import com.aa.fly.receipts.exception.StatusMessage;
+import com.aa.fly.receipts.manager.AgencyTicketManager;
+import com.aa.fly.receipts.service.impl.TicketReceiptApi2ServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TicketReceiptApi2ServiceTest {
@@ -26,6 +31,9 @@ public class TicketReceiptApi2ServiceTest {
 
     @Mock
     private TicketReceiptRepository ticketReceiptRepository;
+    
+    @Mock
+    private AgencyTicketManager agencyTicketManager;
 
     @Test
     public void testTicketReceiptTotal() throws ParseException {
@@ -51,6 +59,17 @@ public class TicketReceiptApi2ServiceTest {
         assertThat(actualReceipt.getStatusMessage()).isEqualTo("BulkTicket");
     }
 
+    @Test
+    public void testTicketReceiptAgencyTicketException() throws ParseException {
+        SearchCriteriaApi2 criteria = ReceiptsMSDomainTest.getSearchCriteriaApi2WithTicketNumber();
+        criteria.setTicketNumber("0012200000000");
+        Mockito.doThrow(new AgencyTicketException("")).when(agencyTicketManager).check(Mockito.anyString());
+        
+        TicketReceipt actualReceipt = ticketReceiptApi2Service.findTicketReceipt(criteria).getBody();
+        assertThat(actualReceipt).isNotNull();
+        assertThat(actualReceipt.getStatusMessage()).isEqualTo(StatusMessage.AGENCY_TICKET.getStatusMessage());
+    }
+    
     @Test
     public void testCriteriaTicketNumber10Chars() throws ParseException {
         SearchCriteriaApi2 criteria = ReceiptsMSDomainTest.getSearchCriteriaApi2WithTicketNumber();
