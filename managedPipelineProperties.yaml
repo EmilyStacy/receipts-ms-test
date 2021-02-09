@@ -33,6 +33,16 @@ CI:
   #  - name: 'other step name'
   #    stepsFile: fileName.groovy
 
+provider:
+  azure:
+    azurerm:
+      resource_group_name: tfstate
+      storage_account_name: bttfstate
+      container_name: delextfstate
+
+deployInfra: terraform
+deployInfraPath: devops/terraform
+
 deployApp: appservice
 publishPath: target
 
@@ -49,6 +59,10 @@ CD:
         - name: 'receipts-ms-dev'
           resourceGroup: 'ct-n-zeaus-receipts-rg'
           region: 'East US'
+          tfvarfile:
+            - variables.dev.tf
+          azurerm: ## For terraform deployment to modify infrastructure
+            statefile: appservice.tf
       sourceBranches:
         - mp # Remove this entry once this MP yaml works.
         - develop
