@@ -35,6 +35,7 @@ CI:
 
 provider:
   azure:
+    servicePrincipalCredJenkins: ct-np-receipts-as-server-sp
     azurerm:
       resource_group_name: tfstate
       storage_account_name: bttfstate
