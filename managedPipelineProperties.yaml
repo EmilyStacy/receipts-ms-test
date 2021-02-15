@@ -80,18 +80,14 @@ CD:
       #servicePrincipalCredJenkins: ct-p-Receipts-receipts-5060-sp
       #subscription: aa-ct-prod-spoke
       #app:
-        #- name: receipts-ms
+        #- name: receipts-ms-east
           #region       : 'East US'
           #resourceGroup: ct-p-zeaus-receipts-rg 
           ## slot: 'staging' ##Optional to deploy to Production/Staging slot
 
-          #actions:
-          #  - name: 'Post-deployment action'
-          #    action: 'mvn -P azure-prod-east azure-webapp:deploy' ## Run Mvn deployment
-
-        #- name: receipts-ms
+        #- name: receipts-ms-west
           #region       : 'West US'
-          ## slot: 'staging' ##Optional to deploy to Production/Staging slot
           #resourceGroup: ct-p-zweus-receipts-rg 
+          ## slot: 'staging' ##Optional to deploy to Production/Staging slot
       #sourceBranches:
         #- master
