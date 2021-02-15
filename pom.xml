@@ -218,7 +218,7 @@
 	          <schemaVersion>v2</schemaVersion>  
 	          <subscriptionId>d468b5ca-4400-4521-8115-2bba3467f651</subscriptionId>  
 	          <resourceGroup>ct-p-zeaus-receipts-rg</resourceGroup>  
-	          <appName>receipts-ms</appName>
+	          <appName>receipts-ms-east</appName>
 	          <appServicePlanName>ServicePlan-Prod-East</appServicePlanName>
 			  <!-- Deployment Slot Setting -->              
 			  <deploymentSlotSetting>
@@ -257,9 +257,9 @@
 	        <version>1.12.0</version>  
 	        <configuration> 
 	          <schemaVersion>v2</schemaVersion>  
-	          <subscriptionId>xxx-xxx-xxx-xxx</subscriptionId>  
+	          <subscriptionId>d468b5ca-4400-4521-8115-2bba3467f651</subscriptionId>  
 	          <resourceGroup>ct-p-zweus-receipts-rg</resourceGroup>  
-	          <appName>receipts-ms</appName>
+	          <appName>receipts-ms-west</appName>
 	          <appServicePlanName>ServicePlan-Prod-West</appServicePlanName>
 			  <deploymentSlotSetting>
 			  	<name>staging</name>
