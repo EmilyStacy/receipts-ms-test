@@ -60,22 +60,9 @@ CD:
         - name: 'receipts-ms-dev'
           resourceGroup: 'ct-n-zeaus-receipts-rg'
           region: 'East US'
-          #tfvarfile:
-          #  - variables.dev.tf
-          #azurerm: ## For terraform deployment to modify infrastructure
-          #  statefile: appservice.tf
       sourceBranches:
         - mp # Remove this entry once this MP yaml works.
         - develop
-
-      #actions:
-      #  - name: 'Pre-deployment action'
-      #    action: '...' ## Like pre build
-      #  - name: 'azure deployment'
-      #    action: 'azuredeploy'
-      #  - name: 'Post-deployment action'
-      #    action: '...' ## Run post deployment actions
-
     prod:
       servicePrincipalCredJenkins: ct-p-Receipts-receipts-5060-sp
       subscription: aa-ct-prod-spoke
@@ -84,11 +71,10 @@ CD:
           region       : 'East US'
           resourceGroup: ct-p-zeaus-receipts-rg 
           slot: 'staging' ##Optional to deploy to Production/Staging slot
-
-        #- name: receipts-ms-west
-          #region       : 'West US'
-          #resourceGroup: ct-p-zweus-receipts-rg 
-          ## slot: 'staging' ##Optional to deploy to Production/Staging slot
+        - name: receipts-ms-west
+          region       : 'West US'
+          resourceGroup: ct-p-zweus-receipts-rg 
+          slot: 'staging' ##Optional to deploy to Production/Staging slot
       sourceBranches:
         - mp # Remove this entry once this MP yaml works.
-        #- master
+        - master
