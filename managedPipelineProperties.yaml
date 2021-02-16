@@ -63,18 +63,18 @@ CD:
       sourceBranches:
         - mp # Remove this entry once this MP yaml works.
         - develop
-    #prod:
-      #servicePrincipalCredJenkins: ct-p-Receipts-receipts-5060-sp
-      #subscription: aa-ct-prod-spoke
-      #app:
-        #- name: receipts-ms-east
-        #  region       : 'East US'
-        #  resourceGroup: ct-p-zeaus-receipts-rg 
-        #  slot: 'staging' ##Optional to deploy to Production/Staging slot
-        #- name: receipts-ms-west
-        #  region       : 'West US'
-        #  resourceGroup: ct-p-zweus-receipts-rg 
-        #  slot: 'staging' ##Optional to deploy to Production/Staging slot
-      #sourceBranches:
-        #- mp # Remove this entry once this MP yaml works.
-        #- master
+    prod:
+      servicePrincipalCredJenkins: ct-p-Receipts-receipts-5060-sp
+      subscription: aa-ct-prod-spoke
+      app:
+        - name: receipts-ms-east
+          region       : 'East US'
+          resourceGroup: ct-p-zeaus-receipts-rg 
+          slot: 'staging' ##Optional to deploy to Production/Staging slot
+        - name: receipts-ms-west
+          region       : 'West US'
+          resourceGroup: ct-p-zweus-receipts-rg 
+          slot: 'staging' ##Optional to deploy to Production/Staging slot
+      sourceBranches:
+        - mp # Remove this entry once this MP yaml works.
+        - master
