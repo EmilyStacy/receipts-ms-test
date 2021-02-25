@@ -24,8 +24,6 @@ public class PassengerAncillaryBuilder {
 
         String ancillaryDocNumber = ticketReceiptRsRow.getAnclryDocNbr();
         Set<Ancillary> ancillaryList = new HashSet<>();
-        System.out.println("test");
-
         if (StringUtils.isNotBlank(ancillaryDocNumber)) {
             Ancillary ancillary = new Ancillary();
             int ancillaryDocNumberCount = ancillaryDocNumber.length();
