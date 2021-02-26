@@ -23,6 +23,8 @@ public class AddHeadersInterceptor extends HandlerInterceptorAdapter {
         String xTransactionIdValue = request.getHeader(X_TRANSACTION_ID);
 
         // Allow only alphanumeric characters and dashes
+        if(xTransactionIdValue == null) return true;
+
         if (!xTransactionIdValue.matches("[a-zA-Z0-9\\-]++")) {
             throw new IOException();
         }
