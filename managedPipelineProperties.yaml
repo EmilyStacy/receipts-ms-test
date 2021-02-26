@@ -70,7 +70,7 @@ CD:
         - name: receipts-ms-east
           region       : 'East US'
           resourceGroup: ct-p-zeaus-receipts-rg
-    #      slot: 'staging' ##Optional to deploy to Production/Staging slot
+          slot: 'staging' ##Optional to deploy to Production/Staging slot
     #    - name: receipts-ms-west
     #      region       : 'West US'
     #      resourceGroup: ct-p-zweus-receipts-rg 
