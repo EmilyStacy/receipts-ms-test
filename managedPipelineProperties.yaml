@@ -61,7 +61,7 @@ CD:
           resourceGroup: 'ct-n-zeaus-receipts-rg'
           region: 'East US'
       sourceBranches:
-        - mp # Remove this entry once this MP yaml works.
+        - mp # Remove this entry once this MP yaml works
         - develop
 #    prod:
 #      manualApproval: False
