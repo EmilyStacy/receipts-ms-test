@@ -64,6 +64,7 @@ CD:
         - mp # Remove this entry once this MP yaml works.
         - develop
 #    prod:
+#      manualApproval: False
 #      servicePrincipalCredJenkins: ct-p-Receipts-receipts-5060-sp
 #      subscription: aa-ct-prod-spoke
 #      app:

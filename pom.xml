@@ -178,7 +178,7 @@
 	          <schemaVersion>v2</schemaVersion>  
 	          <subscriptionId>0bc507f3-ad14-4edd-8f76-a91458390da2</subscriptionId>  
 	          <resourceGroup>ct-n-zeaus-receipts-rg</resourceGroup>  
-	          <appName>receipts-ms-dev</appName>
+	          <appName>receipts-ms-dev-new</appName>
 	          
 	          <!-- Deploy Web App to an existing Service Plan -->
 	          <!-- appServicePlanResourceGroup>your-existing-plan-group</appServicePlanResourceGroup -->
