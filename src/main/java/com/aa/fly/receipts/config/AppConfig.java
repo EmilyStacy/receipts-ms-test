@@ -34,6 +34,7 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     public Map<String, String> fopTypeMap() {
+        //moved to pom
         Map<String, String> fopTypeMap = new HashMap<>();
         fopTypeMap.put("CA", "Cash / Check");
         fopTypeMap.put("CCAA", "American Airlines Credit Card");
